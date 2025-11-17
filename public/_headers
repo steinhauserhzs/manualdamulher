@@ -1,0 +1,24 @@
+# Cache de assets estáticos por 1 ano
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Cache de imagens por 1 ano
+*.jpg
+  Cache-Control: public, max-age=31536000, immutable
+
+*.png
+  Cache-Control: public, max-age=31536000, immutable
+
+*.svg
+  Cache-Control: public, max-age=31536000, immutable
+
+*.webp
+  Cache-Control: public, max-age=31536000, immutable
+
+# HTML sem cache
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Service Worker
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate
