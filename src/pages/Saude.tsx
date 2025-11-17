@@ -4,13 +4,23 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Droplets, Plus } from "lucide-react";
+import { ArrowLeft, Droplets, Plus, Utensils, Heart } from "lucide-react";
 import { toast } from "sonner";
+import { AddRefeicaoDialog } from "@/components/saude/AddRefeicaoDialog";
+import { HumorDialog } from "@/components/saude/HumorDialog";
+
+interface Refeicao {
+  id: string;
+  tipo: string;
+  descricao: string | null;
+  data_hora: string;
+}
 
 const Saude = () => {
   const [user, setUser] = useState<any>(null);
   const [aguaHoje, setAguaHoje] = useState(0);
-  const [metaAgua] = useState(2000); // 2L por padrão
+  const [metaAgua] = useState(2000);
+  const [refeicoes, setRefeicoes] = useState<Refeicao[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -24,12 +34,17 @@ const Saude = () => {
       }
 
       setUser(session.user);
-      await carregarAguaHoje(session.user.id);
+      await carregarDados(session.user.id);
       setLoading(false);
     };
 
     checkAuth();
   }, [navigate]);
+
+  const carregarDados = async (userId: string) => {
+    await carregarAguaHoje(userId);
+    await carregarRefeicoes(userId);
+  };
 
   const carregarAguaHoje = async (userId: string) => {
     const hoje = new Date().toISOString().split("T")[0];
@@ -47,6 +62,24 @@ const Saude = () => {
 
     const total = data?.reduce((acc, reg) => acc + reg.quantidade_ml, 0) || 0;
     setAguaHoje(total);
+  };
+
+  const carregarRefeicoes = async (userId: string) => {
+    const hoje = new Date().toISOString().split("T")[0];
+    
+    const { data, error } = await supabase
+      .from("refeicoes")
+      .select("*")
+      .eq("user_id", userId)
+      .gte("data_hora", hoje)
+      .order("data_hora", { ascending: false });
+
+    if (error) {
+      toast.error("Erro ao carregar refeições");
+      return;
+    }
+
+    setRefeicoes(data || []);
   };
 
   const adicionarAgua = async (quantidade: number) => {
@@ -96,118 +129,91 @@ const Saude = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        {/* Água Card */}
-        <Card className="gradient-card mb-6 shadow-card">
+      <main className="container mx-auto px-4 py-8 space-y-6">
+        <Card className="gradient-card shadow-card">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Heart className="h-6 w-6 text-secondary" />
+                  Como você está hoje?
+                </CardTitle>
+                <CardDescription>Registre seu humor e energia do dia</CardDescription>
+              </div>
+              {user && <HumorDialog userId={user.id} onHumorSalvo={() => {}} />}
+            </div>
+          </CardHeader>
+        </Card>
+        <Card className="gradient-card shadow-card">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Droplets className="h-6 w-6 text-accent" />
               Água de Hoje
             </CardTitle>
-            <CardDescription>
-              Mantenha-se hidratada para ter mais energia e saúde
-            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
               <div className="mb-2 flex items-center justify-between">
-                <span className="text-3xl font-bold text-accent">
-                  {aguaHoje}ml
-                </span>
-                <span className="text-sm text-muted-foreground">
-                  Meta: {metaAgua}ml
-                </span>
+                <span className="text-3xl font-bold text-accent">{aguaHoje}ml</span>
+                <span className="text-sm text-muted-foreground">Meta: {metaAgua}ml</span>
               </div>
               <Progress value={progressoAgua} className="h-3" />
-              {aguaHoje >= metaAgua && (
-                <p className="mt-2 text-sm font-semibold text-success">
-                  🎉 Meta alcançada! Parabéns!
-                </p>
-              )}
             </div>
-
-            <div className="flex flex-wrap gap-3">
-              <Button
-                variant="outline"
-                onClick={() => adicionarAgua(250)}
-                className="flex-1 min-w-[100px]"
-              >
-                +250ml
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <Button onClick={() => adicionarAgua(250)} variant="outline" className="flex flex-col gap-2 h-auto py-4">
+                <Droplets className="h-5 w-5" />
+                <span className="text-xs">+250ml</span>
               </Button>
-              <Button
-                variant="outline"
-                onClick={() => adicionarAgua(500)}
-                className="flex-1 min-w-[100px]"
-              >
-                +500ml
+              <Button onClick={() => adicionarAgua(500)} variant="outline" className="flex flex-col gap-2 h-auto py-4">
+                <Droplets className="h-5 w-5" />
+                <span className="text-xs">+500ml</span>
               </Button>
-              <Button
-                variant="outline"
-                onClick={() => adicionarAgua(1000)}
-                className="flex-1 min-w-[100px]"
-              >
-                +1L
+              <Button onClick={() => adicionarAgua(750)} variant="outline" className="flex flex-col gap-2 h-auto py-4">
+                <Droplets className="h-5 w-5" />
+                <span className="text-xs">+750ml</span>
+              </Button>
+              <Button onClick={() => adicionarAgua(1000)} variant="outline" className="flex flex-col gap-2 h-auto py-4">
+                <Droplets className="h-5 w-5" />
+                <span className="text-xs">+1L</span>
               </Button>
             </div>
           </CardContent>
         </Card>
-
-        {/* Other Health Modules - Coming Soon */}
-        <div className="grid gap-6 md:grid-cols-2">
-          <Card className="gradient-card shadow-card">
-            <CardHeader>
-              <CardTitle>Humor & Energia</CardTitle>
-              <CardDescription>
-                Como você está se sentindo hoje?
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">
-                <p className="text-muted-foreground mb-4">Em breve...</p>
-                <Button variant="outline" disabled>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Registrar Humor
-                </Button>
+        <Card className="gradient-card shadow-card">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <Utensils className="h-6 w-6 text-primary" />
+                  Alimentação de Hoje
+                </CardTitle>
               </div>
-            </CardContent>
-          </Card>
-
-          <Card className="gradient-card shadow-card">
-            <CardHeader>
-              <CardTitle>Ciclo Menstrual</CardTitle>
-              <CardDescription>
-                Acompanhe seu ciclo e sintomas
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">
-                <p className="text-muted-foreground mb-4">Em breve...</p>
-                <Button variant="outline" disabled>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Registrar Período
-                </Button>
+              {user && <AddRefeicaoDialog userId={user.id} onRefeicaoAdded={() => carregarDados(user.id)} />}
+            </div>
+          </CardHeader>
+          <CardContent>
+            {refeicoes.length === 0 ? (
+              <div className="py-8 text-center">
+                <Utensils className="mx-auto h-10 w-10 text-muted-foreground opacity-50" />
+                <p className="mt-3 text-sm text-muted-foreground">Nenhuma refeição registrada hoje</p>
               </div>
-            </CardContent>
-          </Card>
-
-          <Card className="gradient-card shadow-card">
-            <CardHeader>
-              <CardTitle>Refeições</CardTitle>
-              <CardDescription>
-                Registre suas refeições do dia
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">
-                <p className="text-muted-foreground mb-4">Em breve...</p>
-                <Button variant="outline" disabled>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Registrar Refeição
-                </Button>
+            ) : (
+              <div className="space-y-3">
+                {refeicoes.map((refeicao) => (
+                  <div key={refeicao.id} className="flex items-start gap-3 rounded-lg border border-border bg-card p-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                      <Utensils className="h-5 w-5 text-primary" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold capitalize text-foreground">{refeicao.tipo}</h4>
+                      {refeicao.descricao && <p className="text-sm text-muted-foreground">{refeicao.descricao}</p>}
+                    </div>
+                  </div>
+                ))}
               </div>
-            </CardContent>
-          </Card>
-        </div>
+            )}
+          </CardContent>
+        </Card>
       </main>
     </div>
   );
