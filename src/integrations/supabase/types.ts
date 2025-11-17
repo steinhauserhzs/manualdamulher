@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      ajuda_artigos: {
+        Row: {
+          categoria: string
+          conteudo: string
+          created_at: string | null
+          helpful_no: number | null
+          helpful_yes: number | null
+          id: string
+          ordem: number | null
+          titulo: string
+          views: number | null
+        }
+        Insert: {
+          categoria: string
+          conteudo: string
+          created_at?: string | null
+          helpful_no?: number | null
+          helpful_yes?: number | null
+          id?: string
+          ordem?: number | null
+          titulo: string
+          views?: number | null
+        }
+        Update: {
+          categoria?: string
+          conteudo?: string
+          created_at?: string | null
+          helpful_no?: number | null
+          helpful_yes?: number | null
+          id?: string
+          ordem?: number | null
+          titulo?: string
+          views?: number | null
+        }
+        Relationships: []
+      }
       badges_casa: {
         Row: {
           created_at: string
@@ -175,6 +211,68 @@ export type Database = {
         }
         Relationships: []
       }
+      dicas_favoritas: {
+        Row: {
+          created_at: string | null
+          dica_id: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          dica_id?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          dica_id?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dicas_favoritas_dica_id_fkey"
+            columns: ["dica_id"]
+            isOneToOne: false
+            referencedRelation: "dicas_praticas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dicas_praticas: {
+        Row: {
+          categoria: string
+          checklist: Json | null
+          conteudo: string
+          created_at: string | null
+          destacada: boolean | null
+          id: string
+          ordem: number | null
+          titulo: string
+        }
+        Insert: {
+          categoria: string
+          checklist?: Json | null
+          conteudo: string
+          created_at?: string | null
+          destacada?: boolean | null
+          id?: string
+          ordem?: number | null
+          titulo: string
+        }
+        Update: {
+          categoria?: string
+          checklist?: Json | null
+          conteudo?: string
+          created_at?: string | null
+          destacada?: boolean | null
+          id?: string
+          ordem?: number | null
+          titulo?: string
+        }
+        Relationships: []
+      }
       habitos_bem_estar: {
         Row: {
           ativo: boolean
@@ -302,6 +400,33 @@ export type Database = {
           id?: string
           titulo?: string
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      onboarding_progress: {
+        Row: {
+          completed: boolean | null
+          created_at: string | null
+          dados_onboarding: Json | null
+          id: string
+          step: string | null
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean | null
+          created_at?: string | null
+          dados_onboarding?: Json | null
+          id?: string
+          step?: string | null
+          user_id: string
+        }
+        Update: {
+          completed?: boolean | null
+          created_at?: string | null
+          dados_onboarding?: Json | null
+          id?: string
+          step?: string | null
           user_id?: string
         }
         Relationships: []
@@ -628,6 +753,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      tutorial_progress: {
+        Row: {
+          completed: boolean | null
+          id: string
+          modulo: string
+          step_atual: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean | null
+          id?: string
+          modulo: string
+          step_atual?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          completed?: boolean | null
+          id?: string
+          modulo?: string
+          step_atual?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {
