@@ -55,11 +55,23 @@ All colors MUST be HSL.
     --shadow-card: 0 8px 24px -8px hsl(280 40% 45% / 0.15);
 
     /* Gamificação */
-    --success: 150 60% 45%;
-    --success-foreground: 0 0% 100%;
-    --warning: 45 90% 55%;
-    --warning-foreground: 280 15% 20%;
-    --xp: 280 60% 55%;
+    --success: 142 71% 45%;
+    --success-foreground: 142 71% 95%;
+    --warning: 48 96% 53%;
+    --warning-foreground: 48 96% 10%;
+    --xp: 280 60% 50%;
+    
+    /* Module Colors */
+    --casa-primary: 280 40% 45%;
+    --casa-light: 280 35% 85%;
+    --saude-primary: 340 60% 55%;
+    --saude-light: 340 50% 85%;
+    --bem-estar-primary: 150 50% 50%;
+    --bem-estar-light: 150 40% 85%;
+    --financas-primary: 200 60% 50%;
+    --financas-light: 200 50% 85%;
+    --notas-primary: 45 90% 60%;
+    --notas-light: 45 80% 85%;
   }
 
   .dark {
@@ -150,5 +162,27 @@ All colors MUST be HSL.
 
   .shadow-card {
     box-shadow: var(--shadow-card);
+  }
+
+  /* Hover Animations */
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-105;
+  }
+
+  /* Module Gradients */
+  .gradient-casa {
+    background: linear-gradient(135deg, hsl(var(--casa-primary)), hsl(var(--primary-light)));
+  }
+
+  .gradient-saude {
+    background: linear-gradient(135deg, hsl(var(--saude-primary)), hsl(var(--secondary)));
+  }
+
+  .gradient-bem-estar {
+    background: linear-gradient(135deg, hsl(var(--bem-estar-primary)), hsl(var(--accent)));
+  }
+
+  .gradient-financas {
+    background: linear-gradient(135deg, hsl(var(--financas-primary)), hsl(var(--primary)));
   }
 }
