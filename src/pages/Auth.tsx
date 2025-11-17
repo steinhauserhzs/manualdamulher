@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Loader2, ArrowLeft } from "lucide-react";
+import { Loader2, ArrowLeft, Lock, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { z } from "zod";
 
@@ -101,6 +101,19 @@ const Auth = () => {
           <ArrowLeft className="h-4 w-4" />
           Voltar
         </Link>
+        
+        <div className="mb-6 bg-primary/10 border border-primary/20 rounded-lg p-4">
+          <p className="text-sm text-center mb-2">
+            <Lock className="inline h-4 w-4 mr-1" />
+            <strong>Acesso Exclusivo:</strong> Disponível apenas para quem adquiriu o E-book.
+          </p>
+          <Button variant="link" asChild className="text-sm w-full p-0 h-auto">
+            <a href="/#ebook" className="flex items-center justify-center gap-1">
+              <BookOpen className="h-3 w-3" />
+              Ainda não tem? Clique aqui para adquirir
+            </a>
+          </Button>
+        </div>
         
         <Card className="gradient-card shadow-card">
           <CardHeader className="space-y-1">
