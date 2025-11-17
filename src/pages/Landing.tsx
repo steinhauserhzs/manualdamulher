@@ -31,23 +31,23 @@ import ebookMockup from "@/assets/ebook-mockup.jpg";
 
 const Landing = () => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-x-hidden">
       <Header />
       
       {/* Hero Section */}
-      <section className="relative overflow-hidden px-4 py-20 md:py-32 pt-24">
+      <section className="relative overflow-hidden px-4 py-20 md:py-32 pt-24 w-full max-w-full">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-secondary/10 to-accent/20" />
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-secondary/10 rounded-full blur-3xl" />
+        <div className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 md:w-96 md:h-96 bg-secondary/10 rounded-full blur-3xl" />
         
-        <div className="container relative mx-auto max-w-6xl">
-          <div className="grid items-center gap-8 md:grid-cols-2">
-            <div className="space-y-6 text-center md:text-left">
-              <h1 className="text-4xl font-bold leading-tight md:text-5xl lg:text-6xl">
+        <div className="container relative mx-auto max-w-6xl w-full">
+          <div className="grid items-center gap-8 md:grid-cols-2 w-full">
+            <div className="space-y-6 text-center md:text-left w-full">
+              <h1 className="text-3xl font-bold leading-tight md:text-5xl lg:text-6xl break-words">
                 Organize sua vida, conquiste sua{" "}
                 <span className="text-gradient">independência</span>
               </h1>
-              <p className="text-lg text-muted-foreground md:text-xl">
+              <p className="text-base text-muted-foreground md:text-xl break-words">
                 O app completo para mulheres que querem ter controle total sobre casa,
                 finanças, saúde e bem-estar. Tudo em um só lugar. 💜
               </p>
@@ -91,9 +91,9 @@ const Landing = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="bg-primary/5 px-4 py-12">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid gap-8 md:grid-cols-4 text-center">
+      <section className="bg-primary/5 px-4 py-12 w-full max-w-full overflow-hidden">
+        <div className="container mx-auto max-w-6xl w-full">
+          <div className="grid gap-6 md:gap-8 grid-cols-2 md:grid-cols-4 text-center w-full">
             <StatDisplay number="10.000+" label="Mulheres empoderadas" />
             <StatDisplay number="50.000+" label="Tarefas completadas" />
             <StatDisplay number="100+" label="Hábitos cultivados" />
@@ -146,30 +146,30 @@ const Landing = () => {
       </section>
 
       {/* E-book Section */}
-      <section id="ebook" className="px-4 py-16 md:py-24 bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+      <section id="ebook" className="px-4 py-16 md:py-24 bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 w-full max-w-full overflow-hidden">
+        <div className="container mx-auto max-w-6xl w-full">
+          <div className="grid md:grid-cols-2 gap-12 items-center w-full">
             {/* Imagem do E-book */}
-            <div className="relative">
+            <div className="relative w-full max-w-full">
               <img 
                 src={ebookMockup} 
                 alt="Manual da Mulher Independente - E-book"
-                className="rounded-3xl shadow-card hover-scale"
+                className="rounded-3xl shadow-card hover-scale w-full h-auto max-w-full"
                 width="1280"
                 height="720"
                 loading="lazy"
               />
-              <div className="absolute top-4 right-4 bg-primary text-white px-4 py-2 rounded-full font-bold text-sm">
+              <div className="absolute top-2 right-2 md:top-4 md:right-4 bg-primary text-white px-2 py-1 md:px-4 md:py-2 rounded-full font-bold text-xs md:text-sm">
                 🏆 Mais Vendido
               </div>
             </div>
             
             {/* Conteúdo */}
-            <div>
-              <h2 className="mb-4 text-3xl font-bold md:text-4xl">
+            <div className="w-full max-w-full">
+              <h2 className="mb-4 text-2xl md:text-3xl lg:text-4xl break-words">
                 E-book: Manual da Mulher Independente
               </h2>
-              <p className="text-xl text-muted-foreground mb-6">
+              <p className="text-lg md:text-xl text-muted-foreground mb-6 break-words">
                 Seu guia completo para organizar a vida, conquistar independência 
                 e cuidar de você mesma. + Acesso VITALÍCIO ao nosso app exclusivo!
               </p>
@@ -218,22 +218,22 @@ const Landing = () => {
               </div>
               
               {/* Preço e CTA */}
-              <div className="gradient-card rounded-2xl p-6 shadow-card">
-                <div className="flex items-baseline gap-3 mb-4">
-                  <span className="text-4xl font-bold text-foreground">R$ 97,00</span>
-                  <span className="text-xl line-through text-muted-foreground">R$ 197,00</span>
-                  <span className="bg-success text-white px-3 py-1 rounded-full text-sm font-bold">
+              <div className="gradient-card rounded-2xl p-4 md:p-6 shadow-card w-full max-w-full">
+                <div className="flex flex-wrap items-baseline gap-2 md:gap-3 mb-4">
+                  <span className="text-3xl md:text-4xl font-bold text-foreground">R$ 97,00</span>
+                  <span className="text-lg md:text-xl line-through text-muted-foreground">R$ 197,00</span>
+                  <span className="bg-success text-white px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-bold">
                     50% OFF
                   </span>
                 </div>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-xs md:text-sm text-muted-foreground mb-4">
                   Ou 12x de R$ 9,70 sem juros
                 </p>
-                <Button size="lg" variant="hero" className="w-full hover-scale">
-                  <ShoppingCart className="mr-2 h-5 w-5" />
-                  Comprar E-book + Acesso ao App
+                <Button size="lg" variant="hero" className="w-full hover-scale text-sm md:text-base">
+                  <ShoppingCart className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+                  <span className="break-words">Comprar E-book + Acesso ao App</span>
                 </Button>
-                <p className="text-xs text-center text-muted-foreground mt-3">
+                <p className="text-xs text-center text-muted-foreground mt-3 break-words">
                   🔒 Compra 100% segura • 7 dias de garantia
                 </p>
               </div>
@@ -243,12 +243,12 @@ const Landing = () => {
       </section>
 
       {/* Features */}
-      <section className="px-4 py-16 md:py-24">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="mb-12 text-center text-3xl font-bold md:text-4xl">
+      <section className="px-4 py-16 md:py-24 w-full max-w-full overflow-hidden">
+        <div className="container mx-auto max-w-6xl w-full">
+          <h2 className="mb-12 text-center text-2xl md:text-3xl lg:text-4xl break-words">
             Tudo que você precisa em um só lugar
           </h2>
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 w-full">
             <FeatureCard
               icon={<Home className="h-8 w-8 text-casa-primary" />}
               title="Casa Organizada"
@@ -293,10 +293,10 @@ const Landing = () => {
       </section>
 
       {/* Como Funciona Section */}
-      <section className="bg-muted/30 px-4 py-16 md:py-24">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="mb-12 text-center text-3xl font-bold md:text-4xl">Como funciona?</h2>
-          <div className="grid md:grid-cols-3 gap-8">
+      <section className="bg-muted/30 px-4 py-16 md:py-24 w-full max-w-full overflow-hidden">
+        <div className="container mx-auto max-w-6xl w-full">
+          <h2 className="mb-12 text-center text-2xl md:text-3xl lg:text-4xl break-words">Como funciona?</h2>
+          <div className="grid md:grid-cols-3 gap-8 w-full">
             <StepCard
               number="1"
               icon={<ShoppingCart className="h-8 w-8" />}
@@ -320,12 +320,12 @@ const Landing = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section id="depoimentos" className="px-4 py-16 md:py-24">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="mb-12 text-center text-3xl font-bold md:text-4xl">
+      <section id="depoimentos" className="px-4 py-16 md:py-24 w-full max-w-full overflow-hidden">
+        <div className="container mx-auto max-w-6xl w-full">
+          <h2 className="mb-12 text-center text-2xl md:text-3xl lg:text-4xl break-words">
             O que outras mulheres estão dizendo
           </h2>
-          <div className="grid gap-8 md:grid-cols-3">
+          <div className="grid gap-8 md:grid-cols-3 w-full">
             <TestimonialCard
               avatar="👩‍💼"
               name="Ana Silva"
@@ -349,10 +349,10 @@ const Landing = () => {
       </section>
 
       {/* FAQ Section */}
-      <section className="px-4 py-16 md:py-24 bg-muted/30">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="mb-12 text-center text-3xl font-bold md:text-4xl">Perguntas Frequentes</h2>
-          <Accordion type="single" collapsible className="w-full">
+      <section className="px-4 py-16 md:py-24 bg-muted/30 w-full max-w-full overflow-hidden">
+        <div className="container mx-auto max-w-4xl w-full">
+          <h2 className="mb-12 text-center text-2xl md:text-3xl lg:text-4xl break-words">Perguntas Frequentes</h2>
+          <Accordion type="single" collapsible className="w-full max-w-full">
             <AccordionItem value="q1">
               <AccordionTrigger>
                 O que está incluído no E-book?
@@ -408,29 +408,29 @@ const Landing = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary via-secondary to-accent px-4 py-20 md:py-32">
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary via-secondary to-accent px-4 py-20 md:py-32 w-full max-w-full">
         <div className="absolute inset-0 bg-black/10" />
-        <div className="container relative mx-auto max-w-3xl text-center text-white">
-          <h2 className="mb-4 text-3xl font-bold md:text-4xl">
+        <div className="container relative mx-auto max-w-3xl text-center text-white w-full">
+          <h2 className="mb-4 text-2xl md:text-3xl lg:text-4xl break-words">
             Pronta para transformar sua vida?
           </h2>
-          <p className="mb-8 text-lg opacity-90">
+          <p className="mb-8 text-base md:text-lg opacity-90 break-words">
             Junte-se a milhares de mulheres que já estão organizando suas vidas e
             conquistando sua independência.
           </p>
-          <Button asChild size="xl" className="bg-white text-primary hover:bg-white/90 hover-scale text-lg px-8 py-6 h-auto">
-            <a href="#ebook">
-              <ShoppingCart className="mr-2 h-5 w-5" />
-              Adquirir Agora por R$ 97
+          <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90 hover-scale text-sm md:text-lg px-6 md:px-8 py-4 md:py-6 h-auto w-full max-w-md mx-auto">
+            <a href="#ebook" className="flex items-center justify-center">
+              <ShoppingCart className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+              <span className="break-words">Adquirir Agora por R$ 97</span>
             </a>
           </Button>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t bg-muted/30 px-4 py-8">
-        <div className="container mx-auto text-center text-sm text-muted-foreground">
-          <p>© 2024 Manual da Mulher Independente. Todos os direitos reservados.</p>
+      <footer className="border-t bg-muted/30 px-4 py-8 w-full max-w-full overflow-hidden">
+        <div className="container mx-auto text-center text-sm text-muted-foreground w-full">
+          <p className="break-words">© 2024 Manual da Mulher Independente. Todos os direitos reservados.</p>
         </div>
       </footer>
     </div>

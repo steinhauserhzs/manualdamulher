@@ -25,13 +25,13 @@ export const Header = () => {
   };
   
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b">
-      <div className="container mx-auto px-4">
-        <nav className="flex items-center justify-between h-16">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b w-full max-w-full overflow-hidden">
+      <div className="container mx-auto px-4 w-full max-w-full">
+        <nav className="flex items-center justify-between h-16 w-full">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 font-bold text-lg hover-scale">
-            <Heart className="h-6 w-6 text-primary" />
-            <span className="hidden sm:inline">Manual da Mulher Independente</span>
+          <Link to="/" className="flex items-center gap-2 font-bold text-base md:text-lg hover-scale min-w-0">
+            <Heart className="h-5 w-5 md:h-6 md:w-6 text-primary flex-shrink-0" />
+            <span className="hidden sm:inline truncate">Manual da Mulher Independente</span>
             <span className="sm:hidden">MMI</span>
           </Link>
           
