@@ -4,15 +4,43 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Home, Heart, TrendingUp, Sparkles, LogOut, User as UserIcon, BookOpen, StickyNote } from "lucide-react";
+import { Home, Heart, TrendingUp, Sparkles, LogOut, User as UserIcon, BookOpen, StickyNote, Flame, Award } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 const Dashboard = () => {
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [perfil, setPerfil] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [streak, setStreak] = useState(7);
+  const [level, setLevel] = useState(3);
+  const [xp, setXp] = useState(250);
+  const [nextLevelXp, setNextLevelXp] = useState(500);
   const navigate = useNavigate();
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Bom dia";
+    if (hour < 18) return "Boa tarde";
+    return "Boa noite";
+  };
+
+  const getGreetingEmoji = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "☀️";
+    if (hour < 18) return "🌤️";
+    return "🌙";
+  };
+
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -66,13 +94,22 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b border-border bg-card">
+      <header className="border-b border-border bg-card mb-8">
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
-          <h2 className="text-xl font-bold text-foreground">Manual da Mulher Independente</h2>
+          <div>
+            <h2 className="text-xl font-bold text-foreground">Manual da Mulher Independente</h2>
+            <p className="text-sm text-muted-foreground">Seu espaço de organização e empoderamento</p>
+          </div>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground">
-              Olá, {perfil?.nome || "Usuária"}! 👋
-            </span>
+            <div className="hidden md:flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2">
+              <Flame className="h-5 w-5 text-primary" />
+              <span className="font-semibold text-primary">{streak} dias</span>
+            </div>
+            <Avatar className="h-12 w-12 ring-2 ring-primary/20">
+              <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-white font-bold">
+                {perfil?.nome ? getInitials(perfil.nome) : "U"}
+              </AvatarFallback>
+            </Avatar>
             <Button variant="ghost" size="sm" onClick={handleLogout}>
               <LogOut className="h-4 w-4" />
               <span className="ml-2 hidden sm:inline">Sair</span>
@@ -82,15 +119,30 @@ const Dashboard = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 pb-8">
         {/* Welcome Section */}
-        <div className="mb-8 gradient-card rounded-3xl p-6 shadow-card md:p-8">
-          <h1 className="mb-2 text-3xl font-bold text-foreground md:text-4xl">
-            Bem-vinda ao seu espaço! 💜
-          </h1>
-          <p className="text-lg text-muted-foreground">
-            Aqui você pode cuidar de você mesma, sem julgamentos. Cada pequeno passo conta.
-          </p>
+        <div className="mb-8 relative overflow-hidden gradient-card rounded-2xl p-8 shadow-card">
+          <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-primary/10 blur-3xl"></div>
+          <div className="relative">
+            <h1 className="mb-2 text-3xl font-bold text-foreground">
+              {getGreeting()}, {perfil?.nome || "Querida"}! {getGreetingEmoji()}
+            </h1>
+            <p className="mb-6 text-lg text-muted-foreground">
+              Você está arrasando! Continue assim e conquiste seus objetivos. 💜
+            </p>
+            
+            {/* Level Progress */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center gap-2">
+                  <Award className="h-4 w-4 text-primary" />
+                  <span className="font-semibold text-foreground">Nível {level}</span>
+                </div>
+                <span className="text-muted-foreground">{xp} / {nextLevelXp} XP</span>
+              </div>
+              <Progress value={(xp / nextLevelXp) * 100} className="h-2" />
+            </div>
+          </div>
         </div>
 
         {/* Quick Stats */}

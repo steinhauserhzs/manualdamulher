@@ -60,6 +60,26 @@ export default {
           foreground: "hsl(var(--warning-foreground))",
         },
         xp: "hsl(var(--xp))",
+        casa: {
+          DEFAULT: "hsl(var(--casa-primary))",
+          light: "hsl(var(--casa-light))",
+        },
+        saude: {
+          DEFAULT: "hsl(var(--saude-primary))",
+          light: "hsl(var(--saude-light))",
+        },
+        bemEstar: {
+          DEFAULT: "hsl(var(--bem-estar-primary))",
+          light: "hsl(var(--bem-estar-light))",
+        },
+        financas: {
+          DEFAULT: "hsl(var(--financas-primary))",
+          light: "hsl(var(--financas-light))",
+        },
+        notas: {
+          DEFAULT: "hsl(var(--notas-primary))",
+          light: "hsl(var(--notas-light))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
