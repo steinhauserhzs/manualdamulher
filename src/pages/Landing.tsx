@@ -445,28 +445,42 @@ interface FeatureCardProps {
   image?: string;
 }
 
-const FeatureCard = ({ icon, title, description, gradient, image }: FeatureCardProps) => (
-  <div className={`group relative overflow-hidden rounded-2xl ${gradient || 'bg-card'} p-6 shadow-card hover-scale transition-all duration-300`}>
-    {image && (
-      <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity">
-        <img 
-          src={image} 
-          alt={title} 
-          className="h-full w-full object-cover"
-          width="800"
-          height="515"
-          loading="lazy"
-        />
+const FeatureCard = ({ icon, title, description, gradient, image }: FeatureCardProps) => {
+  const hasGradient = gradient && gradient.startsWith('gradient-');
+  
+  return (
+    <div className={`group relative overflow-hidden rounded-2xl ${gradient || 'bg-card'} p-6 shadow-card hover-scale transition-all duration-300`}>
+      {/* Overlay para melhorar contraste em gradientes */}
+      {hasGradient && (
+        <div className="absolute inset-0 bg-black/20" />
+      )}
+      
+      {image && (
+        <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity">
+          <img 
+            src={image} 
+            alt={title} 
+            className="h-full w-full object-cover"
+            width="800"
+            height="515"
+            loading="lazy"
+          />
+        </div>
+      )}
+      
+      <div className="relative">
+        <div className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl ${hasGradient ? 'bg-white/90' : 'bg-background/80'} backdrop-blur-sm`}>
+          {icon}
+        </div>
+        <h3 className={`mb-2 text-xl font-bold ${hasGradient ? 'text-white' : 'text-foreground'}`}>
+          {title}
+        </h3>
+        <p className={`${hasGradient ? 'text-white/90' : 'text-muted-foreground'}`}>
+          {description}
+        </p>
       </div>
-    )}
-    <div className="relative">
-      <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-background/80 backdrop-blur-sm">
-        {icon}
-      </div>
-      <h3 className="mb-2 text-xl font-bold">{title}</h3>
-      <p className="text-muted-foreground">{description}</p>
     </div>
-  </div>
-);
+  );
+};
 
 export default Landing;
