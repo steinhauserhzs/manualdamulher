@@ -8,6 +8,8 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Casa from "./pages/Casa";
 import Saude from "./pages/Saude";
+import BemEstar from "./pages/BemEstar";
+import Financas from "./pages/Financas";
 import Blog from "./pages/Blog";
 import NotFound from "./pages/NotFound";
 
@@ -25,10 +27,10 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/casa" element={<Casa />} />
           <Route path="/saude" element={<Saude />} />
+          <Route path="/bem-estar" element={<BemEstar />} />
+          <Route path="/financas" element={<Financas />} />
           <Route path="/blog" element={<Blog />} />
           {/* Rotas futuras */}
-          <Route path="/bem-estar" element={<Dashboard />} />
-          <Route path="/financas" element={<Dashboard />} />
           <Route path="/notas" element={<Dashboard />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
