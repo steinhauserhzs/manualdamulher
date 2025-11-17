@@ -81,6 +81,9 @@ const Landing = () => {
                 src={heroImage} 
                 alt="Mulher confiante usando o app" 
                 className="rounded-3xl shadow-card hover-scale"
+                width="1920"
+                height="1080"
+                fetchPriority="high"
               />
             </div>
           </div>
@@ -152,6 +155,9 @@ const Landing = () => {
                 src={ebookMockup} 
                 alt="Manual da Mulher Independente - E-book"
                 className="rounded-3xl shadow-card hover-scale"
+                width="1280"
+                height="720"
+                loading="lazy"
               />
               <div className="absolute top-4 right-4 bg-primary text-white px-4 py-2 rounded-full font-bold text-sm">
                 🏆 Mais Vendido
@@ -443,7 +449,14 @@ const FeatureCard = ({ icon, title, description, gradient, image }: FeatureCardP
   <div className={`group relative overflow-hidden rounded-2xl ${gradient || 'bg-card'} p-6 shadow-card hover-scale transition-all duration-300`}>
     {image && (
       <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity">
-        <img src={image} alt={title} className="h-full w-full object-cover" />
+        <img 
+          src={image} 
+          alt={title} 
+          className="h-full w-full object-cover"
+          width="800"
+          height="515"
+          loading="lazy"
+        />
       </div>
     )}
     <div className="relative">
