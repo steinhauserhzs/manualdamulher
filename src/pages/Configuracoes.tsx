@@ -11,6 +11,8 @@ import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import AvatarUpload from "@/components/profile/AvatarUpload";
 
 const Configuracoes = () => {
   const [user, setUser] = useState<any>(null);
@@ -22,6 +24,14 @@ const Configuracoes = () => {
   const [pronome, setPronome] = useState("");
   const [dataNascimento, setDataNascimento] = useState("");
   const [objetivos, setObjetivos] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [bio, setBio] = useState("");
+  const [localizacao, setLocalizacao] = useState("");
+  const [cidade, setCidade] = useState("");
+  const [estado, setEstado] = useState("");
+  const [website, setWebsite] = useState("");
+  const [instagram, setInstagram] = useState("");
+  const [visibilidade, setVisibilidade] = useState("publico");
   
   const [novaSenha, setNovaSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
@@ -65,6 +75,14 @@ const Configuracoes = () => {
       setPronome(data.pronome || "");
       setDataNascimento(data.data_nascimento || "");
       setObjetivos(data.objetivos || "");
+      setAvatarUrl(data.avatar_url || null);
+      setBio(data.bio || "");
+      setLocalizacao(data.localizacao || "");
+      setCidade(data.cidade || "");
+      setEstado(data.estado || "");
+      setWebsite(data.website || "");
+      setInstagram(data.instagram || "");
+      setVisibilidade(data.visibilidade_perfil || "publico");
     }
     setLoading(false);
   };
@@ -80,6 +98,13 @@ const Configuracoes = () => {
         pronome,
         data_nascimento: dataNascimento || null,
         objetivos,
+        bio,
+        localizacao,
+        cidade,
+        estado,
+        website,
+        instagram,
+        visibilidade_perfil: visibilidade,
       })
       .eq('user_id', user.id);
 
@@ -178,25 +203,100 @@ const Configuracoes = () => {
                 <CardTitle>Informações Pessoais</CardTitle>
                 <CardDescription>Atualize seus dados pessoais aqui</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <Label htmlFor="nome">Nome *</Label>
-                  <Input
-                    id="nome"
-                    value={nome}
-                    onChange={(e) => setNome(e.target.value)}
-                    placeholder="Seu nome"
+              <CardContent className="space-y-6">
+                <div className="flex justify-center pb-4 border-b">
+                  <AvatarUpload
+                    currentAvatarUrl={avatarUrl}
+                    userId={user?.id || ""}
+                    userName={nome}
+                    onAvatarUpdate={setAvatarUrl}
                   />
                 </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <Label htmlFor="nome">Nome *</Label>
+                    <Input
+                      id="nome"
+                      value={nome}
+                      onChange={(e) => setNome(e.target.value)}
+                      placeholder="Seu nome"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="pronome">Pronome</Label>
+                    <Input
+                      id="pronome"
+                      value={pronome}
+                      onChange={(e) => setPronome(e.target.value)}
+                      placeholder="Ex: ela/dela"
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <Label htmlFor="pronome">Pronome</Label>
-                  <Input
-                    id="pronome"
-                    value={pronome}
-                    onChange={(e) => setPronome(e.target.value)}
-                    placeholder="Ex: ela/dela"
+                  <Label htmlFor="bio">Bio</Label>
+                  <Textarea
+                    id="bio"
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                    placeholder="Conte um pouco sobre você..."
+                    rows={3}
                   />
                 </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <Label htmlFor="cidade">Cidade</Label>
+                    <Input
+                      id="cidade"
+                      value={cidade}
+                      onChange={(e) => setCidade(e.target.value)}
+                      placeholder="Ex: São Paulo"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="estado">Estado</Label>
+                    <Input
+                      id="estado"
+                      value={estado}
+                      onChange={(e) => setEstado(e.target.value)}
+                      placeholder="Ex: SP"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="localizacao">Localização (opcional)</Label>
+                  <Input
+                    id="localizacao"
+                    value={localizacao}
+                    onChange={(e) => setLocalizacao(e.target.value)}
+                    placeholder="Ex: Bairro, Região"
+                  />
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <Label htmlFor="instagram">Instagram</Label>
+                    <Input
+                      id="instagram"
+                      value={instagram}
+                      onChange={(e) => setInstagram(e.target.value)}
+                      placeholder="@seu_usuario"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="website">Website</Label>
+                    <Input
+                      id="website"
+                      value={website}
+                      onChange={(e) => setWebsite(e.target.value)}
+                      placeholder="https://seusite.com"
+                    />
+                  </div>
+                </div>
+
                 <div>
                   <Label htmlFor="dataNascimento">Data de Nascimento</Label>
                   <Input
@@ -206,6 +306,7 @@ const Configuracoes = () => {
                     onChange={(e) => setDataNascimento(e.target.value)}
                   />
                 </div>
+
                 <div>
                   <Label htmlFor="objetivos">Objetivos</Label>
                   <Textarea
@@ -216,7 +317,24 @@ const Configuracoes = () => {
                     rows={4}
                   />
                 </div>
-                <Button onClick={handleSalvarPerfil} disabled={saving}>
+
+                <div>
+                  <Label htmlFor="visibilidade">Visibilidade do Perfil</Label>
+                  <Select value={visibilidade} onValueChange={setVisibilidade}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="publico">Público - Qualquer pessoa pode ver</SelectItem>
+                      <SelectItem value="privado">Privado - Apenas você</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Define quem pode ver seu perfil na comunidade
+                  </p>
+                </div>
+
+                <Button onClick={handleSalvarPerfil} disabled={saving} className="w-full md:w-auto">
                   {saving ? "Salvando..." : "Salvar Alterações"}
                 </Button>
               </CardContent>

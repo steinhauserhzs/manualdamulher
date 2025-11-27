@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/Checkbox";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Loader2, ArrowLeft, Lock, BookOpen } from "lucide-react";
@@ -22,6 +23,8 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nome, setNome] = useState("");
+  const [rememberMe, setRememberMe] = useState(true);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,6 +44,26 @@ const Auth = () => {
 
     return () => subscription.unsubscribe();
   }, [navigate]);
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) throw error;
+      toast.success("E-mail de recuperação enviado! Verifique sua caixa de entrada. 📧");
+      setShowForgotPassword(false);
+      setEmail("");
+    } catch (error: any) {
+      toast.error(error.message || "Erro ao enviar e-mail de recuperação");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,8 +150,49 @@ const Auth = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleAuth} className="space-y-4">
-              {!isLogin && (
+            {showForgotPassword ? (
+              <form onSubmit={handleForgotPassword} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">E-mail</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="seu@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    disabled={loading}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Enviaremos um link para redefinir sua senha
+                  </p>
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full"
+                  variant="hero"
+                  size="lg"
+                  disabled={loading}
+                >
+                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Enviar Link de Recuperação
+                </Button>
+                <Button
+                  type="button"
+                  variant="link"
+                  className="w-full text-sm"
+                  onClick={() => {
+                    setShowForgotPassword(false);
+                    setEmail("");
+                  }}
+                  disabled={loading}
+                >
+                  Voltar para login
+                </Button>
+              </form>
+            ) : (
+              <form onSubmit={handleAuth} className="space-y-4">
+                {!isLogin && (
                 <div className="space-y-2">
                   <Label htmlFor="nome">Nome</Label>
                   <Input
@@ -171,6 +235,31 @@ const Auth = () => {
                   </p>
                 )}
               </div>
+              
+              {isLogin && (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="rememberMe"
+                      checked={rememberMe}
+                      onCheckedChange={(checked) => setRememberMe(checked === true)}
+                    />
+                    <Label htmlFor="rememberMe" className="text-sm font-normal cursor-pointer">
+                      Lembrar-me
+                    </Label>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="link"
+                    className="text-sm p-0 h-auto"
+                    onClick={() => setShowForgotPassword(true)}
+                    disabled={loading}
+                  >
+                    Esqueceu a senha?
+                  </Button>
+                </div>
+              )}
+
               <Button
                 type="submit"
                 className="w-full"
@@ -181,10 +270,12 @@ const Auth = () => {
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {isLogin ? "Entrar" : "Criar Conta"}
               </Button>
-            </form>
+              </form>
+            )}
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button
+            {!showForgotPassword && (
+              <Button
               variant="link"
               className="text-sm"
               onClick={() => {
@@ -195,10 +286,11 @@ const Auth = () => {
               }}
               disabled={loading}
             >
-              {isLogin
-                ? "Não tem conta? Cadastre-se aqui"
-                : "Já tem conta? Entre aqui"}
-            </Button>
+                {isLogin
+                  ? "Não tem conta? Cadastre-se aqui"
+                  : "Já tem conta? Entre aqui"}
+              </Button>
+            )}
           </CardFooter>
         </Card>
       </div>

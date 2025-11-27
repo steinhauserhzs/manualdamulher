@@ -573,37 +573,61 @@ export type Database = {
       }
       perfis: {
         Row: {
+          avatar_url: string | null
+          bio: string | null
+          cidade: string | null
           created_at: string
           data_nascimento: string | null
+          estado: string | null
           id: string
+          instagram: string | null
+          localizacao: string | null
           nome: string
           objetivos: string | null
           pronome: string | null
           tipo_usuario: Database["public"]["Enums"]["tipo_usuario"]
           updated_at: string
           user_id: string
+          visibilidade_perfil: string | null
+          website: string | null
         }
         Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          cidade?: string | null
           created_at?: string
           data_nascimento?: string | null
+          estado?: string | null
           id?: string
+          instagram?: string | null
+          localizacao?: string | null
           nome: string
           objetivos?: string | null
           pronome?: string | null
           tipo_usuario?: Database["public"]["Enums"]["tipo_usuario"]
           updated_at?: string
           user_id: string
+          visibilidade_perfil?: string | null
+          website?: string | null
         }
         Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          cidade?: string | null
           created_at?: string
           data_nascimento?: string | null
+          estado?: string | null
           id?: string
+          instagram?: string | null
+          localizacao?: string | null
           nome?: string
           objetivos?: string | null
           pronome?: string | null
           tipo_usuario?: Database["public"]["Enums"]["tipo_usuario"]
           updated_at?: string
           user_id?: string
+          visibilidade_perfil?: string | null
+          website?: string | null
         }
         Relationships: []
       }
