@@ -15,6 +15,7 @@ import { ComentarioForm } from "@/components/comunidade/ComentarioForm";
 import { ComentarioCard } from "@/components/comunidade/ComentarioCard";
 import { EnqueteDisplay } from "@/components/comunidade/EnqueteDisplay";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
+import { LinkifyText } from "@/components/comunidade/LinkifyText";
 
 interface Post {
   id: string;
@@ -171,16 +172,23 @@ export default function ComunidadePost() {
 
       <Card className="p-6">
         <div className="flex items-start gap-4 mb-4">
-          <Avatar className="h-12 w-12">
-            <AvatarImage src={post.perfis?.avatar_url || undefined} />
-            <AvatarFallback>
-              {post.perfis?.nome?.charAt(0).toUpperCase() || "U"}
-            </AvatarFallback>
-          </Avatar>
+          <Link to={`/perfil/${post.user_id}`} className="flex-shrink-0">
+            <Avatar className="h-12 w-12 cursor-pointer hover:ring-2 ring-primary transition-all">
+              <AvatarImage src={post.perfis?.avatar_url || undefined} />
+              <AvatarFallback>
+                {post.perfis?.nome?.charAt(0).toUpperCase() || "U"}
+              </AvatarFallback>
+            </Avatar>
+          </Link>
 
           <div className="flex-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-semibold">{post.perfis?.nome || "Usuária"}</span>
+              <Link 
+                to={`/perfil/${post.user_id}`}
+                className="font-semibold hover:underline"
+              >
+                {post.perfis?.nome || "Usuária"}
+              </Link>
               <Badge variant="secondary" className="text-xs">
                 {getTipoIcon(post.tipo)} {getTipoLabel(post.tipo)}
               </Badge>
@@ -198,7 +206,9 @@ export default function ComunidadePost() {
           <h1 className="text-2xl font-bold mb-3">{post.titulo}</h1>
         )}
 
-        <p className="text-foreground whitespace-pre-wrap mb-4">{post.conteudo}</p>
+        <p className="text-foreground whitespace-pre-wrap mb-4">
+          <LinkifyText text={post.conteudo} />
+        </p>
 
         {post.imagem_url && (
           <img
