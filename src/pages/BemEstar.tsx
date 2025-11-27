@@ -4,9 +4,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ArrowLeft, Sparkles, Plus, Flame, TrendingUp } from "lucide-react";
+import { ArrowLeft, Sparkles, Flame, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import { AddHabitoDialog } from "@/components/bem-estar/AddHabitoDialog";
+import { ModuleHeader } from "@/components/ui/ModuleHeader";
+import { EmptyStateVisual } from "@/components/ui/EmptyStateVisual";
+import bemEstarIllustration from "@/assets/bem-estar-illustration.jpg";
 
 interface Habito {
   id: string;
@@ -57,7 +60,6 @@ const BemEstar = () => {
 
     setHabitos(data || []);
 
-    // Carregar hábitos concluídos hoje
     const hoje = new Date().toISOString().split("T")[0];
     const { data: historico } = await supabase
       .from("habitos_bem_estar_historico")
@@ -85,7 +87,6 @@ const BemEstar = () => {
       return;
     }
 
-    // Calcular streak consecutivo
     let streakAtual = 0;
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
@@ -113,7 +114,6 @@ const BemEstar = () => {
     const hoje = new Date().toISOString().split("T")[0];
 
     if (jaConcluido) {
-      // Desmarcar
       const { error } = await supabase
         .from("habitos_bem_estar_historico")
         .delete()
@@ -129,7 +129,6 @@ const BemEstar = () => {
       setHabitosHoje(prev => prev.filter(id => id !== habito.id));
       toast.info("Hábito desmarcado");
     } else {
-      // Marcar
       const { error } = await supabase
         .from("habitos_bem_estar_historico")
         .insert({
@@ -164,93 +163,95 @@ const BemEstar = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b border-border bg-card">
-        <div className="container mx-auto flex items-center gap-4 px-4 py-4">
+      <div className="mb-6">
+        <div className="container mx-auto px-3 sm:px-4 pt-4 pb-2">
           <Button variant="ghost" size="icon" asChild>
             <Link to="/dashboard">
               <ArrowLeft className="h-5 w-5" />
             </Link>
           </Button>
-          <h1 className="text-2xl font-bold text-foreground">Bem-estar & Autocuidado</h1>
         </div>
-      </header>
+        <ModuleHeader 
+          icon={Sparkles}
+          title="Bem-estar"
+          subtitle="Cultive hábitos saudáveis"
+          gradient="bem-estar"
+        />
+      </div>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 space-y-6">
+      <main className="container mx-auto px-3 sm:px-4 py-6 space-y-4 sm:space-y-6 animate-fade-in">
         {/* Stats Cards */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Card className="gradient-card shadow-card">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Flame className="h-5 w-5 text-accent" />
+        <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-3">
+          <Card className="gradient-card shadow-card hover-lift">
+            <CardHeader className="px-3 sm:px-6 pt-3 sm:pt-6">
+              <CardTitle className="flex items-center gap-2 text-sm sm:text-lg">
+                <Flame className="h-4 w-4 sm:h-5 sm:w-5 text-accent" />
                 Sequência
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-4xl font-bold text-accent">{streak}</p>
-              <p className="text-sm text-muted-foreground">dias consecutivos</p>
+            <CardContent className="px-3 sm:px-6 pb-3 sm:pb-6">
+              <p className="text-2xl sm:text-4xl font-bold text-accent">{streak}</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">dias</p>
             </CardContent>
           </Card>
 
-          <Card className="gradient-card shadow-card">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <TrendingUp className="h-5 w-5 text-primary" />
+          <Card className="gradient-card shadow-card hover-lift">
+            <CardHeader className="px-3 sm:px-6 pt-3 sm:pt-6">
+              <CardTitle className="flex items-center gap-2 text-sm sm:text-lg">
+                <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                 Hoje
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-4xl font-bold text-primary">
+            <CardContent className="px-3 sm:px-6 pb-3 sm:pb-6">
+              <p className="text-2xl sm:text-4xl font-bold text-primary">
                 {habitosHoje.length}/{habitos.length}
               </p>
-              <p className="text-sm text-muted-foreground">hábitos concluídos</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">hábitos</p>
             </CardContent>
           </Card>
 
-          <Card className="gradient-card shadow-card sm:col-span-2 lg:col-span-1">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Sparkles className="h-5 w-5 text-secondary" />
+          <Card className="gradient-card shadow-card hover-lift col-span-2 lg:col-span-1">
+            <CardHeader className="px-3 sm:px-6 pt-3 sm:pt-6">
+              <CardTitle className="flex items-center gap-2 text-sm sm:text-lg">
+                <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-secondary" />
                 Progresso
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-4xl font-bold text-secondary">{Math.round(progressoHoje)}%</p>
-              <p className="text-sm text-muted-foreground">do dia completo</p>
+            <CardContent className="px-3 sm:px-6 pb-3 sm:pb-6">
+              <p className="text-2xl sm:text-4xl font-bold text-secondary">{Math.round(progressoHoje)}%</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">completo</p>
             </CardContent>
           </Card>
         </div>
 
         {/* Hábitos de Hoje */}
         <Card className="gradient-card shadow-card">
-          <CardHeader>
-            <div className="flex items-center justify-between">
+          <CardHeader className="px-4 sm:px-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
-                <CardTitle>Hábitos de Hoje</CardTitle>
-                <CardDescription>Marque os hábitos conforme você os completa</CardDescription>
+                <CardTitle className="text-base sm:text-lg">Hábitos de Hoje</CardTitle>
+                <CardDescription className="text-xs sm:text-sm">Marque os hábitos conforme você os completa</CardDescription>
               </div>
               {user && <AddHabitoDialog userId={user.id} onHabitoAdded={() => carregarHabitos(user.id)} />}
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-4 sm:px-6">
             {habitos.length === 0 ? (
-              <div className="py-12 text-center">
-                <Sparkles className="mx-auto h-12 w-12 text-muted-foreground opacity-50" />
-                <p className="mt-4 text-muted-foreground">
-                  Nenhum hábito cadastrado ainda.
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Comece criando seu primeiro hábito de bem-estar!
-                </p>
-              </div>
+              <EmptyStateVisual
+                icon={Sparkles}
+                illustration={bemEstarIllustration}
+                title="Nenhum hábito ainda"
+                description="Comece criando seu primeiro hábito de bem-estar! Pequenas ações diárias fazem toda a diferença."
+              />
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3">
                 {habitos.map((habito) => {
                   const concluido = habitosHoje.includes(habito.id);
                   return (
                     <div
                       key={habito.id}
-                      className={`flex items-start gap-4 rounded-lg border p-4 transition-all ${
+                      className={`flex items-start gap-3 sm:gap-4 rounded-lg border p-3 sm:p-4 transition-all hover-lift ${
                         concluido
                           ? "border-primary/40 bg-primary/5"
                           : "border-border bg-card hover:border-primary/20"
@@ -261,12 +262,12 @@ const BemEstar = () => {
                         onCheckedChange={() => marcarHabito(habito)}
                         className="mt-1"
                       />
-                      <div className="flex-1">
-                        <h3 className={`font-semibold ${concluido ? "text-primary" : "text-foreground"}`}>
+                      <div className="flex-1 min-w-0">
+                        <h3 className={`font-semibold text-sm sm:text-base break-words ${concluido ? "text-primary" : "text-foreground"}`}>
                           {habito.nome}
                         </h3>
                         {habito.descricao && (
-                          <p className="text-sm text-muted-foreground">{habito.descricao}</p>
+                          <p className="text-xs sm:text-sm text-muted-foreground break-words">{habito.descricao}</p>
                         )}
                         <p className="mt-1 text-xs text-muted-foreground capitalize">
                           Frequência: {habito.frequencia}

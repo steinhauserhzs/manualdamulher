@@ -4,10 +4,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Droplets, Plus, Utensils, Heart } from "lucide-react";
+import { ArrowLeft, Droplets, Utensils, Heart } from "lucide-react";
 import { toast } from "sonner";
 import { AddRefeicaoDialog } from "@/components/saude/AddRefeicaoDialog";
 import { HumorDialog } from "@/components/saude/HumorDialog";
+import { ModuleHeader } from "@/components/ui/ModuleHeader";
+import { EmptyStateVisual } from "@/components/ui/EmptyStateVisual";
+import { DecorativeCard } from "@/components/ui/DecorativeCard";
+import saudeIllustration from "@/assets/saude-illustration.jpg";
 
 interface Refeicao {
   id: string;
@@ -117,96 +121,108 @@ const Saude = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b border-border bg-card">
-        <div className="container mx-auto flex items-center gap-4 px-4 py-4">
+      <div className="mb-6">
+        <div className="container mx-auto px-3 sm:px-4 pt-4 pb-2">
           <Button variant="ghost" size="icon" asChild>
             <Link to="/dashboard">
               <ArrowLeft className="h-5 w-5" />
             </Link>
           </Button>
-          <h1 className="text-2xl font-bold text-foreground">Saúde</h1>
         </div>
-      </header>
+        <ModuleHeader 
+          icon={Heart}
+          title="Saúde"
+          subtitle="Cuide do seu corpo e mente"
+          gradient="saude"
+        />
+      </div>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 space-y-6">
-        <Card className="gradient-card shadow-card">
-          <CardHeader>
-            <div className="flex items-center justify-between">
+      <main className="container mx-auto px-3 sm:px-4 py-6 space-y-4 sm:space-y-6 animate-fade-in">
+        {/* Humor Card */}
+        <Card className="gradient-card shadow-card hover-lift">
+          <CardHeader className="px-4 sm:px-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
-                <CardTitle className="flex items-center gap-2">
-                  <Heart className="h-6 w-6 text-secondary" />
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <Heart className="h-5 w-5 sm:h-6 sm:w-6 text-secondary" />
                   Como você está hoje?
                 </CardTitle>
-                <CardDescription>Registre seu humor e energia do dia</CardDescription>
+                <CardDescription className="text-xs sm:text-sm">Registre seu humor e energia do dia</CardDescription>
               </div>
               {user && <HumorDialog userId={user.id} onHumorSalvo={() => {}} />}
             </div>
           </CardHeader>
         </Card>
-        <Card className="gradient-card shadow-card">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Droplets className="h-6 w-6 text-accent" />
+
+        {/* Água Card */}
+        <DecorativeCard illustration={saudeIllustration}>
+          <CardHeader className="px-4 sm:px-6">
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <Droplets className="h-5 w-5 sm:h-6 sm:w-6 text-accent" />
               Água de Hoje
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-4 sm:space-y-6 px-4 sm:px-6">
             <div>
               <div className="mb-2 flex items-center justify-between">
-                <span className="text-3xl font-bold text-accent">{aguaHoje}ml</span>
-                <span className="text-sm text-muted-foreground">Meta: {metaAgua}ml</span>
+                <span className="text-2xl sm:text-3xl font-bold text-accent">{aguaHoje}ml</span>
+                <span className="text-xs sm:text-sm text-muted-foreground">Meta: {metaAgua}ml</span>
               </div>
-              <Progress value={progressoAgua} className="h-3" />
+              <Progress value={progressoAgua} className="h-2 sm:h-3" />
             </div>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <Button onClick={() => adicionarAgua(250)} variant="outline" className="flex flex-col gap-2 h-auto py-4">
-                <Droplets className="h-5 w-5" />
+            <div className="grid grid-cols-2 gap-2 sm:gap-3">
+              <Button onClick={() => adicionarAgua(250)} variant="outline" className="flex flex-col gap-1 sm:gap-2 h-auto py-3 sm:py-4">
+                <Droplets className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="text-xs">+250ml</span>
               </Button>
-              <Button onClick={() => adicionarAgua(500)} variant="outline" className="flex flex-col gap-2 h-auto py-4">
-                <Droplets className="h-5 w-5" />
+              <Button onClick={() => adicionarAgua(500)} variant="outline" className="flex flex-col gap-1 sm:gap-2 h-auto py-3 sm:py-4">
+                <Droplets className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="text-xs">+500ml</span>
               </Button>
-              <Button onClick={() => adicionarAgua(750)} variant="outline" className="flex flex-col gap-2 h-auto py-4">
-                <Droplets className="h-5 w-5" />
+              <Button onClick={() => adicionarAgua(750)} variant="outline" className="flex flex-col gap-1 sm:gap-2 h-auto py-3 sm:py-4">
+                <Droplets className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="text-xs">+750ml</span>
               </Button>
-              <Button onClick={() => adicionarAgua(1000)} variant="outline" className="flex flex-col gap-2 h-auto py-4">
-                <Droplets className="h-5 w-5" />
+              <Button onClick={() => adicionarAgua(1000)} variant="outline" className="flex flex-col gap-1 sm:gap-2 h-auto py-3 sm:py-4">
+                <Droplets className="h-4 w-4 sm:h-5 sm:w-5" />
                 <span className="text-xs">+1L</span>
               </Button>
             </div>
           </CardContent>
-        </Card>
+        </DecorativeCard>
+
+        {/* Refeições Card */}
         <Card className="gradient-card shadow-card">
-          <CardHeader>
-            <div className="flex items-center justify-between">
+          <CardHeader className="px-4 sm:px-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
-                <CardTitle className="flex items-center gap-2">
-                  <Utensils className="h-6 w-6 text-primary" />
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <Utensils className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
                   Alimentação de Hoje
                 </CardTitle>
               </div>
               {user && <AddRefeicaoDialog userId={user.id} onRefeicaoAdded={() => carregarDados(user.id)} />}
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-4 sm:px-6">
             {refeicoes.length === 0 ? (
-              <div className="py-8 text-center">
-                <Utensils className="mx-auto h-10 w-10 text-muted-foreground opacity-50" />
-                <p className="mt-3 text-sm text-muted-foreground">Nenhuma refeição registrada hoje</p>
-              </div>
+              <EmptyStateVisual
+                icon={Utensils}
+                illustration={saudeIllustration}
+                title="Nenhuma refeição ainda"
+                description="Que tal registrar o que você comeu hoje? Cada passo na sua jornada de saúde conta!"
+              />
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3">
                 {refeicoes.map((refeicao) => (
-                  <div key={refeicao.id} className="flex items-start gap-3 rounded-lg border border-border bg-card p-4">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                      <Utensils className="h-5 w-5 text-primary" />
+                  <div key={refeicao.id} className="flex items-start gap-3 rounded-lg border border-border bg-card p-3 sm:p-4 hover-lift">
+                    <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-primary/10 flex-shrink-0">
+                      <Utensils className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                     </div>
-                    <div className="flex-1">
-                      <h4 className="font-semibold capitalize text-foreground">{refeicao.tipo}</h4>
-                      {refeicao.descricao && <p className="text-sm text-muted-foreground">{refeicao.descricao}</p>}
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold capitalize text-foreground text-sm sm:text-base">{refeicao.tipo}</h4>
+                      {refeicao.descricao && <p className="text-xs sm:text-sm text-muted-foreground break-words">{refeicao.descricao}</p>}
                     </div>
                   </div>
                 ))}
