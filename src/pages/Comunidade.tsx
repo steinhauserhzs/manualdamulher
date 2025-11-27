@@ -119,11 +119,23 @@ const Comunidade = () => {
         {/* Filtros e Botão de Criar */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
           <Tabs value={filtroAtivo} onValueChange={setFiltroAtivo} className="flex-1">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="todos">📝 Todos</TabsTrigger>
-              <TabsTrigger value="pergunta">❓ Perguntas</TabsTrigger>
-              <TabsTrigger value="dica">💡 Dicas</TabsTrigger>
-              <TabsTrigger value="enquete">📊 Enquetes</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-4 h-auto">
+              <TabsTrigger value="todos" className="flex-col sm:flex-row gap-1 py-2">
+                <span>📝</span>
+                <span className="hidden sm:inline">Todos</span>
+              </TabsTrigger>
+              <TabsTrigger value="pergunta" className="flex-col sm:flex-row gap-1 py-2">
+                <span>❓</span>
+                <span className="hidden sm:inline">Perguntas</span>
+              </TabsTrigger>
+              <TabsTrigger value="dica" className="flex-col sm:flex-row gap-1 py-2">
+                <span>💡</span>
+                <span className="hidden sm:inline">Dicas</span>
+              </TabsTrigger>
+              <TabsTrigger value="enquete" className="flex-col sm:flex-row gap-1 py-2">
+                <span>📊</span>
+                <span className="hidden sm:inline">Enquetes</span>
+              </TabsTrigger>
             </TabsList>
           </Tabs>
 
@@ -134,7 +146,7 @@ const Comunidade = () => {
                 Criar Post
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className="w-full max-w-2xl mx-4 sm:mx-auto max-h-[85vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Criar Novo Post</DialogTitle>
               </DialogHeader>

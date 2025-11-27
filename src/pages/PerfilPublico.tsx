@@ -180,7 +180,7 @@ export default function PerfilPublico() {
             )}
           </div>
 
-          <div className="flex gap-6 text-sm">
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-6 text-sm">
             <div>
               <span className="font-bold">{posts.length}</span>{" "}
               <span className="text-muted-foreground">posts</span>

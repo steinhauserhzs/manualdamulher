@@ -120,15 +120,17 @@ const Ajuda = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background p-6 md:ml-64 mb-16 md:mb-0">
-        <LoadingSkeleton />
+      <div className="min-h-screen bg-background">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
+          <LoadingSkeleton />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background p-6 md:ml-64 mb-16 md:mb-0">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-background">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
         <Breadcrumbs items={[{ label: "Ajuda" }]} />
         
         <div className="mb-6">
