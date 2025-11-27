@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Heart, Sparkles, TrendingUp, StickyNote, BookOpen, Library, Lightbulb, HelpCircle, Settings, Crown } from "lucide-react";
+import { Home, Heart, Sparkles, TrendingUp, StickyNote, BookOpen, Library, Lightbulb, HelpCircle, Settings, Crown, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,6 +11,7 @@ const mainNavItems = [
   { path: "/saude", icon: Heart, label: "Saúde" },
   { path: "/bem-estar", icon: Sparkles, label: "Bem-estar" },
   { path: "/financas", icon: TrendingUp, label: "Finanças" },
+  { path: "/comunidade", icon: Users, label: "Comunidade" },
   { path: "/ebook", icon: BookOpen, label: "E-book" },
 ];
 

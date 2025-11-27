@@ -181,6 +181,268 @@ export type Database = {
         }
         Relationships: []
       }
+      comunidade_comentarios: {
+        Row: {
+          conteudo: string
+          created_at: string | null
+          id: string
+          likes_count: number | null
+          parent_id: string | null
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          conteudo: string
+          created_at?: string | null
+          id?: string
+          likes_count?: number | null
+          parent_id?: string | null
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          conteudo?: string
+          created_at?: string | null
+          id?: string
+          likes_count?: number | null
+          parent_id?: string | null
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comunidade_comentarios_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "comunidade_comentarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comunidade_comentarios_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "comunidade_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      comunidade_denuncias: {
+        Row: {
+          comentario_id: string | null
+          created_at: string | null
+          descricao: string | null
+          id: string
+          motivo: string
+          post_id: string | null
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          comentario_id?: string | null
+          created_at?: string | null
+          descricao?: string | null
+          id?: string
+          motivo: string
+          post_id?: string | null
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          comentario_id?: string | null
+          created_at?: string | null
+          descricao?: string | null
+          id?: string
+          motivo?: string
+          post_id?: string | null
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comunidade_denuncias_comentario_id_fkey"
+            columns: ["comentario_id"]
+            isOneToOne: false
+            referencedRelation: "comunidade_comentarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comunidade_denuncias_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "comunidade_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      comunidade_enquetes: {
+        Row: {
+          created_at: string | null
+          data_fim: string | null
+          id: string
+          multipla_escolha: boolean | null
+          opcoes: Json
+          post_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          data_fim?: string | null
+          id?: string
+          multipla_escolha?: boolean | null
+          opcoes: Json
+          post_id: string
+        }
+        Update: {
+          created_at?: string | null
+          data_fim?: string | null
+          id?: string
+          multipla_escolha?: boolean | null
+          opcoes?: Json
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comunidade_enquetes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "comunidade_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      comunidade_likes: {
+        Row: {
+          comentario_id: string | null
+          created_at: string | null
+          id: string
+          post_id: string | null
+          user_id: string
+        }
+        Insert: {
+          comentario_id?: string | null
+          created_at?: string | null
+          id?: string
+          post_id?: string | null
+          user_id: string
+        }
+        Update: {
+          comentario_id?: string | null
+          created_at?: string | null
+          id?: string
+          post_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comunidade_likes_comentario_id_fkey"
+            columns: ["comentario_id"]
+            isOneToOne: false
+            referencedRelation: "comunidade_comentarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comunidade_likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "comunidade_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      comunidade_posts: {
+        Row: {
+          comentarios_count: number | null
+          conteudo: string
+          created_at: string | null
+          id: string
+          imagem_url: string | null
+          likes_count: number | null
+          tags: string[] | null
+          tipo: string
+          titulo: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          comentarios_count?: number | null
+          conteudo: string
+          created_at?: string | null
+          id?: string
+          imagem_url?: string | null
+          likes_count?: number | null
+          tags?: string[] | null
+          tipo?: string
+          titulo?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          comentarios_count?: number | null
+          conteudo?: string
+          created_at?: string | null
+          id?: string
+          imagem_url?: string | null
+          likes_count?: number | null
+          tags?: string[] | null
+          tipo?: string
+          titulo?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      comunidade_seguidores: {
+        Row: {
+          created_at: string | null
+          id: string
+          seguidor_id: string
+          seguindo_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          seguidor_id: string
+          seguindo_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          seguidor_id?: string
+          seguindo_id?: string
+        }
+        Relationships: []
+      }
+      comunidade_votos: {
+        Row: {
+          created_at: string | null
+          enquete_id: string
+          id: string
+          opcao_index: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          enquete_id: string
+          id?: string
+          opcao_index: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          enquete_id?: string
+          id?: string
+          opcao_index?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comunidade_votos_enquete_id_fkey"
+            columns: ["enquete_id"]
+            isOneToOne: false
+            referencedRelation: "comunidade_enquetes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contas_financeiras: {
         Row: {
           created_at: string
