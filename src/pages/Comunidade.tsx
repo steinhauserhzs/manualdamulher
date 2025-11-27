@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import { PostCard } from "@/components/comunidade/PostCard";
 import { PostForm } from "@/components/comunidade/PostForm";
 import { Plus } from "lucide-react";
@@ -117,31 +117,32 @@ const Comunidade = () => {
         </div>
 
         {/* Filtros e Botão de Criar */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
-          <Tabs value={filtroAtivo} onValueChange={setFiltroAtivo} className="flex-1">
-            <TabsList className="grid w-full grid-cols-4 h-auto">
-              <TabsTrigger value="todos" className="flex-col sm:flex-row gap-1 py-2">
-                <span>📝</span>
-                <span className="hidden sm:inline">Todos</span>
-              </TabsTrigger>
-              <TabsTrigger value="pergunta" className="flex-col sm:flex-row gap-1 py-2">
-                <span>❓</span>
-                <span className="hidden sm:inline">Perguntas</span>
-              </TabsTrigger>
-              <TabsTrigger value="dica" className="flex-col sm:flex-row gap-1 py-2">
-                <span>💡</span>
-                <span className="hidden sm:inline">Dicas</span>
-              </TabsTrigger>
-              <TabsTrigger value="enquete" className="flex-col sm:flex-row gap-1 py-2">
-                <span>📊</span>
-                <span className="hidden sm:inline">Enquetes</span>
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+        <div className="space-y-4 mb-6">
+          {/* Filtros como botões individuais */}
+          <div className="flex flex-wrap gap-2">
+            {[
+              { value: "todos", emoji: "📝", label: "Todos" },
+              { value: "pergunta", emoji: "❓", label: "Perguntas" },
+              { value: "dica", emoji: "💡", label: "Dicas" },
+              { value: "enquete", emoji: "📊", label: "Enquetes" },
+            ].map((filtro) => (
+              <Button
+                key={filtro.value}
+                variant={filtroAtivo === filtro.value ? "default" : "outline"}
+                size="sm"
+                onClick={() => setFiltroAtivo(filtro.value)}
+                className="flex items-center gap-1.5"
+              >
+                <span>{filtro.emoji}</span>
+                <span>{filtro.label}</span>
+              </Button>
+            ))}
+          </div>
 
+          {/* Botão de Criar Post */}
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="sm:w-auto">
+              <Button className="w-full sm:w-auto">
                 <Plus className="h-4 w-4 mr-2" />
                 Criar Post
               </Button>
