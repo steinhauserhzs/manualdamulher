@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Badge } from "@/components/ui/badge";
 import { Plus, X } from "lucide-react";
 
 interface PostFormProps {
@@ -20,7 +21,6 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
   const [tagInput, setTagInput] = useState("");
   const [opcoesEnquete, setOpcoesEnquete] = useState<string[]>(["", ""]);
   const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
 
   const adicionarTag = () => {
     if (tagInput.trim() && !tags.includes(tagInput.trim())) {
@@ -53,22 +53,14 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
     e.preventDefault();
 
     if (!conteudo.trim()) {
-      toast({
-        title: "Erro",
-        description: "O conteúdo do post não pode estar vazio",
-        variant: "destructive",
-      });
+      toast.error("O conteúdo do post não pode estar vazio");
       return;
     }
 
     if (tipo === "enquete") {
       const opcoesValidas = opcoesEnquete.filter((op) => op.trim());
       if (opcoesValidas.length < 2) {
-        toast({
-          title: "Erro",
-          description: "A enquete deve ter pelo menos 2 opções",
-          variant: "destructive",
-        });
+        toast.error("A enquete deve ter pelo menos 2 opções");
         return;
       }
     }
@@ -117,11 +109,7 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
 
       onSuccess();
     } catch (error: any) {
-      toast({
-        title: "Erro ao criar post",
-        description: error.message,
-        variant: "destructive",
-      });
+      toast.error("Erro ao criar post. Tente novamente.");
     } finally {
       setLoading(false);
     }
@@ -289,5 +277,3 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
     </form>
   );
 };
-
-import { Badge } from "@/components/ui/badge";
