@@ -1,9 +1,13 @@
+import { Link } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Heart, MessageCircle, Bookmark } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { MessageCircle, Bookmark } from "lucide-react";
 import { EnqueteDisplay } from "./EnqueteDisplay";
+import { LikeButton } from "./LikeButton";
 
 interface PostCardProps {
   post: {
@@ -73,7 +77,7 @@ export const PostCard = ({ post, onUpdate }: PostCardProps) => {
   });
 
   return (
-    <div className="bg-card rounded-lg p-4 sm:p-6 border shadow-sm hover:shadow-md transition-shadow">
+    <Card className="p-4 sm:p-6">
       {/* Header do Post */}
       <div className="flex items-start gap-3 mb-4">
         <Avatar className="h-10 w-10">
@@ -136,19 +140,22 @@ export const PostCard = ({ post, onUpdate }: PostCardProps) => {
       )}
 
       {/* Ações */}
-      <div className="flex items-center gap-6 text-muted-foreground border-t pt-4">
-        <button className="flex items-center gap-2 hover:text-primary transition-colors">
-          <Heart className="h-5 w-5" />
-          <span className="text-sm">{post.likes_count}</span>
-        </button>
-        <button className="flex items-center gap-2 hover:text-primary transition-colors">
-          <MessageCircle className="h-5 w-5" />
-          <span className="text-sm">{post.comentarios_count}</span>
-        </button>
-        <button className="flex items-center gap-2 hover:text-primary transition-colors ml-auto">
-          <Bookmark className="h-5 w-5" />
-        </button>
+      <div className="flex items-center gap-4 pt-3 border-t">
+        <LikeButton
+          postId={post.id}
+          initialLikesCount={post.likes_count || 0}
+          onLikeChange={onUpdate}
+        />
+        <Button variant="ghost" size="sm" className="gap-1" asChild>
+          <Link to={`/comunidade/${post.id}`}>
+            <MessageCircle className="h-4 w-4" />
+            <span className="text-sm">{post.comentarios_count || 0}</span>
+          </Link>
+        </Button>
+        <Button variant="ghost" size="sm" className="ml-auto">
+          <Bookmark className="h-4 w-4" />
+        </Button>
       </div>
-    </div>
+    </Card>
   );
 };
