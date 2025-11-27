@@ -10,6 +10,7 @@ const mainNavItems = [
   { path: "/saude", icon: Heart, label: "Saúde" },
   { path: "/bem-estar", icon: Sparkles, label: "Bem-estar" },
   { path: "/financas", icon: TrendingUp, label: "Finanças" },
+  { path: "/ebook", icon: BookOpen, label: "E-book" },
 ];
 
 const secondaryNavItems = [

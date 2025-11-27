@@ -19,6 +19,7 @@ const mainNavItems = [
 
 const menuItems = [
   { path: "/financas", icon: TrendingUp, label: "Finanças" },
+  { path: "/ebook", icon: BookOpen, label: "E-book" },
   { path: "/notas", icon: StickyNote, label: "Notas" },
   { path: "/blog", icon: BookOpen, label: "Blog" },
   { path: "/biblioteca", icon: Library, label: "Biblioteca" },

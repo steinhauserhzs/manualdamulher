@@ -273,6 +273,86 @@ export type Database = {
         }
         Relationships: []
       }
+      ebook_capitulos: {
+        Row: {
+          conteudo: string
+          created_at: string | null
+          id: string
+          numero: number
+          ordem: number
+          tempo_leitura: number | null
+          titulo: string
+          xp_recompensa: number | null
+        }
+        Insert: {
+          conteudo: string
+          created_at?: string | null
+          id?: string
+          numero: number
+          ordem: number
+          tempo_leitura?: number | null
+          titulo: string
+          xp_recompensa?: number | null
+        }
+        Update: {
+          conteudo?: string
+          created_at?: string | null
+          id?: string
+          numero?: number
+          ordem?: number
+          tempo_leitura?: number | null
+          titulo?: string
+          xp_recompensa?: number | null
+        }
+        Relationships: []
+      }
+      ebook_progresso: {
+        Row: {
+          capitulo_id: string | null
+          concluido: boolean | null
+          created_at: string | null
+          data_conclusao: string | null
+          data_inicio: string | null
+          id: string
+          posicao_scroll: number | null
+          progresso: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          capitulo_id?: string | null
+          concluido?: boolean | null
+          created_at?: string | null
+          data_conclusao?: string | null
+          data_inicio?: string | null
+          id?: string
+          posicao_scroll?: number | null
+          progresso?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          capitulo_id?: string | null
+          concluido?: boolean | null
+          created_at?: string | null
+          data_conclusao?: string | null
+          data_inicio?: string | null
+          id?: string
+          posicao_scroll?: number | null
+          progresso?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ebook_progresso_capitulo_id_fkey"
+            columns: ["capitulo_id"]
+            isOneToOne: false
+            referencedRelation: "ebook_capitulos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       habitos_bem_estar: {
         Row: {
           ativo: boolean

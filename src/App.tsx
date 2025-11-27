@@ -20,6 +20,8 @@ import Biblioteca from "./pages/Biblioteca";
 import VidaPratica from "./pages/VidaPratica";
 import Ajuda from "./pages/Ajuda";
 import Configuracoes from "./pages/Configuracoes";
+import Ebook from "./pages/Ebook";
+import EbookReader from "./pages/EbookReader";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -47,6 +49,8 @@ const App = () => (
                 <Route path="/notas" element={<Notas />} />
                 <Route path="/vida-pratica" element={<VidaPratica />} />
                 <Route path="/biblioteca" element={<Biblioteca />} />
+                <Route path="/ebook" element={<Ebook />} />
+                <Route path="/ebook/:capitulo" element={<EbookReader />} />
                 <Route path="/configuracoes" element={<Configuracoes />} />
                 <Route path="/ajuda" element={<Ajuda />} />
                 <Route path="/blog" element={<BlogList />} />
