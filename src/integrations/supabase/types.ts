@@ -211,6 +211,36 @@ export type Database = {
         }
         Relationships: []
       }
+      contatos_emergencia: {
+        Row: {
+          created_at: string | null
+          id: string
+          nome: string
+          ordem: number | null
+          relacao: string | null
+          telefone: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          nome: string
+          ordem?: number | null
+          relacao?: string | null
+          telefone: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          nome?: string
+          ordem?: number | null
+          relacao?: string | null
+          telefone?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       dicas_favoritas: {
         Row: {
           created_at: string | null

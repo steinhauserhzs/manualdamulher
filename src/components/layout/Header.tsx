@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Heart, Menu, BookOpen } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { EmergencyButton } from "@/components/ebook/EmergencyButton";
 
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -51,6 +52,7 @@ export const Header = () => {
           
           {/* CTA Buttons */}
           <div className="hidden md:flex items-center gap-3">
+            <EmergencyButton />
             <Button variant="ghost" asChild>
               <Link to="/auth">Entrar</Link>
             </Button>
@@ -85,6 +87,10 @@ export const Header = () => {
                   </a>
                 ))}
                 <hr />
+                <div className="flex items-center gap-2">
+                  <EmergencyButton />
+                  <span className="text-sm text-muted-foreground">Emergência</span>
+                </div>
                 <Button variant="outline" asChild>
                   <Link to="/auth" onClick={() => setIsOpen(false)}>
                     Entrar
