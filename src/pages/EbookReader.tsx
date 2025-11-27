@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ChevronLeft, ChevronRight, Settings } from "lucide-react";
 import { toast } from "sonner";
-import ReactMarkdown from "react-markdown";
+import { EbookContentRenderer } from "@/components/ebook/EbookContentRenderer";
 
 interface Capitulo {
   id: string;
@@ -216,9 +216,7 @@ export default function EbookReader() {
             {capitulo.titulo}
           </h1>
 
-          <div className="prose prose-slate dark:prose-invert max-w-none">
-            <ReactMarkdown>{capitulo.conteudo}</ReactMarkdown>
-          </div>
+          <EbookContentRenderer content={capitulo.conteudo} />
 
           {/* Espaçamento no final */}
           <div className="h-20"></div>

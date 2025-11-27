@@ -353,6 +353,36 @@ export type Database = {
           },
         ]
       }
+      ebook_respostas_interativas: {
+        Row: {
+          created_at: string
+          data: string
+          id: string
+          respostas: Json
+          tipo_resposta: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data?: string
+          id?: string
+          respostas: Json
+          tipo_resposta: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: string
+          id?: string
+          respostas?: Json
+          tipo_resposta?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       habitos_bem_estar: {
         Row: {
           ativo: boolean
