@@ -22,6 +22,7 @@ import Ajuda from "./pages/Ajuda";
 import Configuracoes from "./pages/Configuracoes";
 import Ebook from "./pages/Ebook";
 import EbookReader from "./pages/EbookReader";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,7 +39,8 @@ const App = () => (
               {/* Public Routes */}
               <Route path="/" element={<Landing />} />
               <Route path="/auth" element={<Auth />} />
-              
+              <Route path="/reset-password" element={<ResetPassword />} />
+
               {/* Authenticated Routes */}
               <Route element={<AuthenticatedLayout />}>
                 <Route path="/dashboard" element={<Dashboard />} />
