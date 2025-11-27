@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { MessageCircle, Bookmark } from "lucide-react";
 import { EnqueteDisplay } from "./EnqueteDisplay";
 import { LikeButton } from "./LikeButton";
+import { LinkifyText } from "./LinkifyText";
 
 interface PostCardProps {
   post: {
@@ -80,15 +81,22 @@ export const PostCard = ({ post, onUpdate }: PostCardProps) => {
     <Card className="p-4 sm:p-6">
       {/* Header do Post */}
       <div className="flex items-start gap-3 mb-4">
-        <Avatar className="h-10 w-10">
-          <AvatarImage src={post.perfis.avatar_url || undefined} />
-          <AvatarFallback className="bg-primary text-primary-foreground">
-            {getInitials(post.perfis.nome)}
-          </AvatarFallback>
-        </Avatar>
+        <Link to={`/perfil/${post.user_id}`} className="flex-shrink-0">
+          <Avatar className="h-10 w-10 cursor-pointer hover:ring-2 ring-primary transition-all">
+            <AvatarImage src={post.perfis.avatar_url || undefined} />
+            <AvatarFallback className="bg-primary text-primary-foreground">
+              {getInitials(post.perfis.nome)}
+            </AvatarFallback>
+          </Avatar>
+        </Link>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <p className="font-semibold text-foreground">{post.perfis.nome}</p>
+            <Link 
+              to={`/perfil/${post.user_id}`}
+              className="font-semibold text-foreground hover:underline"
+            >
+              {post.perfis.nome}
+            </Link>
             <Badge variant="secondary" className="text-xs">
               {getTipoIcon(post.tipo)} {getTipoLabel(post.tipo)}
             </Badge>
@@ -105,7 +113,9 @@ export const PostCard = ({ post, onUpdate }: PostCardProps) => {
       )}
 
       {/* Conteúdo */}
-      <p className="text-foreground whitespace-pre-wrap mb-4">{post.conteudo}</p>
+      <p className="text-foreground whitespace-pre-wrap mb-4">
+        <LinkifyText text={post.conteudo} />
+      </p>
 
       {/* Imagem (se houver) */}
       {post.imagem_url && (

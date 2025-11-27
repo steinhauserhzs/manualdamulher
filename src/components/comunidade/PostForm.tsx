@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Badge } from "@/components/ui/badge";
-import { Plus, X } from "lucide-react";
+import { Plus, X, ImageIcon } from "lucide-react";
 
 interface PostFormProps {
   onSuccess: () => void;
@@ -20,6 +20,8 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
   const [opcoesEnquete, setOpcoesEnquete] = useState<string[]>(["", ""]);
+  const [imagemFile, setImagemFile] = useState<File | null>(null);
+  const [imagemPreview, setImagemPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const adicionarTag = () => {
@@ -49,6 +51,53 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
     setOpcoesEnquete(novasOpcoes);
   };
 
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Apenas imagens são permitidas");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("A imagem deve ter no máximo 5MB");
+      return;
+    }
+
+    setImagemFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagemPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const uploadImagem = async (userId: string): Promise<string | null> => {
+    if (!imagemFile) return null;
+
+    try {
+      const fileExt = imagemFile.name.split(".").pop();
+      const fileName = `${userId}/${Date.now()}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from("comunidade-imagens")
+        .upload(fileName, imagemFile);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage
+        .from("comunidade-imagens")
+        .getPublicUrl(fileName);
+
+      return data.publicUrl;
+    } catch (error) {
+      console.error("Erro ao fazer upload da imagem:", error);
+      toast.error("Erro ao enviar imagem");
+      return null;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -73,6 +122,11 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
       } = await supabase.auth.getUser();
       if (!user) throw new Error("Usuário não autenticado");
 
+      let imagemUrl: string | null = null;
+      if (imagemFile) {
+        imagemUrl = await uploadImagem(user.id);
+      }
+
       // Criar post
       const { data: post, error: postError } = await supabase
         .from("comunidade_posts")
@@ -82,6 +136,7 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
           titulo: titulo.trim() || null,
           conteudo: conteudo.trim(),
           tags: tags.length > 0 ? tags : null,
+          imagem_url: imagemUrl,
         })
         .select()
         .single();
@@ -106,6 +161,14 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
 
         if (enqueteError) throw enqueteError;
       }
+
+      // Limpar formulário
+      setTitulo("");
+      setConteudo("");
+      setTags([]);
+      setOpcoesEnquete(["", ""]);
+      setImagemFile(null);
+      setImagemPreview(null);
 
       onSuccess();
     } catch (error: any) {
@@ -185,6 +248,41 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
         <p className="text-xs text-muted-foreground mt-1">
           {conteudo.length}/5000 caracteres
         </p>
+      </div>
+
+      {/* Upload de Imagem */}
+      <div>
+        <Label htmlFor="imagem">Imagem (opcional)</Label>
+        <div className="space-y-3">
+          <Input
+            id="imagem"
+            type="file"
+            accept="image/*"
+            onChange={handleImageSelect}
+            className="cursor-pointer"
+          />
+          {imagemPreview && (
+            <div className="relative">
+              <img
+                src={imagemPreview}
+                alt="Preview"
+                className="rounded-lg max-h-48 w-full object-cover"
+              />
+              <Button
+                type="button"
+                variant="destructive"
+                size="icon"
+                className="absolute top-2 right-2"
+                onClick={() => {
+                  setImagemFile(null);
+                  setImagemPreview(null);
+                }}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Opções de Enquete (se tipo for enquete) */}

@@ -4,8 +4,10 @@ import { ptBR } from "date-fns/locale";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 import { LikeButton } from "./LikeButton";
 import { ComentarioForm } from "./ComentarioForm";
+import { LinkifyText } from "./LinkifyText";
 
 interface Comentario {
   id: string;
@@ -33,17 +35,24 @@ export function ComentarioCard({ comentario, postId, respostas = [], onUpdate }:
   return (
     <div className="space-y-3">
       <div className="flex gap-3">
-        <Avatar className="h-8 w-8 flex-shrink-0">
-          <AvatarImage src={comentario.perfis?.avatar_url || undefined} />
-          <AvatarFallback className="text-xs">
-            {comentario.perfis?.nome?.charAt(0).toUpperCase() || "U"}
-          </AvatarFallback>
-        </Avatar>
+        <Link to={`/perfil/${comentario.user_id}`} className="flex-shrink-0">
+          <Avatar className="h-8 w-8 cursor-pointer hover:ring-2 ring-primary transition-all">
+            <AvatarImage src={comentario.perfis?.avatar_url || undefined} />
+            <AvatarFallback className="text-xs">
+              {comentario.perfis?.nome?.charAt(0).toUpperCase() || "U"}
+            </AvatarFallback>
+          </Avatar>
+        </Link>
 
         <div className="flex-1 space-y-2">
           <div className="bg-muted rounded-lg p-3">
             <div className="flex items-center gap-2 mb-1">
-              <span className="font-semibold text-sm">{comentario.perfis?.nome || "Usuária"}</span>
+              <Link 
+                to={`/perfil/${comentario.user_id}`}
+                className="font-semibold text-sm hover:underline"
+              >
+                {comentario.perfis?.nome || "Usuária"}
+              </Link>
               <span className="text-xs text-muted-foreground">
                 {formatDistanceToNow(new Date(comentario.created_at), {
                   addSuffix: true,
@@ -51,7 +60,9 @@ export function ComentarioCard({ comentario, postId, respostas = [], onUpdate }:
                 })}
               </span>
             </div>
-            <p className="text-sm text-foreground whitespace-pre-wrap">{comentario.conteudo}</p>
+            <p className="text-sm text-foreground whitespace-pre-wrap">
+              <LinkifyText text={comentario.conteudo} />
+            </p>
           </div>
 
           <div className="flex items-center gap-1">
