@@ -147,6 +147,7 @@ const VidaPratica = () => {
     'planejamento': 'Planejamento e Organização 📅',
     'burocracias': 'Burocracias do Dia a Dia 📋',
     'filhos': 'Mães Solo 💜',
+    'direitos': 'Seus Direitos ⚖️',
   };
 
   if (loading) {

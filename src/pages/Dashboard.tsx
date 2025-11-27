@@ -13,10 +13,17 @@ const Dashboard = () => {
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [perfil, setPerfil] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [streak, setStreak] = useState(7);
-  const [level, setLevel] = useState(3);
-  const [xp, setXp] = useState(250);
-  const [nextLevelXp, setNextLevelXp] = useState(500);
+  const [streak, setStreak] = useState(0);
+  const [level, setLevel] = useState(1);
+  const [xp, setXp] = useState(0);
+  const [nextLevelXp, setNextLevelXp] = useState(100);
+  const [stats, setStats] = useState({
+    casaXP: 0,
+    aguaMl: 0,
+    saldoMes: 0,
+    habitosCompletos: 0,
+    habitosTotal: 0,
+  });
   const navigate = useNavigate();
 
   const getGreeting = () => {
@@ -60,6 +67,107 @@ const Dashboard = () => {
         .single();
       
       setPerfil(perfilData);
+      
+      // Calcular XP total de capítulos do e-book concluídos
+      const { data: progressoEbook } = await supabase
+        .from("ebook_progresso")
+        .select("capitulo_id")
+        .eq("user_id", session.user.id)
+        .eq("concluido", true);
+      
+      const { data: capitulos } = await supabase
+        .from("ebook_capitulos")
+        .select("xp_recompensa");
+      
+      const xpEbook = (progressoEbook || []).length * 40; // 40 XP por capítulo
+      
+      // Calcular XP de tarefas de casa completadas (histórico)
+      const { data: tarefasCompletas } = await supabase
+        .from("tarefas_casa_historico")
+        .select("tarefa_id")
+        .eq("user_id", session.user.id);
+      
+      const xpCasa = (tarefasCompletas || []).length * 10; // 10 XP por tarefa
+      
+      const totalXP = xpEbook + xpCasa;
+      const calculatedLevel = Math.floor(totalXP / 100) + 1;
+      const xpAtual = totalXP % 100;
+      
+      setXp(xpAtual);
+      setLevel(calculatedLevel);
+      setNextLevelXp(100);
+      
+      // Calcular streak (dias consecutivos com atividade)
+      const today = new Date().toISOString().split('T')[0];
+      const { data: habitosHoje } = await supabase
+        .from("habitos_bem_estar_historico")
+        .select("data")
+        .eq("user_id", session.user.id)
+        .eq("concluido", true)
+        .order("data", { ascending: false })
+        .limit(30);
+      
+      let currentStreak = 0;
+      if (habitosHoje && habitosHoje.length > 0) {
+        const dates = habitosHoje.map(h => h.data);
+        const uniqueDates = [...new Set(dates)].sort().reverse();
+        
+        let checkDate = new Date();
+        for (const date of uniqueDates) {
+          const habitDate = new Date(date);
+          const diffDays = Math.floor((checkDate.getTime() - habitDate.getTime()) / (1000 * 60 * 60 * 24));
+          
+          if (diffDays <= 1) {
+            currentStreak++;
+            checkDate = habitDate;
+          } else {
+            break;
+          }
+        }
+      }
+      setStreak(currentStreak);
+      
+      // Stats do Dashboard
+      const { data: aguaHoje } = await supabase
+        .from("registro_agua")
+        .select("quantidade_ml")
+        .eq("user_id", session.user.id)
+        .eq("data", today);
+      
+      const totalAgua = (aguaHoje || []).reduce((sum, r) => sum + r.quantidade_ml, 0);
+      
+      const mesAtual = new Date().toISOString().slice(0, 7);
+      const { data: transacoesMes } = await supabase
+        .from("transacoes_financeiras")
+        .select("valor, tipo")
+        .eq("user_id", session.user.id)
+        .gte("data", `${mesAtual}-01`);
+      
+      const saldoMes = (transacoesMes || []).reduce((sum, t) => {
+        return sum + (t.tipo === 'receita' ? t.valor : -t.valor);
+      }, 0);
+      
+      const { data: habitosAtivos } = await supabase
+        .from("habitos_bem_estar")
+        .select("id")
+        .eq("user_id", session.user.id)
+        .eq("ativo", true);
+      
+      const { data: habitosCompletosHoje } = await supabase
+        .from("habitos_bem_estar_historico")
+        .select("habito_id")
+        .eq("user_id", session.user.id)
+        .eq("data", today)
+        .eq("concluido", true);
+      
+      setStats({
+        casaXP: xpCasa,
+        aguaMl: totalAgua,
+        saldoMes: saldoMes,
+        habitosCompletos: (habitosCompletosHoje || []).length,
+        habitosTotal: (habitosAtivos || []).length,
+      });
+      
       setLoading(false);
     };
 
@@ -150,28 +258,28 @@ const Dashboard = () => {
           <StatCard
             icon={<Home className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />}
             title="Casa"
-            value="0 XP"
-            description="Nenhuma tarefa hoje"
+            value={`${stats.casaXP} XP`}
+            description="Tarefas concluídas"
             link="/casa"
           />
           <StatCard
             icon={<Heart className="h-5 w-5 sm:h-6 sm:w-6 text-secondary" />}
             title="Saúde"
-            value="0 ml"
+            value={`${stats.aguaMl} ml`}
             description="Água hoje"
             link="/saude"
           />
           <StatCard
             icon={<TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-accent" />}
             title="Finanças"
-            value="R$ 0"
+            value={`R$ ${stats.saldoMes.toFixed(2)}`}
             description="Saldo do mês"
             link="/financas"
           />
           <StatCard
             icon={<Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />}
             title="Bem-estar"
-            value="0/0"
+            value={`${stats.habitosCompletos}/${stats.habitosTotal}`}
             description="Hábitos hoje"
             link="/bem-estar"
           />

@@ -3,6 +3,7 @@ import { Home, Heart, Sparkles, TrendingUp, StickyNote, BookOpen, Library, Light
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { EmergencyButton } from "@/components/ebook/EmergencyButton";
 
 const mainNavItems = [
   { path: "/dashboard", icon: Home, label: "Dashboard" },
@@ -104,20 +105,10 @@ export const Sidebar = () => {
             </Link>
           ))}
           
-          {isAdmin && (
-            <Link
-              to="/admin"
-              className={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors",
-                location.pathname.startsWith("/admin")
-                  ? "bg-primary text-primary-foreground"
-                  : "hover:bg-accent text-muted-foreground hover:text-foreground"
-              )}
-            >
-              <Crown className="h-5 w-5" />
-              <span>Admin</span>
-            </Link>
-          )}
+          <div className="flex items-center gap-3 px-3 py-2">
+            <EmergencyButton />
+            <span className="text-sm text-muted-foreground">Emergência</span>
+          </div>
         </div>
       </nav>
     </aside>

@@ -9,6 +9,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { StickyNote, BookOpen, Library, Lightbulb, HelpCircle, Settings } from "lucide-react";
+import { EmergencyButton } from "@/components/ebook/EmergencyButton";
 
 const mainNavItems = [
   { path: "/dashboard", icon: Home, label: "Início" },
@@ -75,6 +76,11 @@ export const BottomNav = () => {
                   <span>{item.label}</span>
                 </Link>
               ))}
+              
+              <div className="flex items-center gap-3 px-4 py-3 border-t mt-4 pt-4">
+                <EmergencyButton />
+                <span className="text-sm">Contatos de Emergência</span>
+              </div>
             </div>
           </SheetContent>
         </Sheet>
