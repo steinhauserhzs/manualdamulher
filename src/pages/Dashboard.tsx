@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress";
 import { Home, Heart, TrendingUp, Sparkles, LogOut, BookOpen, StickyNote, Flame, Award } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 const Dashboard = () => {
@@ -213,6 +213,7 @@ const Dashboard = () => {
               <span className="text-xs sm:text-sm font-semibold text-primary">{streak}</span>
             </div>
             <Avatar className="h-8 w-8 sm:h-12 sm:w-12 ring-2 ring-primary/20">
+              <AvatarImage src={perfil?.avatar_url || undefined} alt={perfil?.nome} />
               <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-white font-bold text-xs sm:text-sm">
                 {perfil?.nome ? getInitials(perfil.nome) : "U"}
               </AvatarFallback>

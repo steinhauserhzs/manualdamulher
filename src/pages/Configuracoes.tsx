@@ -90,6 +90,34 @@ const Configuracoes = () => {
   const handleSalvarPerfil = async () => {
     if (!user) return;
 
+    // Validações básicas
+    if (bio && bio.length > 500) {
+      toast({
+        title: "Erro",
+        description: "Bio deve ter no máximo 500 caracteres",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (instagram && instagram.trim() && !instagram.startsWith('@') && !instagram.includes('instagram.com')) {
+      toast({
+        title: "Erro",
+        description: "Instagram deve começar com @ ou ser uma URL válida",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (website && website.trim() && !website.startsWith('http')) {
+      toast({
+        title: "Erro",
+        description: "Website deve ser uma URL válida (começando com http:// ou https://)",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setSaving(true);
     const { error } = await supabase
       .from('perfis')
@@ -98,12 +126,12 @@ const Configuracoes = () => {
         pronome,
         data_nascimento: dataNascimento || null,
         objetivos,
-        bio,
-        localizacao,
-        cidade,
-        estado,
-        website,
-        instagram,
+        bio: bio?.trim() || null,
+        localizacao: localizacao?.trim() || null,
+        cidade: cidade?.trim() || null,
+        estado: estado?.trim() || null,
+        website: website?.trim() || null,
+        instagram: instagram?.trim() || null,
         visibilidade_perfil: visibilidade,
       })
       .eq('user_id', user.id);
@@ -242,7 +270,11 @@ const Configuracoes = () => {
                     onChange={(e) => setBio(e.target.value)}
                     placeholder="Conte um pouco sobre você..."
                     rows={3}
+                    maxLength={500}
                   />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {bio.length}/500 caracteres
+                  </p>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
@@ -285,6 +317,9 @@ const Configuracoes = () => {
                       onChange={(e) => setInstagram(e.target.value)}
                       placeholder="@seu_usuario"
                     />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Exemplo: @usuario ou URL completa
+                    </p>
                   </div>
                   <div>
                     <Label htmlFor="website">Website</Label>
@@ -294,6 +329,9 @@ const Configuracoes = () => {
                       onChange={(e) => setWebsite(e.target.value)}
                       placeholder="https://seusite.com"
                     />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Deve começar com http:// ou https://
+                    </p>
                   </div>
                 </div>
 
