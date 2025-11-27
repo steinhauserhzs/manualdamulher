@@ -10,44 +10,92 @@ interface EbookContentRendererProps {
 }
 
 export const EbookContentRenderer = ({ content }: EbookContentRendererProps) => {
-  // Parse custom tags from the content
+  // Custom components for ReactMarkdown with optimized mobile typography
+  const markdownComponents = {
+    h1: ({ children }: any) => (
+      <h1 className="text-xl md:text-2xl font-bold text-primary mb-4 mt-6 leading-tight">
+        {children}
+      </h1>
+    ),
+    h2: ({ children }: any) => (
+      <h2 className="text-lg md:text-xl font-semibold text-foreground mb-3 mt-5 leading-snug">
+        {children}
+      </h2>
+    ),
+    h3: ({ children }: any) => (
+      <h3 className="text-base md:text-lg font-semibold text-foreground/90 mb-2 mt-4 leading-snug">
+        {children}
+      </h3>
+    ),
+    p: ({ children }: any) => (
+      <p className="text-base leading-relaxed mb-4 text-foreground/90">
+        {children}
+      </p>
+    ),
+    ul: ({ children }: any) => (
+      <ul className="pl-5 mb-4 space-y-2 list-disc">
+        {children}
+      </ul>
+    ),
+    ol: ({ children }: any) => (
+      <ol className="pl-5 mb-4 space-y-2 list-decimal">
+        {children}
+      </ol>
+    ),
+    li: ({ children }: any) => (
+      <li className="text-base leading-relaxed text-foreground/90">
+        {children}
+      </li>
+    ),
+    blockquote: ({ children }: any) => (
+      <blockquote className="border-l-4 border-primary/30 pl-4 py-2 my-4 italic text-muted-foreground bg-muted/30 rounded-r">
+        {children}
+      </blockquote>
+    ),
+    strong: ({ children }: any) => (
+      <strong className="font-semibold text-foreground">
+        {children}
+      </strong>
+    ),
+    em: ({ children }: any) => (
+      <em className="italic text-foreground/80">
+        {children}
+      </em>
+    ),
+    a: ({ children, href }: any) => (
+      <a 
+        href={href} 
+        className="text-primary underline hover:text-primary/80 transition-colors"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {children}
+      </a>
+    ),
+    hr: () => (
+      <hr className="my-6 border-border" />
+    ),
+  };
+
+  // Parse custom interactive tags
   const parseCustomTags = (text: string) => {
     const elements: React.ReactNode[] = [];
-    let lastIndex = 0;
+    let remainingText = text;
     let keyCounter = 0;
 
     // Water reminder pattern: :::water-reminder ... :::
     const waterReminderRegex = /:::water-reminder\n([\s\S]*?)\n:::/g;
-    
-    // Interactive checklist pattern: :::interactive-checklist:id ... :::
-    const checklistRegex = /:::interactive-checklist:(\w+)\n([^\n]+)\n([\s\S]*?)\n:::/g;
-    
-    // Interactive form pattern: :::interactive-form:id ... :::
-    const formRegex = /:::interactive-form:(\w+)\n([^\n]*?)\n([\s\S]*?)\n:::/g;
-    
-    // Bonus button pattern: :::bonus-button ... :::
-    const bonusRegex = /:::bonus-button(?::(\w+))?\n([\s\S]*?)\n:::/g;
-    
-    // Motivational cards pattern: :::motivational-cards ... :::
-    const motivationalRegex = /:::motivational-cards\n([\s\S]*?)\n:::/g;
-
-    // Combine all patterns
-    const combinedRegex = new RegExp(
-      `(${waterReminderRegex.source}|${checklistRegex.source}|${formRegex.source}|${bonusRegex.source}|${motivationalRegex.source})`,
-      'g'
-    );
-
     let match;
-    const processedContent = text;
-
-    // Process water reminders
-    let tempText = text;
+    
     while ((match = waterReminderRegex.exec(text)) !== null) {
-      const beforeMatch = tempText.substring(lastIndex, match.index);
-      if (beforeMatch) {
+      const beforeMatch = remainingText.substring(0, remainingText.indexOf(match[0]));
+      
+      if (beforeMatch.trim()) {
         elements.push(
-          <div key={keyCounter++} className="prose prose-slate dark:prose-invert max-w-none">
-            <ReactMarkdown>{beforeMatch}</ReactMarkdown>
+          <div key={keyCounter++} className="ebook-content">
+            <ReactMarkdown components={markdownComponents}>
+              {beforeMatch}
+            </ReactMarkdown>
           </div>
         );
       }
@@ -58,13 +106,13 @@ export const EbookContentRenderer = ({ content }: EbookContentRendererProps) => 
         </EbookWaterReminder>
       );
 
-      lastIndex = match.index + match[0].length;
-      tempText = tempText.replace(match[0], '');
+      remainingText = remainingText.substring(remainingText.indexOf(match[0]) + match[0].length);
     }
 
-    // Process interactive checklists
-    tempText = text;
-    lastIndex = 0;
+    // Interactive checklist pattern: :::interactive-checklist:id ... :::
+    const checklistRegex = /:::interactive-checklist:(\w+)\n([^\n]+)\n([\s\S]*?)\n:::/g;
+    remainingText = text;
+    
     while ((match = checklistRegex.exec(text)) !== null) {
       const id = match[1];
       const titulo = match[2];
@@ -81,11 +129,12 @@ export const EbookContentRenderer = ({ content }: EbookContentRendererProps) => 
         />
       );
 
-      tempText = tempText.replace(match[0], '');
+      remainingText = remainingText.replace(match[0], '');
     }
 
-    // Process interactive forms
-    tempText = text;
+    // Interactive form pattern: :::interactive-form:id ... :::
+    const formRegex = /:::interactive-form:(\w+)\n([^\n]*?)\n([\s\S]*?)\n:::/g;
+    
     while ((match = formRegex.exec(text)) !== null) {
       const id = match[1];
       const titulo = match[2];
@@ -114,11 +163,12 @@ export const EbookContentRenderer = ({ content }: EbookContentRendererProps) => 
         />
       );
 
-      tempText = tempText.replace(match[0], '');
+      remainingText = remainingText.replace(match[0], '');
     }
 
-    // Process bonus buttons
-    tempText = text;
+    // Bonus button pattern: :::bonus-button ... :::
+    const bonusRegex = /:::bonus-button(?::(\w+))?\n([\s\S]*?)\n:::/g;
+    
     while ((match = bonusRegex.exec(text)) !== null) {
       const capituloId = match[1];
       const texto = match[2].trim();
@@ -131,11 +181,12 @@ export const EbookContentRenderer = ({ content }: EbookContentRendererProps) => 
         />
       );
 
-      tempText = tempText.replace(match[0], '');
+      remainingText = remainingText.replace(match[0], '');
     }
 
-    // Process motivational cards
-    tempText = text;
+    // Motivational cards pattern: :::motivational-cards ... :::
+    const motivationalRegex = /:::motivational-cards\n([\s\S]*?)\n:::/g;
+    
     while ((match = motivationalRegex.exec(text)) !== null) {
       const frases = match[1].split('\n')
         .filter(line => line.trim().startsWith('"'))
@@ -148,23 +199,30 @@ export const EbookContentRenderer = ({ content }: EbookContentRendererProps) => 
         />
       );
 
-      tempText = tempText.replace(match[0], '');
+      remainingText = remainingText.replace(match[0], '');
     }
 
-    // If no custom tags found or there's remaining content, render as markdown
-    if (elements.length === 0 || tempText.trim()) {
-      return (
-        <>
-          {elements}
-          <div className="prose prose-slate dark:prose-invert max-w-none">
-            <ReactMarkdown>{tempText || text}</ReactMarkdown>
-          </div>
-        </>
+    // Remove all custom tags from remaining text
+    remainingText = remainingText
+      .replace(waterReminderRegex, '')
+      .replace(checklistRegex, '')
+      .replace(formRegex, '')
+      .replace(bonusRegex, '')
+      .replace(motivationalRegex, '');
+
+    // Render remaining markdown content
+    if (remainingText.trim() || elements.length === 0) {
+      elements.push(
+        <div key={keyCounter++} className="ebook-content">
+          <ReactMarkdown components={markdownComponents}>
+            {remainingText.trim() || text}
+          </ReactMarkdown>
+        </div>
       );
     }
 
     return <>{elements}</>;
   };
 
-  return <div className="space-y-6">{parseCustomTags(content)}</div>;
+  return <div className="space-y-4">{parseCustomTags(content)}</div>;
 };

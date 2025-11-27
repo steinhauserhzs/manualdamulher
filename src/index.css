@@ -219,4 +219,66 @@ All colors MUST be HSL.
       transform: translateY(0);
     }
   }
+
+  /* E-book Reader Optimized Styles */
+  .ebook-content {
+    @apply text-foreground/90;
+  }
+
+  .ebook-content h1 {
+    @apply text-xl md:text-2xl font-bold text-primary mb-4 mt-6 leading-tight;
+  }
+
+  .ebook-content h2 {
+    @apply text-lg md:text-xl font-semibold text-foreground mb-3 mt-5 leading-snug;
+  }
+
+  .ebook-content h3 {
+    @apply text-base md:text-lg font-semibold text-foreground/90 mb-2 mt-4 leading-snug;
+  }
+
+  .ebook-content p {
+    @apply text-base leading-relaxed mb-4 text-foreground/90;
+  }
+
+  .ebook-content ul,
+  .ebook-content ol {
+    @apply pl-5 mb-4 space-y-2;
+  }
+
+  .ebook-content li {
+    @apply text-base leading-relaxed text-foreground/90;
+  }
+
+  .ebook-content blockquote {
+    @apply border-l-4 border-primary/30 pl-4 py-2 my-4 italic text-muted-foreground bg-muted/30 rounded-r;
+  }
+
+  .ebook-content strong {
+    @apply font-semibold text-foreground;
+  }
+
+  .ebook-content em {
+    @apply italic text-foreground/80;
+  }
+
+  .ebook-content a {
+    @apply text-primary underline hover:text-primary/80 transition-colors;
+  }
+
+  .ebook-content hr {
+    @apply my-6 border-border;
+  }
+
+  .ebook-content code {
+    @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono;
+  }
+
+  .ebook-content pre {
+    @apply bg-muted p-4 rounded-lg overflow-x-auto mb-4;
+  }
+
+  .ebook-content img {
+    @apply rounded-lg my-4 max-w-full h-auto;
+  }
 }

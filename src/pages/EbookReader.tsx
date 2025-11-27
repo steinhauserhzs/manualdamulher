@@ -208,18 +208,18 @@ export default function EbookReader() {
       {/* Conteúdo */}
       <div 
         ref={contentRef}
-        className="flex-1 overflow-y-auto px-4 py-6"
+        className="flex-1 overflow-y-auto px-5 sm:px-6 py-6"
         style={{ fontSize: `${fontSize}px` }}
       >
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
+        <div className="max-w-2xl mx-auto">
+          <h1 className="text-xl md:text-2xl font-bold text-primary mb-6 leading-tight">
             {capitulo.titulo}
           </h1>
 
           <EbookContentRenderer content={capitulo.conteudo} />
 
           {/* Espaçamento no final */}
-          <div className="h-20"></div>
+          <div className="h-24"></div>
         </div>
       </div>
 
