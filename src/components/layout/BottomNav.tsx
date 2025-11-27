@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Heart, Sparkles, TrendingUp, Menu } from "lucide-react";
+import { Home, Heart, Sparkles, TrendingUp, Menu, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Sheet,
@@ -13,9 +13,9 @@ import { EmergencyButton } from "@/components/ebook/EmergencyButton";
 
 const mainNavItems = [
   { path: "/dashboard", icon: Home, label: "Início" },
-  { path: "/casa", icon: Home, label: "Casa" },
   { path: "/saude", icon: Heart, label: "Saúde" },
   { path: "/bem-estar", icon: Sparkles, label: "Bem-estar" },
+  { path: "/comunidade", icon: Users, label: "Comunidade" },
 ];
 
 const menuItems = [
