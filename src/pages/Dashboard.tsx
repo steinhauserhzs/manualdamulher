@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Home, Heart, TrendingUp, Sparkles, LogOut, User as UserIcon, BookOpen, StickyNote, Flame, Award } from "lucide-react";
+import { Home, Heart, TrendingUp, Sparkles, LogOut, BookOpen, StickyNote, Flame, Award } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
@@ -53,7 +53,6 @@ const Dashboard = () => {
 
       setUser(session.user);
       
-      // Buscar perfil
       const { data: perfilData } = await supabase
         .from("perfis")
         .select("*")
@@ -94,46 +93,47 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b border-border bg-card mb-8">
-        <div className="container mx-auto flex items-center justify-between px-4 py-4">
+      <header className="border-b border-border bg-card mb-6 sm:mb-8">
+        <div className="container mx-auto flex items-center justify-between px-3 sm:px-4 py-3 sm:py-4">
           <div>
-            <h2 className="text-xl font-bold text-foreground">Manual da Mulher Independente</h2>
-            <p className="text-sm text-muted-foreground">Seu espaço de organização e empoderamento</p>
+            <h2 className="text-base sm:text-xl font-bold text-foreground">Manual da Mulher Independente</h2>
+            <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">Seu espaço de organização e empoderamento</p>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="hidden md:flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2">
-              <Flame className="h-5 w-5 text-primary" />
-              <span className="font-semibold text-primary">{streak} dias</span>
+          <div className="flex items-center gap-2 sm:gap-4">
+            <div className="flex items-center gap-2 rounded-full bg-primary/10 px-2 sm:px-4 py-1 sm:py-2">
+              <Flame className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+              <span className="text-xs sm:text-sm font-semibold text-primary">{streak}</span>
             </div>
-            <Avatar className="h-12 w-12 ring-2 ring-primary/20">
-              <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-white font-bold">
+            <Avatar className="h-8 w-8 sm:h-12 sm:w-12 ring-2 ring-primary/20">
+              <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-white font-bold text-xs sm:text-sm">
                 {perfil?.nome ? getInitials(perfil.nome) : "U"}
               </AvatarFallback>
             </Avatar>
-            <Button variant="ghost" size="sm" onClick={handleLogout}>
+            <Button variant="ghost" size="sm" onClick={handleLogout} className="p-2">
               <LogOut className="h-4 w-4" />
-              <span className="ml-2 hidden sm:inline">Sair</span>
+              <span className="ml-2 hidden sm:inline text-sm">Sair</span>
             </Button>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 pb-8">
+      <main className="container mx-auto px-3 sm:px-4 pb-8">
         {/* Welcome Section */}
-        <div className="mb-8 relative overflow-hidden gradient-card rounded-2xl p-8 shadow-card">
-          <div className="absolute top-0 right-0 h-32 w-32 rounded-full bg-primary/10 blur-3xl"></div>
+        <div className="mb-6 sm:mb-8 relative overflow-hidden gradient-card rounded-2xl p-4 sm:p-8 shadow-card animate-fade-in">
+          <div className="absolute top-0 right-0 h-24 w-24 sm:h-32 sm:w-32 rounded-full bg-primary/10 blur-3xl"></div>
+          <div className="absolute -left-4 -bottom-4 h-20 w-20 sm:h-28 sm:w-28 rounded-full bg-secondary/10 blur-2xl"></div>
           <div className="relative">
-            <h1 className="mb-2 text-3xl font-bold text-foreground">
+            <h1 className="mb-2 text-xl sm:text-2xl md:text-3xl font-bold text-foreground">
               {getGreeting()}, {perfil?.nome || "Querida"}! {getGreetingEmoji()}
             </h1>
-            <p className="mb-6 text-lg text-muted-foreground">
+            <p className="mb-4 sm:mb-6 text-sm sm:text-base md:text-lg text-muted-foreground">
               Você está arrasando! Continue assim e conquiste seus objetivos. 💜
             </p>
             
             {/* Level Progress */}
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center justify-between text-xs sm:text-sm">
                 <div className="flex items-center gap-2">
                   <Award className="h-4 w-4 text-primary" />
                   <span className="font-semibold text-foreground">Nível {level}</span>
@@ -146,76 +146,76 @@ const Dashboard = () => {
         </div>
 
         {/* Quick Stats */}
-        <div className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mb-6 sm:mb-8 grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
           <StatCard
-            icon={<Home className="h-6 w-6 text-primary" />}
+            icon={<Home className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />}
             title="Casa"
             value="0 XP"
             description="Nenhuma tarefa hoje"
             link="/casa"
           />
           <StatCard
-            icon={<Heart className="h-6 w-6 text-secondary" />}
+            icon={<Heart className="h-5 w-5 sm:h-6 sm:w-6 text-secondary" />}
             title="Saúde"
             value="0 ml"
             description="Água hoje"
             link="/saude"
           />
           <StatCard
-            icon={<TrendingUp className="h-6 w-6 text-accent" />}
+            icon={<TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-accent" />}
             title="Finanças"
-            value="R$ 0,00"
+            value="R$ 0"
             description="Saldo do mês"
             link="/financas"
           />
           <StatCard
-            icon={<Sparkles className="h-6 w-6 text-primary" />}
+            icon={<Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />}
             title="Bem-estar"
             value="0/0"
-            description="Hábitos de hoje"
+            description="Hábitos hoje"
             link="/bem-estar"
           />
         </div>
 
         {/* Main Actions */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           <ActionCard
-            icon={<Home className="h-8 w-8" />}
+            icon={<Home className="h-6 w-6 sm:h-8 sm:w-8" />}
             title="Casa"
             description="Organize sua rotina e ganhe XP"
             link="/casa"
             color="primary"
           />
           <ActionCard
-            icon={<Heart className="h-8 w-8" />}
+            icon={<Heart className="h-6 w-6 sm:h-8 sm:w-8" />}
             title="Saúde"
             description="Cuide do seu corpo e mente"
             link="/saude"
             color="secondary"
           />
           <ActionCard
-            icon={<Sparkles className="h-8 w-8" />}
+            icon={<Sparkles className="h-6 w-6 sm:h-8 sm:w-8" />}
             title="Bem-estar"
             description="Cultive hábitos saudáveis"
             link="/bem-estar"
             color="accent"
           />
           <ActionCard
-            icon={<TrendingUp className="h-8 w-8" />}
+            icon={<TrendingUp className="h-6 w-6 sm:h-8 sm:w-8" />}
             title="Finanças"
             description="Organize suas contas"
             link="/financas"
             color="primary"
           />
           <ActionCard
-            icon={<BookOpen className="h-8 w-8" />}
+            icon={<BookOpen className="h-6 w-6 sm:h-8 sm:w-8" />}
             title="Blog"
             description="Conteúdo inspirador"
             link="/blog"
             color="secondary"
           />
           <ActionCard
-            icon={<StickyNote className="h-8 w-8" />}
+            icon={<StickyNote className="h-6 w-6 sm:h-8 sm:w-8" />}
             title="Notas"
             description="Suas anotações pessoais"
             link="/notas"
@@ -242,13 +242,13 @@ const StatCard = ({
 }) => {
   return (
     <Link to={link}>
-      <Card className="gradient-card transition-transform hover:scale-105 hover:shadow-card">
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+      <Card className="gradient-card hover-lift">
+        <CardHeader className="flex flex-row items-center justify-between pb-2 px-3 sm:px-6 pt-3 sm:pt-6">
+          <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">{title}</CardTitle>
           {icon}
         </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold text-foreground">{value}</div>
+        <CardContent className="px-3 sm:px-6 pb-3 sm:pb-6">
+          <div className="text-lg sm:text-2xl font-bold text-foreground break-words">{value}</div>
           <p className="text-xs text-muted-foreground">{description}</p>
         </CardContent>
       </Card>
@@ -277,13 +277,13 @@ const ActionCard = ({
 
   return (
     <Link to={link}>
-      <Card className="gradient-card h-full transition-transform hover:scale-105 hover:shadow-card">
-        <CardHeader>
-          <div className={`mb-4 flex h-16 w-16 items-center justify-center rounded-2xl ${colorClasses[color]}`}>
+      <Card className="gradient-card h-full hover-lift animate-fade-in">
+        <CardHeader className="px-4 sm:px-6 pt-4 sm:pt-6">
+          <div className={`mb-3 sm:mb-4 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-2xl ${colorClasses[color]}`}>
             {icon}
           </div>
-          <CardTitle className="text-foreground">{title}</CardTitle>
-          <CardDescription>{description}</CardDescription>
+          <CardTitle className="text-foreground text-base sm:text-lg">{title}</CardTitle>
+          <CardDescription className="text-xs sm:text-sm">{description}</CardDescription>
         </CardHeader>
       </Card>
     </Link>

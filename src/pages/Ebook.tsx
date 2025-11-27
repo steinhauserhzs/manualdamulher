@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Clock, Star, Trophy, CheckCircle2, Lock } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { BookOpen, Clock, Trophy, CheckCircle2, Lock, Zap, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
+import { ModuleHeader } from "@/components/ui/ModuleHeader";
+import { EmptyStateVisual } from "@/components/ui/EmptyStateVisual";
 
 interface Capitulo {
   id: string;
@@ -38,7 +41,6 @@ export default function Ebook() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Buscar capítulos
       const { data: caps, error: capsError } = await supabase
         .from("ebook_capitulos")
         .select("*")
@@ -46,7 +48,6 @@ export default function Ebook() {
 
       if (capsError) throw capsError;
 
-      // Buscar progresso do usuário
       const { data: progresso, error: progressoError } = await supabase
         .from("ebook_progresso")
         .select("*")
@@ -54,7 +55,6 @@ export default function Ebook() {
 
       if (progressoError) throw progressoError;
 
-      // Combinar dados
       const capitulosComProgresso = caps?.map(cap => {
         const prog = progresso?.find(p => p.capitulo_id === cap.id);
         return {
@@ -67,12 +67,10 @@ export default function Ebook() {
 
       setCapitulos(capitulosComProgresso);
 
-      // Calcular progresso geral
       const concluidos = capitulosComProgresso.filter(c => c.concluido).length;
       const total = capitulosComProgresso.length;
       setProgressoGeral(total > 0 ? (concluidos / total) * 100 : 0);
 
-      // Calcular XP total
       const xp = capitulosComProgresso
         .filter(c => c.concluido)
         .reduce((sum, c) => sum + c.xp_recompensa, 0);
@@ -93,131 +91,118 @@ export default function Ebook() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-4 border-primary border-t-transparent"></div>
       </div>
     );
   }
 
-  const capitulosConcluidos = capitulos.filter(c => c.concluido).length;
-  const totalCapitulos = capitulos.length;
+  const capitulosLidos = capitulos.filter(c => c.concluido).length;
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-4xl">
-      {/* Header */}
+    <div className="min-h-screen bg-background">
       <div className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
-          📖 Manual da Mulher Independente
-        </h1>
-        <p className="text-muted-foreground">
-          Sua jornada rumo à independência e autonomia
-        </p>
+        <div className="container mx-auto px-3 sm:px-4 pt-4 pb-2">
+          <Button variant="ghost" size="icon" asChild>
+            <Link to="/dashboard">
+              <ArrowLeft className="h-5 w-5" />
+            </Link>
+          </Button>
+        </div>
+        <ModuleHeader 
+          icon={BookOpen}
+          title="E-book"
+          subtitle="Manual da Mulher Independente"
+          gradient="ebook"
+        />
       </div>
 
-      {/* Card de Progresso Geral */}
-      <Card className="p-6 mb-6 bg-gradient-to-br from-primary/10 to-secondary/10 border-primary/20">
-        <div className="flex items-center gap-2 mb-3">
-          <Trophy className="h-5 w-5 text-primary" />
-          <h2 className="text-lg font-semibold text-foreground">Seu Progresso de Leitura</h2>
-        </div>
-        
-        <Progress value={progressoGeral} className="h-3 mb-4" />
-        
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-          <div>
-            <p className="text-muted-foreground">Capítulos Lidos</p>
-            <p className="text-xl font-bold text-foreground">{capitulosConcluidos}/{totalCapitulos}</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground">Progresso</p>
-            <p className="text-xl font-bold text-primary">{Math.round(progressoGeral)}%</p>
-          </div>
-          <div>
-            <p className="text-muted-foreground">XP Conquistado</p>
-            <p className="text-xl font-bold text-secondary">+{xpTotal} XP</p>
-          </div>
-        </div>
-
-        {progressoGeral === 100 && (
-          <div className="mt-4 p-3 bg-primary/20 rounded-lg text-center">
-            <p className="text-sm font-semibold text-primary">
-              🎉 Parabéns! Você completou todo o e-book!
-            </p>
-          </div>
-        )}
-      </Card>
-
-      {/* Lista de Capítulos */}
-      <div className="space-y-3">
-        <h2 className="text-xl font-semibold text-foreground mb-4">📑 Capítulos</h2>
-        
-        {capitulos.map((capitulo, index) => {
-          const isEmProgresso = capitulo.progresso > 0 && !capitulo.concluido;
-          
-          return (
-            <Card 
-              key={capitulo.id} 
-              className="p-4 hover:shadow-md transition-shadow cursor-pointer"
-              onClick={() => abrirCapitulo(capitulo)}
-            >
-              <div className="flex items-start gap-4">
-                {/* Ícone de Status */}
-                <div className="flex-shrink-0 mt-1">
-                  {capitulo.concluido ? (
-                    <CheckCircle2 className="h-6 w-6 text-green-500" />
-                  ) : isEmProgresso ? (
-                    <BookOpen className="h-6 w-6 text-primary" />
-                  ) : (
-                    <Lock className="h-6 w-6 text-muted-foreground" />
-                  )}
-                </div>
-
-                {/* Conteúdo */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <h3 className="font-semibold text-foreground break-words">
-                      {capitulo.numero}. {capitulo.titulo}
-                    </h3>
-                    <div className="flex items-center gap-1 text-secondary flex-shrink-0">
-                      <Star className="h-4 w-4" />
-                      <span className="text-sm font-medium">+{capitulo.xp_recompensa}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      <span>{capitulo.tempo_leitura} min</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      {capitulo.concluido ? (
-                        <span className="text-green-500 font-medium">✓ Concluído</span>
-                      ) : isEmProgresso ? (
-                        <span className="text-primary font-medium">Em progresso ({capitulo.progresso}%)</span>
-                      ) : (
-                        <span>Não iniciado</span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Barra de progresso do capítulo */}
-                  {isEmProgresso && (
-                    <Progress value={capitulo.progresso} className="h-2 mb-3" />
-                  )}
-
-                  {/* Botão */}
-                  <Button 
-                    size="sm" 
-                    variant={capitulo.concluido ? "outline" : "default"}
-                    className="w-full sm:w-auto"
-                  >
-                    {capitulo.concluido ? "Reler" : isEmProgresso ? "Continuar leitura" : "Começar"}
-                  </Button>
-                </div>
+      <main className="container mx-auto px-3 sm:px-4 py-6 space-y-4 sm:space-y-6 animate-fade-in">
+        <Card className="gradient-card shadow-card hover-lift">
+          <CardHeader className="px-4 sm:px-6">
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <Trophy className="h-5 w-5 sm:h-6 sm:w-6 text-accent" />
+              Seu Progresso de Leitura
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 sm:space-y-4 px-4 sm:px-6">
+            <div>
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-2xl sm:text-3xl font-bold text-primary">{Math.round(progressoGeral)}%</span>
+                <span className="text-xs sm:text-sm text-muted-foreground">{capitulosLidos} de {capitulos.length}</span>
               </div>
-            </Card>
-          );
-        })}
-      </div>
+              <Progress value={progressoGeral} className="h-2 sm:h-3" />
+            </div>
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+              <Zap className="h-4 w-4 text-xp" />
+              <span>{xpTotal} XP conquistados</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="gradient-card shadow-card">
+          <CardHeader className="px-4 sm:px-6">
+            <CardTitle className="text-base sm:text-lg">Capítulos</CardTitle>
+            <CardDescription className="text-xs sm:text-sm">Comece sua jornada de leitura</CardDescription>
+          </CardHeader>
+          <CardContent className="px-4 sm:px-6">
+            {capitulos.length === 0 ? (
+              <EmptyStateVisual
+                icon={BookOpen}
+                title="Nenhum capítulo ainda"
+                description="Os capítulos do e-book estarão disponíveis em breve!"
+              />
+            ) : (
+              <div className="space-y-3 sm:space-y-4">
+                {capitulos.map((capitulo, index) => {
+                  const capituloAnteriorConcluido = index === 0 || capitulos[index - 1].concluido;
+                  const bloqueado = !capituloAnteriorConcluido && !capitulo.concluido;
+
+                  return (
+                    <div
+                      key={capitulo.id}
+                      className={`rounded-lg border p-3 sm:p-4 transition-all hover-lift ${
+                        bloqueado ? "border-muted bg-muted/20 opacity-60" : capitulo.concluido ? "border-primary/40 bg-primary/5 hover:bg-primary/10" : "border-border bg-card hover:border-primary/20"
+                      }`}
+                    >
+                      <div className="flex items-start gap-3 sm:gap-4">
+                        <div className={`flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full flex-shrink-0 ${bloqueado ? "bg-muted" : capitulo.concluido ? "bg-primary/20" : "bg-accent/20"}`}>
+                          {bloqueado ? <Lock className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground" /> : capitulo.concluido ? <CheckCircle2 className="h-5 w-5 sm:h-6 sm:w-6 text-primary" /> : <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 text-accent" />}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-2 mb-1">
+                            <h3 className={`font-semibold text-sm sm:text-base break-words ${bloqueado ? "text-muted-foreground" : "text-foreground"}`}>
+                              {capitulo.numero}. {capitulo.titulo}
+                            </h3>
+                            <Badge variant={capitulo.concluido ? "default" : "secondary"} className="text-xs self-start">
+                              +{capitulo.xp_recompensa} XP
+                            </Badge>
+                          </div>
+                          <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-muted-foreground mb-2 sm:mb-3">
+                            <div className="flex items-center gap-1">
+                              <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
+                              <span>{capitulo.tempo_leitura} min</span>
+                            </div>
+                            <span className="hidden sm:inline">•</span>
+                            <span>{capitulo.concluido ? "Concluído" : capitulo.progresso > 0 ? `${capitulo.progresso}% lido` : bloqueado ? "Bloqueado" : "Não iniciado"}</span>
+                          </div>
+                          {capitulo.progresso > 0 && capitulo.progresso < 100 && (
+                            <div className="mb-2 sm:mb-3">
+                              <Progress value={capitulo.progresso} className="h-1.5 sm:h-2" />
+                            </div>
+                          )}
+                          <Button onClick={() => abrirCapitulo(capitulo)} disabled={bloqueado} size="sm" variant={capitulo.concluido ? "outline" : "default"} className="text-xs sm:text-sm">
+                            {capitulo.concluido ? "Reler capítulo" : capitulo.progresso > 0 ? "Continuar leitura" : "Iniciar leitura"}
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </main>
     </div>
   );
 }
