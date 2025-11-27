@@ -12,10 +12,10 @@ import { StickyNote, BookOpen, Library, Lightbulb, HelpCircle, Settings } from "
 import { EmergencyButton } from "@/components/ebook/EmergencyButton";
 
 const mainNavItems = [
-  { path: "/dashboard", icon: Home, label: "Início" },
-  { path: "/saude", icon: Heart, label: "Saúde" },
-  { path: "/bem-estar", icon: Sparkles, label: "Bem-estar" },
-  { path: "/comunidade", icon: Users, label: "Comunidade" },
+  { path: "/dashboard", icon: Home, label: "Início", shortLabel: "Início" },
+  { path: "/saude", icon: Heart, label: "Saúde", shortLabel: "Saúde" },
+  { path: "/bem-estar", icon: Sparkles, label: "Bem-estar", shortLabel: "Bem" },
+  { path: "/comunidade", icon: Users, label: "Comunidade", shortLabel: "Social" },
 ];
 
 const menuItems = [
@@ -47,7 +47,8 @@ export const BottomNav = () => {
             )}
           >
             <item.icon className="h-6 w-6" />
-            <span className="text-xs mt-1">{item.label}</span>
+            <span className="text-xs mt-1 hidden xs:inline">{item.label}</span>
+            <span className="text-xs mt-1 xs:hidden">{item.shortLabel}</span>
           </Link>
         ))}
         

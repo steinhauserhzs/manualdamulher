@@ -203,15 +203,17 @@ const Notas = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background p-6 md:ml-64 mb-16 md:mb-0">
-        <LoadingSkeleton />
+      <div className="min-h-screen bg-background">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
+          <LoadingSkeleton />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background p-6 md:ml-64 mb-16 md:mb-0">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-background">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
         <Breadcrumbs items={[{ label: "Notas" }]} />
         
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
