@@ -74,7 +74,7 @@ export function RegistroDiarioDialog({
         medicamento: medicamento || null,
         sintomas: sintomasSelecionados.length > 0 ? sintomasSelecionados : null,
         humor: humor || null,
-        fluxo: fluxo || null,
+        fluxo: fluxo && fluxo !== "nenhum" ? fluxo : null,
         notas: notas || null,
       };
 
@@ -157,7 +157,7 @@ export function RegistroDiarioDialog({
                 <SelectValue placeholder="Sem fluxo" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Sem fluxo</SelectItem>
+                <SelectItem value="nenhum">Sem fluxo</SelectItem>
                 <SelectItem value="leve">🔴 Leve</SelectItem>
                 <SelectItem value="moderado">🔴🔴 Moderado</SelectItem>
                 <SelectItem value="intenso">🔴🔴🔴 Intenso</SelectItem>
