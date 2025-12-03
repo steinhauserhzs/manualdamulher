@@ -1,261 +1,379 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
-import { Plus } from "lucide-react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { CalendarHeart, Plus, Droplets, Heart, Info } from "lucide-react";
+import { format, addDays, differenceInDays, isSameDay, isWithinInterval } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { RegistroDiarioDialog } from "./RegistroDiarioDialog";
 import { Badge } from "@/components/ui/badge";
+
+interface CicloMenstrualCalendarioProps {
+  userId: string;
+}
 
 interface Ciclo {
   id: string;
   data_inicio: string;
   data_fim: string | null;
-  sintomas: string | null;
   intensidade: string | null;
+  sintomas: string | null;
 }
 
-export const CicloMenstrualCalendario = ({ userId }: { userId: string }) => {
+interface RegistroDiario {
+  id: string;
+  data: string;
+  teve_relacao: boolean;
+  usou_protecao: boolean | null;
+  fluxo: string | null;
+  humor: string | null;
+}
+
+export const CicloMenstrualCalendario = ({ userId }: CicloMenstrualCalendarioProps) => {
   const [ciclos, setCiclos] = useState<Ciclo[]>([]);
+  const [registrosDiarios, setRegistrosDiarios] = useState<RegistroDiario[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dataInicio, setDataInicio] = useState("");
   const [dataFim, setDataFim] = useState("");
-  const [sintomas, setSintomas] = useState("");
   const [intensidade, setIntensidade] = useState("");
-  const [saving, setSaving] = useState(false);
-  const [previsaoProximo, setPrevisaoProximo] = useState<Date | null>(null);
-
+  const [sintomas, setSintomas] = useState("");
+  const [salvando, setSalvando] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const { toast } = useToast();
 
   useEffect(() => {
-    carregarCiclos();
+    if (userId) {
+      carregarDados();
+    }
   }, [userId]);
 
-  const carregarCiclos = async () => {
+  const carregarDados = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('ciclo_menstrual')
-      .select('*')
-      .eq('user_id', userId)
-      .order('data_inicio', { ascending: false })
-      .limit(6);
+    try {
+      // Carregar ciclos
+      const { data: ciclosData, error: ciclosError } = await supabase
+        .from("ciclo_menstrual")
+        .select("*")
+        .eq("user_id", userId)
+        .order("data_inicio", { ascending: false })
+        .limit(12);
 
-    if (error) {
-      toast({
-        title: "Erro ao carregar ciclos",
-        description: error.message,
-        variant: "destructive",
-      });
-    } else {
-      setCiclos(data || []);
-      calcularPrevisao(data || []);
+      if (ciclosError) throw ciclosError;
+      setCiclos(ciclosData || []);
+
+      // Carregar registros diários
+      const { data: registrosData } = await supabase
+        .from("registro_ciclo_diario")
+        .select("*")
+        .eq("user_id", userId)
+        .order("data", { ascending: false })
+        .limit(60);
+
+      setRegistrosDiarios(registrosData || []);
+    } catch (error) {
+      console.error("Erro ao carregar dados:", error);
+      toast({ title: "Erro", description: "Não foi possível carregar os dados.", variant: "destructive" });
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  const calcularPrevisao = (ciclosData: Ciclo[]) => {
-    if (ciclosData.length < 2) return;
-
-    const ciclosCompletos = ciclosData.filter(c => c.data_fim);
-    if (ciclosCompletos.length < 2) return;
+  // Calcular previsão do próximo ciclo
+  const calcularPrevisao = () => {
+    if (ciclos.length < 2) return null;
+    
+    const ciclosCompletos = ciclos.filter(c => c.data_fim);
+    if (ciclosCompletos.length < 2) return null;
 
     let somaIntervalos = 0;
     for (let i = 0; i < ciclosCompletos.length - 1; i++) {
       const inicio1 = new Date(ciclosCompletos[i].data_inicio);
       const inicio2 = new Date(ciclosCompletos[i + 1].data_inicio);
-      const diferenca = Math.abs(inicio1.getTime() - inicio2.getTime());
-      const dias = Math.ceil(diferenca / (1000 * 60 * 60 * 24));
-      somaIntervalos += dias;
+      somaIntervalos += Math.abs(differenceInDays(inicio1, inicio2));
+    }
+    
+    const mediaIntervalo = Math.round(somaIntervalos / (ciclosCompletos.length - 1));
+    const ultimoCiclo = new Date(ciclos[0].data_inicio);
+    const proximaPrevisao = addDays(ultimoCiclo, mediaIntervalo);
+    const periodoFertilInicio = addDays(proximaPrevisao, -14 - 5);
+    const periodoFertilFim = addDays(proximaPrevisao, -14 + 1);
+    const ovulacao = addDays(proximaPrevisao, -14);
+
+    return {
+      proximaMenstruacao: proximaPrevisao,
+      periodoFertilInicio,
+      periodoFertilFim,
+      ovulacao,
+      mediaIntervalo
+    };
+  };
+
+  const previsao = calcularPrevisao();
+
+  // Determinar tipo de dia para colorir o calendário
+  const getDayType = (date: Date): string | null => {
+    // Verificar se está em período de menstruação
+    for (const ciclo of ciclos) {
+      const inicio = new Date(ciclo.data_inicio);
+      const fim = ciclo.data_fim ? new Date(ciclo.data_fim) : addDays(inicio, 5);
+      if (isWithinInterval(date, { start: inicio, end: fim })) {
+        return "menstruacao";
+      }
     }
 
-    const mediaIntervalo = Math.round(somaIntervalos / (ciclosCompletos.length - 1));
-    const ultimoCiclo = new Date(ciclosData[0].data_inicio);
-    const previsao = new Date(ultimoCiclo);
-    previsao.setDate(previsao.getDate() + mediaIntervalo);
-    
-    setPrevisaoProximo(previsao);
+    // Verificar registros diários com fluxo
+    const registro = registrosDiarios.find(r => isSameDay(new Date(r.data), date));
+    if (registro?.fluxo) return "menstruacao";
+
+    // Verificar previsões
+    if (previsao) {
+      if (isSameDay(date, previsao.ovulacao)) return "ovulacao";
+      if (isWithinInterval(date, { start: previsao.periodoFertilInicio, end: previsao.periodoFertilFim })) {
+        return "fertil";
+      }
+    }
+
+    // Verificar se teve relação
+    if (registro?.teve_relacao) return "relacao";
+
+    return null;
   };
 
   const handleSalvar = async () => {
     if (!dataInicio) {
-      toast({
-        title: "Data obrigatória",
-        description: "Por favor, informe a data de início do período.",
-        variant: "destructive",
-      });
+      toast({ title: "Atenção", description: "Informe a data de início.", variant: "destructive" });
       return;
     }
 
-    setSaving(true);
-
-    const { error } = await supabase
-      .from('ciclo_menstrual')
-      .insert({
+    setSalvando(true);
+    try {
+      const { error } = await supabase.from("ciclo_menstrual").insert({
         user_id: userId,
         data_inicio: dataInicio,
         data_fim: dataFim || null,
-        sintomas,
-        intensidade,
+        intensidade: intensidade || null,
+        sintomas: sintomas || null,
       });
 
-    if (error) {
-      toast({
-        title: "Erro ao salvar",
-        description: error.message,
-        variant: "destructive",
-      });
-    } else {
-      toast({
-        title: "Ciclo registrado! 📅",
-        description: "Seu ciclo foi salvo com sucesso.",
-      });
+      if (error) throw error;
+
+      toast({ title: "Ciclo registrado!", description: "Seu ciclo foi salvo com sucesso." });
       setDialogOpen(false);
       setDataInicio("");
       setDataFim("");
-      setSintomas("");
       setIntensidade("");
-      carregarCiclos();
+      setSintomas("");
+      carregarDados();
+    } catch (error) {
+      console.error("Erro ao salvar:", error);
+      toast({ title: "Erro", description: "Não foi possível salvar o ciclo.", variant: "destructive" });
+    } finally {
+      setSalvando(false);
     }
-
-    setSaving(false);
   };
 
-  const getMarkedDates = () => {
-    const marked: Date[] = [];
-    ciclos.forEach(ciclo => {
-      const inicio = new Date(ciclo.data_inicio);
-      marked.push(inicio);
-      
-      if (ciclo.data_fim) {
-        const fim = new Date(ciclo.data_fim);
-        const current = new Date(inicio);
-        
-        while (current <= fim) {
-          marked.push(new Date(current));
-          current.setDate(current.getDate() + 1);
-        }
-      }
-    });
-    return marked;
-  };
+  if (loading) {
+    return (
+      <Card>
+        <CardContent className="p-6">
+          <div className="animate-pulse space-y-4">
+            <div className="h-4 bg-muted rounded w-1/3"></div>
+            <div className="h-64 bg-muted rounded"></div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex justify-between items-start">
+    <Card className="overflow-hidden">
+      <CardHeader className="bg-gradient-to-r from-rose-500/10 to-pink-500/10 pb-2 px-4 sm:px-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <CardTitle>Ciclo Menstrual 🌸</CardTitle>
-            <CardDescription>Acompanhe seu ciclo e previsões</CardDescription>
+            <CardTitle className="text-base sm:text-lg flex items-center gap-2">
+              <CalendarHeart className="h-5 w-5 text-rose-500" />
+              Ciclo Menstrual
+            </CardTitle>
+            <CardDescription className="text-xs sm:text-sm">Acompanhe seu ciclo e registre informações diárias</CardDescription>
           </div>
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm">
-                <Plus className="h-4 w-4 mr-2" /> Registrar
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Registrar Período</DialogTitle>
-                <DialogDescription>
-                  Informe as datas e detalhes do seu período
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="dataInicio">Data de Início *</Label>
-                  <Input
-                    id="dataInicio"
-                    type="date"
-                    value={dataInicio}
-                    onChange={(e) => setDataInicio(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="dataFim">Data de Término</Label>
-                  <Input
-                    id="dataFim"
-                    type="date"
-                    value={dataFim}
-                    onChange={(e) => setDataFim(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="intensidade">Intensidade</Label>
-                  <select
-                    id="intensidade"
-                    value={intensidade}
-                    onChange={(e) => setIntensidade(e.target.value)}
-                    className="w-full px-3 py-2 border rounded-md"
-                  >
-                    <option value="">Selecione</option>
-                    <option value="leve">Leve</option>
-                    <option value="moderado">Moderado</option>
-                    <option value="intenso">Intenso</option>
-                  </select>
-                </div>
-                <div>
-                  <Label htmlFor="sintomas">Sintomas</Label>
-                  <Textarea
-                    id="sintomas"
-                    value={sintomas}
-                    onChange={(e) => setSintomas(e.target.value)}
-                    placeholder="Cólicas, TPM, dor de cabeça..."
-                    rows={3}
-                  />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setDialogOpen(false)}>
-                  Cancelar
+          <div className="flex gap-2 flex-wrap">
+            <RegistroDiarioDialog 
+              userId={userId} 
+              selectedDate={selectedDate}
+              onRegistroAdded={carregarDados}
+              existingRegistro={registrosDiarios.find(r => isSameDay(new Date(r.data), selectedDate)) as any}
+            />
+            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm" className="gap-1">
+                  <Plus className="h-4 w-4" />
+                  <span className="hidden sm:inline">Novo Ciclo</span>
+                  <span className="sm:hidden">Ciclo</span>
                 </Button>
-                <Button onClick={handleSalvar} disabled={saving}>
-                  {saving ? "Salvando..." : "Salvar"}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Registrar Novo Ciclo</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="dataInicio">Data de início *</Label>
+                    <Input
+                      id="dataInicio"
+                      type="date"
+                      value={dataInicio}
+                      onChange={(e) => setDataInicio(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="dataFim">Data de término</Label>
+                    <Input
+                      id="dataFim"
+                      type="date"
+                      value={dataFim}
+                      onChange={(e) => setDataFim(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Intensidade</Label>
+                    <Select value={intensidade} onValueChange={setIntensidade}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="leve">Leve</SelectItem>
+                        <SelectItem value="moderado">Moderado</SelectItem>
+                        <SelectItem value="intenso">Intenso</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="sintomas">Sintomas</Label>
+                    <Textarea
+                      id="sintomas"
+                      value={sintomas}
+                      onChange={(e) => setSintomas(e.target.value)}
+                      placeholder="Cólicas, dor de cabeça..."
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancelar</Button>
+                  <Button onClick={handleSalvar} disabled={salvando}>
+                    {salvando ? "Salvando..." : "Salvar"}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
       </CardHeader>
-      <CardContent>
-        {previsaoProximo && (
-          <div className="mb-4 p-3 bg-primary/10 rounded-lg">
-            <p className="text-sm font-medium">
-              Previsão do próximo período: {previsaoProximo.toLocaleDateString('pt-BR')}
+      <CardContent className="p-4 space-y-4">
+        {/* Legenda */}
+        <div className="flex flex-wrap gap-2 sm:gap-3 text-xs">
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 rounded-full bg-rose-500"></div>
+            <span>Menstruação</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 rounded-full bg-green-500"></div>
+            <span>Período fértil</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+            <span>Ovulação</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Heart className="w-3 h-3 text-pink-500 fill-pink-500" />
+            <span>Relação</span>
+          </div>
+        </div>
+
+        {/* Calendário */}
+        <div className="flex justify-center overflow-x-auto">
+          <Calendar
+            mode="single"
+            selected={selectedDate}
+            onSelect={(date) => date && setSelectedDate(date)}
+            locale={ptBR}
+            className="rounded-md border"
+            modifiers={{
+              menstruacao: (date) => getDayType(date) === "menstruacao",
+              fertil: (date) => getDayType(date) === "fertil",
+              ovulacao: (date) => getDayType(date) === "ovulacao",
+              relacao: (date) => getDayType(date) === "relacao",
+            }}
+            modifiersStyles={{
+              menstruacao: { backgroundColor: "hsl(346 77% 50% / 0.3)", borderRadius: "50%" },
+              fertil: { backgroundColor: "hsl(142 76% 36% / 0.3)", borderRadius: "50%" },
+              ovulacao: { backgroundColor: "hsl(217 91% 60% / 0.5)", borderRadius: "50%", fontWeight: "bold" },
+              relacao: { border: "2px solid hsl(330 81% 60%)", borderRadius: "50%" },
+            }}
+          />
+        </div>
+
+        {/* Previsões */}
+        {previsao && (
+          <div className="space-y-2 p-3 bg-muted/50 rounded-lg">
+            <h4 className="font-semibold flex items-center gap-2 text-sm">
+              <Info className="h-4 w-4" />
+              Previsões (baseado nos últimos ciclos)
+            </h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+              <div className="flex items-center gap-2">
+                <Droplets className="h-4 w-4 text-rose-500" />
+                <span>Próxima menstruação: </span>
+                <strong>{format(previsao.proximaMenstruacao, "dd/MM", { locale: ptBR })}</strong>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 rounded-full bg-green-500/50"></div>
+                <span>Período fértil: </span>
+                <strong>
+                  {format(previsao.periodoFertilInicio, "dd/MM")} - {format(previsao.periodoFertilFim, "dd/MM")}
+                </strong>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Média do seu ciclo: {previsao.mediaIntervalo} dias
             </p>
           </div>
         )}
-        
-        <div className="space-y-3">
-          <h4 className="text-sm font-semibold">Últimos Ciclos:</h4>
-          {ciclos.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              Nenhum ciclo registrado ainda. Comece registrando seu primeiro período!
-            </p>
-          ) : (
-            <div className="space-y-2">
-              {ciclos.map((ciclo) => (
-                <div key={ciclo.id} className="flex items-center justify-between p-2 border rounded">
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">
-                      {new Date(ciclo.data_inicio).toLocaleDateString('pt-BR')}
-                      {ciclo.data_fim && ` - ${new Date(ciclo.data_fim).toLocaleDateString('pt-BR')}`}
-                    </p>
-                    {ciclo.intensidade && (
-                      <Badge variant="secondary" className="text-xs mt-1">
-                        {ciclo.intensidade}
-                      </Badge>
-                    )}
-                  </div>
+
+        {/* Últimos ciclos */}
+        {ciclos.length > 0 && (
+          <div className="space-y-2">
+            <h4 className="font-semibold text-sm">Últimos ciclos</h4>
+            <div className="space-y-1">
+              {ciclos.slice(0, 3).map((ciclo) => (
+                <div key={ciclo.id} className="flex justify-between items-center text-sm p-2 bg-muted/30 rounded">
+                  <span>
+                    {format(new Date(ciclo.data_inicio), "dd/MM/yyyy")}
+                    {ciclo.data_fim && ` - ${format(new Date(ciclo.data_fim), "dd/MM")}`}
+                  </span>
+                  {ciclo.intensidade && (
+                    <Badge variant="secondary" className="text-xs">
+                      {ciclo.intensidade}
+                    </Badge>
+                  )}
                 </div>
               ))}
             </div>
-          )}
-        </div>
+          </div>
+        )}
+
+        {ciclos.length === 0 && (
+          <p className="text-sm text-muted-foreground text-center py-4">
+            Nenhum ciclo registrado ainda. Clique em "Novo Ciclo" para começar.
+          </p>
+        )}
       </CardContent>
     </Card>
   );
