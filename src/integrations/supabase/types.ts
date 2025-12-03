@@ -743,6 +743,333 @@ export type Database = {
           },
         ]
       }
+      marketplace_anuncios: {
+        Row: {
+          categoria: string
+          condicao: string
+          created_at: string
+          descricao: string | null
+          id: string
+          imagens: string[] | null
+          preco: number
+          status: string
+          titulo: string
+          updated_at: string
+          user_id: string
+          visualizacoes: number | null
+        }
+        Insert: {
+          categoria: string
+          condicao?: string
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          imagens?: string[] | null
+          preco: number
+          status?: string
+          titulo: string
+          updated_at?: string
+          user_id: string
+          visualizacoes?: number | null
+        }
+        Update: {
+          categoria?: string
+          condicao?: string
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          imagens?: string[] | null
+          preco?: number
+          status?: string
+          titulo?: string
+          updated_at?: string
+          user_id?: string
+          visualizacoes?: number | null
+        }
+        Relationships: []
+      }
+      marketplace_avaliacoes: {
+        Row: {
+          comentario: string | null
+          created_at: string
+          id: string
+          nota: number
+          parceiro_id: string | null
+          servico_id: string | null
+          user_id: string
+        }
+        Insert: {
+          comentario?: string | null
+          created_at?: string
+          id?: string
+          nota: number
+          parceiro_id?: string | null
+          servico_id?: string | null
+          user_id: string
+        }
+        Update: {
+          comentario?: string | null
+          created_at?: string
+          id?: string
+          nota?: number
+          parceiro_id?: string | null
+          servico_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_avaliacoes_parceiro_id_fkey"
+            columns: ["parceiro_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_parceiros"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_avaliacoes_servico_id_fkey"
+            columns: ["servico_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_servicos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketplace_cupons: {
+        Row: {
+          codigo: string
+          created_at: string
+          data_fim: string | null
+          data_inicio: string | null
+          descricao: string | null
+          id: string
+          limite_uso: number | null
+          parceiro_id: string | null
+          status: string
+          tipo_desconto: string
+          titulo: string
+          updated_at: string
+          user_id: string
+          usos_atuais: number | null
+          valor_desconto: number
+          valor_minimo: number | null
+        }
+        Insert: {
+          codigo: string
+          created_at?: string
+          data_fim?: string | null
+          data_inicio?: string | null
+          descricao?: string | null
+          id?: string
+          limite_uso?: number | null
+          parceiro_id?: string | null
+          status?: string
+          tipo_desconto?: string
+          titulo: string
+          updated_at?: string
+          user_id: string
+          usos_atuais?: number | null
+          valor_desconto: number
+          valor_minimo?: number | null
+        }
+        Update: {
+          codigo?: string
+          created_at?: string
+          data_fim?: string | null
+          data_inicio?: string | null
+          descricao?: string | null
+          id?: string
+          limite_uso?: number | null
+          parceiro_id?: string | null
+          status?: string
+          tipo_desconto?: string
+          titulo?: string
+          updated_at?: string
+          user_id?: string
+          usos_atuais?: number | null
+          valor_desconto?: number
+          valor_minimo?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_cupons_parceiro_id_fkey"
+            columns: ["parceiro_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_parceiros"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketplace_favoritos: {
+        Row: {
+          anuncio_id: string | null
+          created_at: string
+          id: string
+          parceiro_id: string | null
+          servico_id: string | null
+          user_id: string
+        }
+        Insert: {
+          anuncio_id?: string | null
+          created_at?: string
+          id?: string
+          parceiro_id?: string | null
+          servico_id?: string | null
+          user_id: string
+        }
+        Update: {
+          anuncio_id?: string | null
+          created_at?: string
+          id?: string
+          parceiro_id?: string | null
+          servico_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_favoritos_anuncio_id_fkey"
+            columns: ["anuncio_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_anuncios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_favoritos_parceiro_id_fkey"
+            columns: ["parceiro_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_parceiros"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_favoritos_servico_id_fkey"
+            columns: ["servico_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_servicos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketplace_parceiros: {
+        Row: {
+          banner_url: string | null
+          categoria: string
+          cidade: string | null
+          created_at: string
+          descricao: string | null
+          endereco: string | null
+          estado: string | null
+          id: string
+          instagram: string | null
+          logo_url: string | null
+          nome_estabelecimento: string
+          status: string
+          telefone: string | null
+          updated_at: string
+          user_id: string
+          verificado: boolean | null
+          visualizacoes: number | null
+          website: string | null
+          whatsapp: string | null
+        }
+        Insert: {
+          banner_url?: string | null
+          categoria: string
+          cidade?: string | null
+          created_at?: string
+          descricao?: string | null
+          endereco?: string | null
+          estado?: string | null
+          id?: string
+          instagram?: string | null
+          logo_url?: string | null
+          nome_estabelecimento: string
+          status?: string
+          telefone?: string | null
+          updated_at?: string
+          user_id: string
+          verificado?: boolean | null
+          visualizacoes?: number | null
+          website?: string | null
+          whatsapp?: string | null
+        }
+        Update: {
+          banner_url?: string | null
+          categoria?: string
+          cidade?: string | null
+          created_at?: string
+          descricao?: string | null
+          endereco?: string | null
+          estado?: string | null
+          id?: string
+          instagram?: string | null
+          logo_url?: string | null
+          nome_estabelecimento?: string
+          status?: string
+          telefone?: string | null
+          updated_at?: string
+          user_id?: string
+          verificado?: boolean | null
+          visualizacoes?: number | null
+          website?: string | null
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
+      marketplace_servicos: {
+        Row: {
+          categoria: string
+          contato_instagram: string | null
+          contato_whatsapp: string | null
+          created_at: string
+          descricao: string | null
+          id: string
+          imagens: string[] | null
+          portfolio: string[] | null
+          preco_maximo: number | null
+          preco_minimo: number | null
+          status: string
+          tipo_preco: string | null
+          titulo: string
+          updated_at: string
+          user_id: string
+          visualizacoes: number | null
+        }
+        Insert: {
+          categoria: string
+          contato_instagram?: string | null
+          contato_whatsapp?: string | null
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          imagens?: string[] | null
+          portfolio?: string[] | null
+          preco_maximo?: number | null
+          preco_minimo?: number | null
+          status?: string
+          tipo_preco?: string | null
+          titulo: string
+          updated_at?: string
+          user_id: string
+          visualizacoes?: number | null
+        }
+        Update: {
+          categoria?: string
+          contato_instagram?: string | null
+          contato_whatsapp?: string | null
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          imagens?: string[] | null
+          portfolio?: string[] | null
+          preco_maximo?: number | null
+          preco_minimo?: number | null
+          status?: string
+          tipo_preco?: string | null
+          titulo?: string
+          updated_at?: string
+          user_id?: string
+          visualizacoes?: number | null
+        }
+        Relationships: []
+      }
       metas_financeiras: {
         Row: {
           created_at: string
