@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Home, Heart, TrendingUp, Sparkles, LogOut, BookOpen, StickyNote, Flame, Award } from "lucide-react";
+import { Home, Heart, TrendingUp, Sparkles, LogOut, BookOpen, StickyNote, Flame, Award, ShoppingBag, Stars, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
@@ -286,50 +286,104 @@ const Dashboard = () => {
           />
         </div>
 
+        {/* Novidades Section */}
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-lg sm:text-xl font-bold text-foreground mb-4 flex items-center gap-2">
+            <span className="text-xl">🆕</span> Novidades
+          </h2>
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            <Link to="/marketplace">
+              <Card className="relative overflow-hidden border-2 border-secondary/30 bg-gradient-to-br from-secondary/10 via-background to-secondary/5 hover-lift h-full">
+                <div className="absolute top-0 right-0 h-20 w-20 rounded-full bg-secondary/20 blur-2xl"></div>
+                <CardHeader className="relative px-4 sm:px-6 pt-4 sm:pt-6">
+                  <div className="mb-3 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-secondary/20 text-secondary">
+                    <ShoppingBag className="h-6 w-6 sm:h-7 sm:w-7" />
+                  </div>
+                  <CardTitle className="text-foreground text-base sm:text-lg">Marketplace</CardTitle>
+                  <CardDescription className="text-xs sm:text-sm">
+                    Brechó, serviços, cupons e muito mais!
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </Link>
+            <Link to="/horoscopo">
+              <Card className="relative overflow-hidden border-2 border-accent/30 bg-gradient-to-br from-accent/10 via-background to-accent/5 hover-lift h-full">
+                <div className="absolute top-0 right-0 h-20 w-20 rounded-full bg-accent/20 blur-2xl"></div>
+                <CardHeader className="relative px-4 sm:px-6 pt-4 sm:pt-6">
+                  <div className="mb-3 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-accent/20 text-accent">
+                    <Stars className="h-6 w-6 sm:h-7 sm:w-7" />
+                  </div>
+                  <CardTitle className="text-foreground text-base sm:text-lg">Horóscopo</CardTitle>
+                  <CardDescription className="text-xs sm:text-sm">
+                    Sua conexão com o universo e previsões diárias
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </Link>
+            <Link to="/comunidade" className="sm:col-span-2 lg:col-span-1">
+              <Card className="relative overflow-hidden border-2 border-primary/30 bg-gradient-to-br from-primary/10 via-background to-primary/5 hover-lift h-full">
+                <div className="absolute top-0 right-0 h-20 w-20 rounded-full bg-primary/20 blur-2xl"></div>
+                <CardHeader className="relative px-4 sm:px-6 pt-4 sm:pt-6">
+                  <div className="mb-3 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-primary/20 text-primary">
+                    <Users className="h-6 w-6 sm:h-7 sm:w-7" />
+                  </div>
+                  <CardTitle className="text-foreground text-base sm:text-lg">Comunidade</CardTitle>
+                  <CardDescription className="text-xs sm:text-sm">
+                    Conecte-se com outras mulheres independentes
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </Link>
+          </div>
+        </div>
+
         {/* Main Actions */}
-        <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          <ActionCard
-            icon={<Home className="h-6 w-6 sm:h-8 sm:w-8" />}
-            title="Casa"
-            description="Organize sua rotina e ganhe XP"
-            link="/casa"
-            color="primary"
-          />
-          <ActionCard
-            icon={<Heart className="h-6 w-6 sm:h-8 sm:w-8" />}
-            title="Saúde"
-            description="Cuide do seu corpo e mente"
-            link="/saude"
-            color="secondary"
-          />
-          <ActionCard
-            icon={<Sparkles className="h-6 w-6 sm:h-8 sm:w-8" />}
-            title="Bem-estar"
-            description="Cultive hábitos saudáveis"
-            link="/bem-estar"
-            color="accent"
-          />
-          <ActionCard
-            icon={<TrendingUp className="h-6 w-6 sm:h-8 sm:w-8" />}
-            title="Finanças"
-            description="Organize suas contas"
-            link="/financas"
-            color="primary"
-          />
-          <ActionCard
-            icon={<BookOpen className="h-6 w-6 sm:h-8 sm:w-8" />}
-            title="Blog"
-            description="Conteúdo inspirador"
-            link="/blog"
-            color="secondary"
-          />
-          <ActionCard
-            icon={<StickyNote className="h-6 w-6 sm:h-8 sm:w-8" />}
-            title="Notas"
-            description="Suas anotações pessoais"
-            link="/notas"
-            color="accent"
-          />
+        <div>
+          <h2 className="text-lg sm:text-xl font-bold text-foreground mb-4">Ações Principais</h2>
+          <div className="grid gap-4 sm:gap-6 grid-cols-2 sm:grid-cols-2 lg:grid-cols-3">
+            <ActionCard
+              icon={<Home className="h-6 w-6 sm:h-8 sm:w-8" />}
+              title="Casa"
+              description="Organize sua rotina e ganhe XP"
+              link="/casa"
+              color="primary"
+            />
+            <ActionCard
+              icon={<Heart className="h-6 w-6 sm:h-8 sm:w-8" />}
+              title="Saúde"
+              description="Cuide do seu corpo e mente"
+              link="/saude"
+              color="secondary"
+            />
+            <ActionCard
+              icon={<Sparkles className="h-6 w-6 sm:h-8 sm:w-8" />}
+              title="Bem-estar"
+              description="Cultive hábitos saudáveis"
+              link="/bem-estar"
+              color="accent"
+            />
+            <ActionCard
+              icon={<TrendingUp className="h-6 w-6 sm:h-8 sm:w-8" />}
+              title="Finanças"
+              description="Organize suas contas"
+              link="/financas"
+              color="primary"
+            />
+            <ActionCard
+              icon={<BookOpen className="h-6 w-6 sm:h-8 sm:w-8" />}
+              title="Blog"
+              description="Conteúdo inspirador"
+              link="/blog"
+              color="secondary"
+            />
+            <ActionCard
+              icon={<StickyNote className="h-6 w-6 sm:h-8 sm:w-8" />}
+              title="Notas"
+              description="Suas anotações pessoais"
+              link="/notas"
+              color="accent"
+            />
+          </div>
         </div>
       </main>
     </div>
