@@ -33,6 +33,12 @@ import MarketplaceServicos from "./pages/MarketplaceServicos";
 import MarketplaceParceiros from "./pages/MarketplaceParceiros";
 import MarketplaceCupons from "./pages/MarketplaceCupons";
 import MeusAnuncios from "./pages/MeusAnuncios";
+import Horoscopo from "./pages/Horoscopo";
+import HoroscopoSignos from "./pages/HoroscopoSignos";
+import HoroscopoSignoDetalhe from "./pages/HoroscopoSignoDetalhe";
+import Numerologia from "./pages/Numerologia";
+import Compatibilidade from "./pages/Compatibilidade";
+import MapaAstral from "./pages/MapaAstral";
 
 const queryClient = new QueryClient();
 
@@ -67,6 +73,12 @@ const App = () => (
                 <Route path="/marketplace/parceiros" element={<MarketplaceParceiros />} />
                 <Route path="/marketplace/cupons" element={<MarketplaceCupons />} />
                 <Route path="/marketplace/meus-anuncios" element={<MeusAnuncios />} />
+                <Route path="/horoscopo" element={<Horoscopo />} />
+                <Route path="/horoscopo/signos" element={<HoroscopoSignos />} />
+                <Route path="/horoscopo/signos/:signo" element={<HoroscopoSignoDetalhe />} />
+                <Route path="/horoscopo/numerologia" element={<Numerologia />} />
+                <Route path="/horoscopo/compatibilidade" element={<Compatibilidade />} />
+                <Route path="/horoscopo/mapa-astral" element={<MapaAstral />} />
                 <Route path="/vida-pratica" element={<VidaPratica />} />
                 <Route path="/biblioteca" element={<Biblioteca />} />
                 <Route path="/ebook" element={<Ebook />} />
