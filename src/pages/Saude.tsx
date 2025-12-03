@@ -4,28 +4,22 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Droplets, Utensils, Heart } from "lucide-react";
+import { ArrowLeft, Droplets, Heart } from "lucide-react";
 import { toast } from "sonner";
-import { AddRefeicaoDialog } from "@/components/saude/AddRefeicaoDialog";
 import { HumorDialog } from "@/components/saude/HumorDialog";
 import { ModuleHeader } from "@/components/ui/ModuleHeader";
-import { EmptyStateVisual } from "@/components/ui/EmptyStateVisual";
 import { DecorativeCard } from "@/components/ui/DecorativeCard";
+import { CicloMenstrualCalendario } from "@/components/saude/CicloMenstrualCalendario";
+import { AnalisarRefeicaoDialog } from "@/components/saude/AnalisarRefeicaoDialog";
+import { ResumoNutricionalCard } from "@/components/saude/ResumoNutricionalCard";
 import saudeIllustration from "@/assets/saude-illustration.jpg";
-
-interface Refeicao {
-  id: string;
-  tipo: string;
-  descricao: string | null;
-  data_hora: string;
-}
 
 const Saude = () => {
   const [user, setUser] = useState<any>(null);
   const [aguaHoje, setAguaHoje] = useState(0);
   const [metaAgua] = useState(2000);
-  const [refeicoes, setRefeicoes] = useState<Refeicao[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,17 +32,12 @@ const Saude = () => {
       }
 
       setUser(session.user);
-      await carregarDados(session.user.id);
+      await carregarAguaHoje(session.user.id);
       setLoading(false);
     };
 
     checkAuth();
   }, [navigate]);
-
-  const carregarDados = async (userId: string) => {
-    await carregarAguaHoje(userId);
-    await carregarRefeicoes(userId);
-  };
 
   const carregarAguaHoje = async (userId: string) => {
     const hoje = new Date().toISOString().split("T")[0];
@@ -66,24 +55,6 @@ const Saude = () => {
 
     const total = data?.reduce((acc, reg) => acc + reg.quantidade_ml, 0) || 0;
     setAguaHoje(total);
-  };
-
-  const carregarRefeicoes = async (userId: string) => {
-    const hoje = new Date().toISOString().split("T")[0];
-    
-    const { data, error } = await supabase
-      .from("refeicoes")
-      .select("*")
-      .eq("user_id", userId)
-      .gte("data_hora", hoje)
-      .order("data_hora", { ascending: false });
-
-    if (error) {
-      toast.error("Erro ao carregar refeições");
-      return;
-    }
-
-    setRefeicoes(data || []);
   };
 
   const adicionarAgua = async (quantidade: number) => {
@@ -119,7 +90,7 @@ const Saude = () => {
   const progressoAgua = (aguaHoje / metaAgua) * 100;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-20">
       {/* Header */}
       <div className="mb-6">
         <div className="container mx-auto px-3 sm:px-4 pt-4 pb-2">
@@ -192,44 +163,31 @@ const Saude = () => {
           </CardContent>
         </DecorativeCard>
 
-        {/* Refeições Card */}
+        {/* Ciclo Menstrual */}
+        {user && <CicloMenstrualCalendario userId={user.id} />}
+
+        {/* Alimentação com IA */}
         <Card className="gradient-card shadow-card">
           <CardHeader className="px-4 sm:px-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
-                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-                  <Utensils className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
-                  Alimentação de Hoje
-                </CardTitle>
+                <CardTitle className="text-base sm:text-lg">🍽️ Alimentação</CardTitle>
+                <CardDescription className="text-xs sm:text-sm">
+                  Registre suas refeições e acompanhe calorias com IA
+                </CardDescription>
               </div>
-              {user && <AddRefeicaoDialog userId={user.id} onRefeicaoAdded={() => carregarDados(user.id)} />}
+              {user && (
+                <AnalisarRefeicaoDialog 
+                  userId={user.id} 
+                  onRefeicaoAdded={() => setRefetchTrigger(prev => prev + 1)} 
+                />
+              )}
             </div>
           </CardHeader>
-          <CardContent className="px-4 sm:px-6">
-            {refeicoes.length === 0 ? (
-              <EmptyStateVisual
-                icon={Utensils}
-                illustration={saudeIllustration}
-                title="Nenhuma refeição ainda"
-                description="Que tal registrar o que você comeu hoje? Cada passo na sua jornada de saúde conta!"
-              />
-            ) : (
-              <div className="space-y-2 sm:space-y-3">
-                {refeicoes.map((refeicao) => (
-                  <div key={refeicao.id} className="flex items-start gap-3 rounded-lg border border-border bg-card p-3 sm:p-4 hover-lift">
-                    <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-primary/10 flex-shrink-0">
-                      <Utensils className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold capitalize text-foreground text-sm sm:text-base">{refeicao.tipo}</h4>
-                      {refeicao.descricao && <p className="text-xs sm:text-sm text-muted-foreground break-words">{refeicao.descricao}</p>}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
         </Card>
+
+        {/* Resumo Nutricional */}
+        {user && <ResumoNutricionalCard userId={user.id} refetchTrigger={refetchTrigger} />}
       </main>
     </div>
   );

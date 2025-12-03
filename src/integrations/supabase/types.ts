@@ -1142,6 +1142,39 @@ export type Database = {
         }
         Relationships: []
       }
+      metas_nutricionais: {
+        Row: {
+          calorias_diarias: number | null
+          carboidratos_diarios: number | null
+          created_at: string | null
+          gorduras_diarias: number | null
+          id: string
+          proteinas_diarias: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          calorias_diarias?: number | null
+          carboidratos_diarios?: number | null
+          created_at?: string | null
+          gorduras_diarias?: number | null
+          id?: string
+          proteinas_diarias?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          calorias_diarias?: number | null
+          carboidratos_diarios?: number | null
+          created_at?: string | null
+          gorduras_diarias?: number | null
+          id?: string
+          proteinas_diarias?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       notas: {
         Row: {
           categoria: string | null
@@ -1377,26 +1410,50 @@ export type Database = {
       }
       refeicoes: {
         Row: {
+          alimentos_identificados: Json | null
+          calorias: number | null
+          carboidratos: number | null
           created_at: string
           data_hora: string
           descricao: string | null
+          fibras: number | null
+          foto_url: string | null
+          gorduras: number | null
           id: string
+          porcao: string | null
+          proteinas: number | null
           tipo: string
           user_id: string
         }
         Insert: {
+          alimentos_identificados?: Json | null
+          calorias?: number | null
+          carboidratos?: number | null
           created_at?: string
           data_hora?: string
           descricao?: string | null
+          fibras?: number | null
+          foto_url?: string | null
+          gorduras?: number | null
           id?: string
+          porcao?: string | null
+          proteinas?: number | null
           tipo: string
           user_id: string
         }
         Update: {
+          alimentos_identificados?: Json | null
+          calorias?: number | null
+          carboidratos?: number | null
           created_at?: string
           data_hora?: string
           descricao?: string | null
+          fibras?: number | null
+          foto_url?: string | null
+          gorduras?: number | null
           id?: string
+          porcao?: string | null
+          proteinas?: number | null
           tipo?: string
           user_id?: string
         }
@@ -1423,6 +1480,48 @@ export type Database = {
           id?: string
           quantidade_ml?: number
           user_id?: string
+        }
+        Relationships: []
+      }
+      registro_ciclo_diario: {
+        Row: {
+          created_at: string | null
+          data: string
+          fluxo: string | null
+          humor: string | null
+          id: string
+          medicamento: string | null
+          notas: string | null
+          sintomas: string[] | null
+          teve_relacao: boolean | null
+          user_id: string
+          usou_protecao: boolean | null
+        }
+        Insert: {
+          created_at?: string | null
+          data: string
+          fluxo?: string | null
+          humor?: string | null
+          id?: string
+          medicamento?: string | null
+          notas?: string | null
+          sintomas?: string[] | null
+          teve_relacao?: boolean | null
+          user_id: string
+          usou_protecao?: boolean | null
+        }
+        Update: {
+          created_at?: string | null
+          data?: string
+          fluxo?: string | null
+          humor?: string | null
+          id?: string
+          medicamento?: string | null
+          notas?: string | null
+          sintomas?: string[] | null
+          teve_relacao?: boolean | null
+          user_id?: string
+          usou_protecao?: boolean | null
         }
         Relationships: []
       }
