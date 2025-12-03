@@ -27,6 +27,12 @@ import Ebook from "./pages/Ebook";
 import EbookReader from "./pages/EbookReader";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
+import Marketplace from "./pages/Marketplace";
+import MarketplaceBrecho from "./pages/MarketplaceBrecho";
+import MarketplaceServicos from "./pages/MarketplaceServicos";
+import MarketplaceParceiros from "./pages/MarketplaceParceiros";
+import MarketplaceCupons from "./pages/MarketplaceCupons";
+import MeusAnuncios from "./pages/MeusAnuncios";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +61,12 @@ const App = () => (
                 <Route path="/comunidade" element={<Comunidade />} />
                 <Route path="/comunidade/:id" element={<ComunidadePost />} />
                 <Route path="/perfil/:userId" element={<PerfilPublico />} />
+                <Route path="/marketplace" element={<Marketplace />} />
+                <Route path="/marketplace/brecho" element={<MarketplaceBrecho />} />
+                <Route path="/marketplace/servicos" element={<MarketplaceServicos />} />
+                <Route path="/marketplace/parceiros" element={<MarketplaceParceiros />} />
+                <Route path="/marketplace/cupons" element={<MarketplaceCupons />} />
+                <Route path="/marketplace/meus-anuncios" element={<MeusAnuncios />} />
                 <Route path="/vida-pratica" element={<VidaPratica />} />
                 <Route path="/biblioteca" element={<Biblioteca />} />
                 <Route path="/ebook" element={<Ebook />} />

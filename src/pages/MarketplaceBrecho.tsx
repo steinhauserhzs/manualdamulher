@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { ArrowLeft, Plus, Search, Filter } from "lucide-react";
+import { ArrowLeft, Plus, Search, Filter, ShoppingBag } from "lucide-react";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { AnuncioCard } from "@/components/marketplace/AnuncioCard";
@@ -195,7 +195,7 @@ const MarketplaceBrecho = () => {
           <LoadingSkeleton />
         ) : filteredAnuncios.length === 0 ? (
           <EmptyState
-            icon="shopping"
+            icon={ShoppingBag}
             title="Nenhum anúncio encontrado"
             description="Seja a primeira a criar um anúncio no brechó!"
           />

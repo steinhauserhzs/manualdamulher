@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, ShoppingBag, Briefcase, Store, Ticket } from "lucide-react";
+import { ArrowLeft, ShoppingBag, Briefcase, Store, Ticket as TicketIcon } from "lucide-react";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { AnuncioCard } from "@/components/marketplace/AnuncioCard";
@@ -102,7 +102,7 @@ const MeusAnuncios = () => {
               <span className="text-xs sm:text-sm">Parceiros ({parceiros.length})</span>
             </TabsTrigger>
             <TabsTrigger value="cupons" className="flex flex-col sm:flex-row gap-1 py-2">
-              <Ticket className="h-4 w-4" />
+              <TicketIcon className="h-4 w-4" />
               <span className="text-xs sm:text-sm">Cupons ({cupons.length})</span>
             </TabsTrigger>
           </TabsList>
@@ -110,7 +110,7 @@ const MeusAnuncios = () => {
           <TabsContent value="anuncios" className="mt-4">
             {anuncios.length === 0 ? (
               <EmptyState
-                icon="shopping"
+                icon={ShoppingBag}
                 title="Nenhum anúncio"
                 description="Você ainda não criou anúncios no brechó."
               />
@@ -126,7 +126,7 @@ const MeusAnuncios = () => {
           <TabsContent value="servicos" className="mt-4">
             {servicos.length === 0 ? (
               <EmptyState
-                icon="briefcase"
+                icon={Briefcase}
                 title="Nenhum serviço"
                 description="Você ainda não ofereceu serviços."
               />
@@ -142,7 +142,7 @@ const MeusAnuncios = () => {
           <TabsContent value="parceiros" className="mt-4">
             {parceiros.length === 0 ? (
               <EmptyState
-                icon="store"
+                icon={Store}
                 title="Nenhum parceiro"
                 description="Você ainda não cadastrou estabelecimentos."
               />
@@ -158,7 +158,7 @@ const MeusAnuncios = () => {
           <TabsContent value="cupons" className="mt-4">
             {cupons.length === 0 ? (
               <EmptyState
-                icon="ticket"
+                icon={TicketIcon}
                 title="Nenhum cupom"
                 description="Você ainda não criou cupons de desconto."
               />

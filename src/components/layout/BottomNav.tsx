@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Heart, Sparkles, TrendingUp, Menu, Users } from "lucide-react";
+import { Home, Heart, Sparkles, TrendingUp, Menu, Users, ShoppingBag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Sheet,
@@ -14,12 +14,13 @@ import { EmergencyButton } from "@/components/ebook/EmergencyButton";
 const mainNavItems = [
   { path: "/dashboard", icon: Home, label: "Início", shortLabel: "Início" },
   { path: "/saude", icon: Heart, label: "Saúde", shortLabel: "Saúde" },
-  { path: "/bem-estar", icon: Sparkles, label: "Bem-estar", shortLabel: "Bem" },
+  { path: "/marketplace", icon: ShoppingBag, label: "Marketplace", shortLabel: "Loja" },
   { path: "/comunidade", icon: Users, label: "Comunidade", shortLabel: "Social" },
 ];
 
 const menuItems = [
   { path: "/financas", icon: TrendingUp, label: "Finanças" },
+  { path: "/bem-estar", icon: Sparkles, label: "Bem-estar" },
   { path: "/ebook", icon: BookOpen, label: "E-book" },
   { path: "/notas", icon: StickyNote, label: "Notas" },
   { path: "/blog", icon: BookOpen, label: "Blog" },
