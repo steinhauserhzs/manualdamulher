@@ -1,1 +1,4 @@
 project_id = "gkdspxzksufrpzocpzmg"
+
+[functions.gerar-horoscopo]
+verify_jwt = false

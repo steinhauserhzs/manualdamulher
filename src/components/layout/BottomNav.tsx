@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Heart, Sparkles, TrendingUp, Menu, Users, ShoppingBag } from "lucide-react";
+import { Home, Heart, Sparkles, TrendingUp, Menu, Users, ShoppingBag, Stars } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Sheet,
@@ -21,6 +21,7 @@ const mainNavItems = [
 const menuItems = [
   { path: "/financas", icon: TrendingUp, label: "Finanças" },
   { path: "/bem-estar", icon: Sparkles, label: "Bem-estar" },
+  { path: "/horoscopo", icon: Stars, label: "Horóscopo" },
   { path: "/ebook", icon: BookOpen, label: "E-book" },
   { path: "/notas", icon: StickyNote, label: "Notas" },
   { path: "/blog", icon: BookOpen, label: "Blog" },

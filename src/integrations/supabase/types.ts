@@ -743,6 +743,45 @@ export type Database = {
           },
         ]
       }
+      horoscopo_diario: {
+        Row: {
+          amor: string | null
+          cor_do_dia: string | null
+          created_at: string
+          data: string
+          id: string
+          numero_sorte: number | null
+          previsao_geral: string
+          saude: string | null
+          signo: string
+          trabalho: string | null
+        }
+        Insert: {
+          amor?: string | null
+          cor_do_dia?: string | null
+          created_at?: string
+          data?: string
+          id?: string
+          numero_sorte?: number | null
+          previsao_geral: string
+          saude?: string | null
+          signo: string
+          trabalho?: string | null
+        }
+        Update: {
+          amor?: string | null
+          cor_do_dia?: string | null
+          created_at?: string
+          data?: string
+          id?: string
+          numero_sorte?: number | null
+          previsao_geral?: string
+          saude?: string | null
+          signo?: string
+          trabalho?: string | null
+        }
+        Relationships: []
+      }
       marketplace_anuncios: {
         Row: {
           categoria: string
@@ -1156,6 +1195,42 @@ export type Database = {
           dados_onboarding?: Json | null
           id?: string
           step?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      perfil_astrologico: {
+        Row: {
+          ano_pessoal: number
+          created_at: string
+          elemento: string
+          id: string
+          modalidade: string
+          numero_pessoal: number
+          signo_solar: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ano_pessoal: number
+          created_at?: string
+          elemento: string
+          id?: string
+          modalidade: string
+          numero_pessoal: number
+          signo_solar: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ano_pessoal?: number
+          created_at?: string
+          elemento?: string
+          id?: string
+          modalidade?: string
+          numero_pessoal?: number
+          signo_solar?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
