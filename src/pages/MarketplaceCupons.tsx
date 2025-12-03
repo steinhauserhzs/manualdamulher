@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { ArrowLeft, Plus, Search, Ticket } from "lucide-react";
+import { ArrowLeft, Plus, Search, Ticket as TicketIcon } from "lucide-react";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { CupomCard } from "@/components/marketplace/CupomCard";
@@ -156,7 +156,7 @@ const MarketplaceCupons = () => {
           <LoadingSkeleton />
         ) : filteredCupons.length === 0 ? (
           <EmptyState
-            icon="ticket"
+            icon={TicketIcon}
             title="Nenhum cupom encontrado"
             description="Fique de olho! Novos cupons podem aparecer a qualquer momento."
           />

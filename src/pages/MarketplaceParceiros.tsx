@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { ArrowLeft, Plus, Search, Filter } from "lucide-react";
+import { ArrowLeft, Plus, Search, Filter, Store } from "lucide-react";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ParceiroCard } from "@/components/marketplace/ParceiroCard";
@@ -163,7 +163,7 @@ const MarketplaceParceiros = () => {
           <LoadingSkeleton />
         ) : filteredParceiros.length === 0 ? (
           <EmptyState
-            icon="store"
+            icon={Store}
             title="Nenhum parceiro encontrado"
             description="Seja a primeira a cadastrar seu estabelecimento!"
           />
