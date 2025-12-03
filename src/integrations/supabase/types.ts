@@ -1525,6 +1525,50 @@ export type Database = {
         }
         Relationships: []
       }
+      registro_suplementacao: {
+        Row: {
+          created_at: string
+          data: string
+          horario: string | null
+          id: string
+          notas: string | null
+          quantidade: string | null
+          suplemento_id: string | null
+          tomou: boolean
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data?: string
+          horario?: string | null
+          id?: string
+          notas?: string | null
+          quantidade?: string | null
+          suplemento_id?: string | null
+          tomou?: boolean
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: string
+          horario?: string | null
+          id?: string
+          notas?: string | null
+          quantidade?: string | null
+          suplemento_id?: string | null
+          tomou?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "registro_suplementacao_suplemento_id_fkey"
+            columns: ["suplemento_id"]
+            isOneToOne: false
+            referencedRelation: "suplementos_cadastrados"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       saude_resumo_diario: {
         Row: {
           created_at: string
@@ -1551,6 +1595,63 @@ export type Database = {
           humor?: string | null
           id?: string
           notas?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      suplementos_cadastrados: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          data_validade: string | null
+          dosagem_recomendada: string | null
+          horario_ideal: string | null
+          id: string
+          marca: string | null
+          nome: string
+          notas: string | null
+          quantidade_restante: number | null
+          quantidade_total: number | null
+          sabor: string | null
+          tipo: string
+          unidade: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          data_validade?: string | null
+          dosagem_recomendada?: string | null
+          horario_ideal?: string | null
+          id?: string
+          marca?: string | null
+          nome: string
+          notas?: string | null
+          quantidade_restante?: number | null
+          quantidade_total?: number | null
+          sabor?: string | null
+          tipo?: string
+          unidade?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          data_validade?: string | null
+          dosagem_recomendada?: string | null
+          horario_ideal?: string | null
+          id?: string
+          marca?: string | null
+          nome?: string
+          notas?: string | null
+          quantidade_restante?: number | null
+          quantidade_total?: number | null
+          sabor?: string | null
+          tipo?: string
+          unidade?: string | null
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
