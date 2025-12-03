@@ -12,6 +12,7 @@ import { DecorativeCard } from "@/components/ui/DecorativeCard";
 import { CicloMenstrualCalendario } from "@/components/saude/CicloMenstrualCalendario";
 import { AnalisarRefeicaoDialog } from "@/components/saude/AnalisarRefeicaoDialog";
 import { ResumoNutricionalCard } from "@/components/saude/ResumoNutricionalCard";
+import { SuplementacaoCard } from "@/components/saude/SuplementacaoCard";
 import saudeIllustration from "@/assets/saude-illustration.jpg";
 
 const Saude = () => {
@@ -188,6 +189,9 @@ const Saude = () => {
 
         {/* Resumo Nutricional */}
         {user && <ResumoNutricionalCard userId={user.id} refetchTrigger={refetchTrigger} />}
+
+        {/* Suplementação */}
+        {user && <SuplementacaoCard userId={user.id} />}
       </main>
     </div>
   );
