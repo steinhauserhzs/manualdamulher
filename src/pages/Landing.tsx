@@ -14,7 +14,7 @@ import {
   CheckCircle2,
   Star,
   BookOpen,
-  ShoppingCart,
+  
   ShoppingBag,
   Stars,
   Camera,
@@ -33,7 +33,7 @@ import heroImage from "@/assets/hero-woman.jpg";
 import casaIllustration from "@/assets/casa-illustration.jpg";
 import saudeIllustration from "@/assets/saude-illustration.jpg";
 import financasIllustration from "@/assets/financas-illustration.jpg";
-import ebookMockup from "@/assets/ebook-mockup.jpg";
+
 import bemEstarIllustration from "@/assets/bem-estar-illustration.jpg";
 
 const Landing = () => {
@@ -65,10 +65,10 @@ const Landing = () => {
               </p>
               <div className="flex flex-col gap-3 sm:flex-row justify-center md:justify-start w-full sm:w-auto">
                 <Button asChild variant="hero" size="xl" className="hover-scale">
-                  <a href="#ebook">
-                    <BookOpen className="mr-2 h-5 w-5 flex-shrink-0" />
-                    Adquirir E-book + App
-                  </a>
+                  <Link to="/auth">
+                    <Sparkles className="mr-2 h-5 w-5 flex-shrink-0" />
+                    Começar Agora - 7 dias grátis
+                  </Link>
                 </Button>
                 <Button asChild variant="outline" size="xl" className="hover-scale">
                   <Link to="/blog">
@@ -80,15 +80,15 @@ const Landing = () => {
               <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-4 text-sm text-muted-foreground md:justify-start">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
-                  <span>Acesso liberado com o E-book</span>
+                  <span>7 dias grátis para testar</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
-                  <span>9 módulos completos</span>
+                  <span>Cancele quando quiser</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
-                  <span>IA integrada</span>
+                  <span>9 módulos + IA</span>
                 </div>
               </div>
             </div>
@@ -269,110 +269,6 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* E-book Section */}
-      <section id="ebook" className="px-4 py-16 md:py-24 bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 w-full max-w-full overflow-hidden">
-        <div className="container mx-auto max-w-6xl w-full">
-          <div className="grid md:grid-cols-2 gap-12 items-center w-full">
-            {/* Imagem do E-book */}
-            <div className="relative w-full max-w-full">
-              <img 
-                src={ebookMockup} 
-                alt="Manual da Mulher Independente - E-book"
-                className="rounded-3xl shadow-card hover-scale w-full h-auto max-w-full"
-                width="1280"
-                height="720"
-                loading="lazy"
-              />
-              <div className="absolute top-2 right-2 md:top-4 md:right-4 bg-primary text-white px-2 py-1 md:px-4 md:py-2 rounded-full font-bold text-xs md:text-sm">
-                🏆 Mais Vendido
-              </div>
-            </div>
-            
-            {/* Conteúdo */}
-            <div className="w-full max-w-full">
-              <h2 className="mb-4 text-2xl md:text-3xl lg:text-4xl break-words">
-                E-book: Manual da Mulher Independente
-              </h2>
-              <p className="text-lg md:text-xl text-muted-foreground mb-6 break-words">
-                Seu guia completo para organizar a vida, conquistar independência 
-                e cuidar de você mesma. + Acesso VITALÍCIO ao nosso app exclusivo com 9 módulos!
-              </p>
-              
-              {/* O que está incluído */}
-              <div className="space-y-4 mb-8">
-                <div className="flex items-start gap-3">
-                  <CheckCircle2 className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-bold">E-book Completo (200+ páginas)</h4>
-                    <p className="text-muted-foreground text-sm">Guia prático com passo a passo detalhado</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <CheckCircle2 className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-bold">App com 9 Módulos Completos</h4>
-                    <p className="text-muted-foreground text-sm">Casa, Saúde, Finanças, Bem-estar, Comunidade, Marketplace e mais</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <CheckCircle2 className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-bold">IA para Análise de Refeições</h4>
-                    <p className="text-muted-foreground text-sm">Tire foto do prato e saiba as calorias automaticamente</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <CheckCircle2 className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-bold">Horóscopo Personalizado</h4>
-                    <p className="text-muted-foreground text-sm">Previsões diárias, numerologia e compatibilidade</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <CheckCircle2 className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-bold">Comunidade Exclusiva</h4>
-                    <p className="text-muted-foreground text-sm">Rede social para conectar e apoiar outras mulheres</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <CheckCircle2 className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-bold">Marketplace + Cupons</h4>
-                    <p className="text-muted-foreground text-sm">Brechó, serviços e descontos exclusivos</p>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Preço e CTA */}
-              <div className="gradient-card rounded-2xl p-4 md:p-6 shadow-card w-full max-w-full">
-                <div className="flex flex-wrap items-baseline gap-2 md:gap-3 mb-4">
-                  <span className="text-3xl md:text-4xl font-bold text-foreground">R$ 97,00</span>
-                  <span className="text-lg md:text-xl line-through text-muted-foreground">R$ 197,00</span>
-                  <span className="bg-success text-white px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-bold">
-                    50% OFF
-                  </span>
-                </div>
-                <p className="text-xs md:text-sm text-muted-foreground mb-4">
-                  Ou 12x de R$ 9,70 sem juros
-                </p>
-                <Button size="lg" variant="hero" className="w-full hover-scale text-sm md:text-base">
-                  <ShoppingCart className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-                  <span className="break-words">Comprar E-book + Acesso ao App</span>
-                </Button>
-                <p className="text-xs text-center text-muted-foreground mt-3 break-words">
-                  🔒 Compra 100% segura • 7 dias de garantia
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Features */}
       <section id="funcionalidades" className="px-4 py-16 md:py-24 w-full max-w-full overflow-hidden">
@@ -455,9 +351,9 @@ const Landing = () => {
           <div className="grid md:grid-cols-3 gap-8 w-full">
             <StepCard
               number="1"
-              icon={<ShoppingCart className="h-8 w-8" />}
-              title="Compre o E-book"
-              description="Adquira o Manual da Mulher Independente e ganhe acesso vitalício ao app"
+              icon={<Sparkles className="h-8 w-8" />}
+              title="Crie sua conta"
+              description="Cadastre-se gratuitamente e aproveite 7 dias grátis para testar tudo"
             />
             <StepCard
               number="2"
@@ -613,10 +509,10 @@ const Landing = () => {
             conectando-se na comunidade e conquistando sua independência.
           </p>
           <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90 hover-scale text-sm md:text-lg px-6 md:px-8 py-4 md:py-6 h-auto w-full max-w-md mx-auto">
-            <a href="#ebook" className="flex items-center justify-center">
-              <ShoppingCart className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-              <span className="break-words">Adquirir Agora por R$ 97</span>
-            </a>
+            <Link to="/auth" className="flex items-center justify-center">
+              <Sparkles className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+              <span className="break-words">Começar Agora - 7 dias grátis</span>
+            </Link>
           </Button>
         </div>
       </section>

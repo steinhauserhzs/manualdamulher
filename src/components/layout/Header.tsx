@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Heart, Menu, BookOpen } from "lucide-react";
+import { Heart, Menu, Sparkles } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { EmergencyButton } from "@/components/ebook/EmergencyButton";
 
@@ -12,7 +12,6 @@ export const Header = () => {
     { href: "#sobre", label: "Sobre" },
     { href: "#novidades", label: "Novidades" },
     { href: "#funcionalidades", label: "Funcionalidades" },
-    { href: "#ebook", label: "E-book" },
     { href: "/blog", label: "Blog" },
     { href: "#depoimentos", label: "Depoimentos" },
   ];
@@ -59,10 +58,10 @@ export const Header = () => {
               <Link to="/auth">Entrar</Link>
             </Button>
             <Button variant="hero" asChild className="hover-scale">
-              <a href="#ebook" onClick={(e) => scrollToSection(e, "#ebook")}>
-                <BookOpen className="mr-2 h-4 w-4" />
-                Comprar E-book
-              </a>
+              <Link to="/auth">
+                <Sparkles className="mr-2 h-4 w-4" />
+                Começar Agora
+              </Link>
             </Button>
           </div>
           
@@ -99,16 +98,10 @@ export const Header = () => {
                   </Link>
                 </Button>
                 <Button variant="hero" asChild>
-                  <a 
-                    href="#ebook" 
-                    onClick={(e) => {
-                      scrollToSection(e, "#ebook");
-                      setIsOpen(false);
-                    }}
-                  >
-                    <BookOpen className="mr-2 h-4 w-4" />
-                    Comprar E-book
-                  </a>
+                  <Link to="/auth" onClick={() => setIsOpen(false)}>
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    Começar Agora
+                  </Link>
                 </Button>
               </div>
             </SheetContent>
