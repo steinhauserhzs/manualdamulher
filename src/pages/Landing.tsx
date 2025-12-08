@@ -63,14 +63,14 @@ const Landing = () => {
                 O app completo para mulheres que querem ter controle total sobre casa,
                 finanças, saúde, bem-estar, comunidade e muito mais. Tudo em um só lugar. 💜
               </p>
-              <div className="flex flex-col gap-3 sm:flex-row justify-center md:justify-start w-full sm:w-auto">
-                <Button asChild variant="hero" size="xl" className="hover-scale">
+              <div className="flex flex-col gap-3 w-full max-w-full sm:flex-row sm:w-auto">
+                <Button asChild variant="hero" size="lg" className="hover-scale w-full sm:w-auto text-center">
                   <Link to="/auth">
                     <Sparkles className="mr-2 h-5 w-5 flex-shrink-0" />
-                    Começar Agora - 7 dias grátis
+                    <span className="truncate">Começar Agora - 7 dias grátis</span>
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="xl" className="hover-scale">
+                <Button asChild variant="outline" size="lg" className="hover-scale w-full sm:w-auto">
                   <Link to="/blog">
                     <Book className="mr-2 h-5 w-5 flex-shrink-0" />
                     Ver Blog
