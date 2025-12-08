@@ -10,6 +10,8 @@ export const Header = () => {
   
   const navLinks = [
     { href: "#sobre", label: "Sobre" },
+    { href: "#novidades", label: "Novidades" },
+    { href: "#funcionalidades", label: "Funcionalidades" },
     { href: "#ebook", label: "E-book" },
     { href: "/blog", label: "Blog" },
     { href: "#depoimentos", label: "Depoimentos" },
@@ -37,13 +39,13 @@ export const Header = () => {
           </Link>
           
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden lg:flex items-center gap-5">
             {navLinks.map(link => (
               <a 
                 key={link.href}
                 href={link.href}
                 onClick={(e) => scrollToSection(e, link.href)}
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 {link.label}
               </a>
@@ -72,7 +74,7 @@ export const Header = () => {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[280px]">
-              <div className="flex flex-col gap-6 mt-8">
+              <div className="flex flex-col gap-4 mt-8">
                 {navLinks.map(link => (
                   <a 
                     key={link.href}
