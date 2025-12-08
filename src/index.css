@@ -220,6 +220,30 @@ All colors MUST be HSL.
     }
   }
 
+  /* Landing Page Background Pattern */
+  .bg-landing-pattern {
+    background-image: 
+      radial-gradient(ellipse 80% 50% at 20% 40%, hsl(280 40% 45% / 0.06) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 40% at 80% 60%, hsl(15 75% 65% / 0.05) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 30% at 50% 80%, hsl(150 30% 55% / 0.04) 0%, transparent 50%);
+  }
+
+  .bg-landing-pattern-dark {
+    background-image: 
+      radial-gradient(ellipse 80% 50% at 20% 40%, hsl(280 45% 55% / 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 40% at 80% 60%, hsl(15 70% 60% / 0.06) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 30% at 50% 80%, hsl(150 35% 50% / 0.05) 0%, transparent 50%);
+  }
+
+  /* Decorative circles for subtle visual interest */
+  .decorative-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
   /* E-book Reader Optimized Styles */
   .ebook-content {
     @apply text-foreground/90;
