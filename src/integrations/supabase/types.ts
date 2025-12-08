@@ -106,6 +106,63 @@ export type Database = {
           },
         ]
       }
+      calendario_eventos: {
+        Row: {
+          concluido: boolean | null
+          cor: string | null
+          created_at: string
+          data_fim: string | null
+          data_inicio: string
+          descricao: string | null
+          frequencia_recorrencia: string | null
+          id: string
+          lembrete_minutos: number | null
+          modulo: string | null
+          recorrente: boolean | null
+          referencia_id: string | null
+          tipo: string
+          titulo: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          concluido?: boolean | null
+          cor?: string | null
+          created_at?: string
+          data_fim?: string | null
+          data_inicio: string
+          descricao?: string | null
+          frequencia_recorrencia?: string | null
+          id?: string
+          lembrete_minutos?: number | null
+          modulo?: string | null
+          recorrente?: boolean | null
+          referencia_id?: string | null
+          tipo?: string
+          titulo: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          concluido?: boolean | null
+          cor?: string | null
+          created_at?: string
+          data_fim?: string | null
+          data_inicio?: string
+          descricao?: string | null
+          frequencia_recorrencia?: string | null
+          id?: string
+          lembrete_minutos?: number | null
+          modulo?: string | null
+          recorrente?: boolean | null
+          referencia_id?: string | null
+          tipo?: string
+          titulo?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       categorias_blog: {
         Row: {
           created_at: string
@@ -779,6 +836,137 @@ export type Database = {
           saude?: string | null
           signo?: string
           trabalho?: string | null
+        }
+        Relationships: []
+      }
+      lembretes: {
+        Row: {
+          ativo: boolean | null
+          created_at: string
+          dias_semana: string[] | null
+          horario: string
+          id: string
+          mensagem: string | null
+          modulo: string | null
+          referencia_id: string | null
+          tipo: string
+          titulo: string
+          ultimo_disparo: string | null
+          user_id: string
+        }
+        Insert: {
+          ativo?: boolean | null
+          created_at?: string
+          dias_semana?: string[] | null
+          horario: string
+          id?: string
+          mensagem?: string | null
+          modulo?: string | null
+          referencia_id?: string | null
+          tipo?: string
+          titulo: string
+          ultimo_disparo?: string | null
+          user_id: string
+        }
+        Update: {
+          ativo?: boolean | null
+          created_at?: string
+          dias_semana?: string[] | null
+          horario?: string
+          id?: string
+          mensagem?: string | null
+          modulo?: string | null
+          referencia_id?: string | null
+          tipo?: string
+          titulo?: string
+          ultimo_disparo?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      lista_compras: {
+        Row: {
+          categoria: string
+          comprado: boolean | null
+          created_at: string
+          id: string
+          lista_id: string | null
+          nome: string
+          notas: string | null
+          preco_estimado: number | null
+          prioridade: string | null
+          quantidade: number | null
+          unidade: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          categoria?: string
+          comprado?: boolean | null
+          created_at?: string
+          id?: string
+          lista_id?: string | null
+          nome: string
+          notas?: string | null
+          preco_estimado?: number | null
+          prioridade?: string | null
+          quantidade?: number | null
+          unidade?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          categoria?: string
+          comprado?: boolean | null
+          created_at?: string
+          id?: string
+          lista_id?: string | null
+          nome?: string
+          notas?: string | null
+          preco_estimado?: number | null
+          prioridade?: string | null
+          quantidade?: number | null
+          unidade?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_lista_compras_grupo"
+            columns: ["lista_id"]
+            isOneToOne: false
+            referencedRelation: "listas_compras_grupos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      listas_compras_grupos: {
+        Row: {
+          ativa: boolean | null
+          cor: string | null
+          created_at: string
+          icone: string | null
+          id: string
+          nome: string
+          user_id: string
+        }
+        Insert: {
+          ativa?: boolean | null
+          cor?: string | null
+          created_at?: string
+          icone?: string | null
+          id?: string
+          nome?: string
+          user_id: string
+        }
+        Update: {
+          ativa?: boolean | null
+          cor?: string | null
+          created_at?: string
+          icone?: string | null
+          id?: string
+          nome?: string
+          user_id?: string
         }
         Relationships: []
       }
