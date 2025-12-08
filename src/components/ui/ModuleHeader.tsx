@@ -5,7 +5,7 @@ interface ModuleHeaderProps {
   icon: LucideIcon;
   title: string;
   subtitle?: string;
-  gradient: "casa" | "saude" | "bem-estar" | "financas" | "ebook";
+  gradient: "casa" | "saude" | "bem-estar" | "financas" | "ebook" | "calendario" | "lembretes" | "compras" | "instalar";
   className?: string;
 }
 
@@ -21,7 +21,11 @@ export const ModuleHeader = ({
     saude: "gradient-saude", 
     "bem-estar": "gradient-bem-estar",
     financas: "gradient-financas",
-    ebook: "gradient-primary"
+    ebook: "gradient-primary",
+    calendario: "bg-gradient-to-r from-indigo-600 to-purple-600",
+    lembretes: "bg-gradient-to-r from-amber-500 to-orange-500",
+    compras: "bg-gradient-to-r from-emerald-500 to-teal-500",
+    instalar: "bg-gradient-to-r from-pink-500 to-rose-500"
   };
 
   return (

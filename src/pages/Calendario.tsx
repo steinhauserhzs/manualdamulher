@@ -165,7 +165,7 @@ export default function Calendario() {
         title="Calendário Unificado" 
         subtitle="Todos os seus compromissos em um só lugar"
         icon={CalendarDays}
-        gradientClass="gradient-primary"
+        gradient="calendario"
       />
 
       <main className="container mx-auto px-4 py-6 max-w-4xl">
