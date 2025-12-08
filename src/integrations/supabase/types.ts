@@ -238,6 +238,68 @@ export type Database = {
         }
         Relationships: []
       }
+      comunidade_badges: {
+        Row: {
+          cor: string | null
+          created_at: string
+          criterio: string
+          descricao: string
+          icone: string | null
+          id: string
+          nome: string
+          pontos_necessarios: number | null
+        }
+        Insert: {
+          cor?: string | null
+          created_at?: string
+          criterio: string
+          descricao: string
+          icone?: string | null
+          id?: string
+          nome: string
+          pontos_necessarios?: number | null
+        }
+        Update: {
+          cor?: string | null
+          created_at?: string
+          criterio?: string
+          descricao?: string
+          icone?: string | null
+          id?: string
+          nome?: string
+          pontos_necessarios?: number | null
+        }
+        Relationships: []
+      }
+      comunidade_badges_usuario: {
+        Row: {
+          badge_id: string
+          data_conquista: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          badge_id: string
+          data_conquista?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          badge_id?: string
+          data_conquista?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comunidade_badges_usuario_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "comunidade_badges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       comunidade_comentarios: {
         Row: {
           conteudo: string
@@ -366,6 +428,77 @@ export type Database = {
           },
         ]
       }
+      comunidade_grupos: {
+        Row: {
+          cor: string | null
+          created_at: string
+          criadora_id: string
+          descricao: string | null
+          icone: string | null
+          id: string
+          membros_count: number | null
+          nome: string
+          privado: boolean | null
+          updated_at: string
+        }
+        Insert: {
+          cor?: string | null
+          created_at?: string
+          criadora_id: string
+          descricao?: string | null
+          icone?: string | null
+          id?: string
+          membros_count?: number | null
+          nome: string
+          privado?: boolean | null
+          updated_at?: string
+        }
+        Update: {
+          cor?: string | null
+          created_at?: string
+          criadora_id?: string
+          descricao?: string | null
+          icone?: string | null
+          id?: string
+          membros_count?: number | null
+          nome?: string
+          privado?: boolean | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      comunidade_grupos_membros: {
+        Row: {
+          created_at: string
+          grupo_id: string
+          id: string
+          papel: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          grupo_id: string
+          id?: string
+          papel?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          grupo_id?: string
+          id?: string
+          papel?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comunidade_grupos_membros_grupo_id_fkey"
+            columns: ["grupo_id"]
+            isOneToOne: false
+            referencedRelation: "comunidade_grupos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       comunidade_likes: {
         Row: {
           comentario_id: string | null
@@ -410,6 +543,7 @@ export type Database = {
           comentarios_count: number | null
           conteudo: string
           created_at: string | null
+          grupo_id: string | null
           id: string
           imagem_url: string | null
           likes_count: number | null
@@ -423,6 +557,7 @@ export type Database = {
           comentarios_count?: number | null
           conteudo: string
           created_at?: string | null
+          grupo_id?: string | null
           id?: string
           imagem_url?: string | null
           likes_count?: number | null
@@ -436,6 +571,7 @@ export type Database = {
           comentarios_count?: number | null
           conteudo?: string
           created_at?: string | null
+          grupo_id?: string | null
           id?: string
           imagem_url?: string | null
           likes_count?: number | null
@@ -445,7 +581,15 @@ export type Database = {
           updated_at?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "comunidade_posts_grupo_id_fkey"
+            columns: ["grupo_id"]
+            isOneToOne: false
+            referencedRelation: "comunidade_grupos"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       comunidade_seguidores: {
         Row: {
@@ -621,6 +765,104 @@ export type Database = {
           titulo?: string
         }
         Relationships: []
+      }
+      dividas: {
+        Row: {
+          categoria: string | null
+          created_at: string
+          credor: string | null
+          data_inicio: string
+          data_vencimento: string | null
+          descricao: string | null
+          id: string
+          nome: string
+          parcelas_pagas: number | null
+          status: string
+          taxa_juros: number | null
+          total_parcelas: number | null
+          updated_at: string
+          user_id: string
+          valor_pago: number | null
+          valor_total: number
+        }
+        Insert: {
+          categoria?: string | null
+          created_at?: string
+          credor?: string | null
+          data_inicio?: string
+          data_vencimento?: string | null
+          descricao?: string | null
+          id?: string
+          nome: string
+          parcelas_pagas?: number | null
+          status?: string
+          taxa_juros?: number | null
+          total_parcelas?: number | null
+          updated_at?: string
+          user_id: string
+          valor_pago?: number | null
+          valor_total: number
+        }
+        Update: {
+          categoria?: string | null
+          created_at?: string
+          credor?: string | null
+          data_inicio?: string
+          data_vencimento?: string | null
+          descricao?: string | null
+          id?: string
+          nome?: string
+          parcelas_pagas?: number | null
+          status?: string
+          taxa_juros?: number | null
+          total_parcelas?: number | null
+          updated_at?: string
+          user_id?: string
+          valor_pago?: number | null
+          valor_total?: number
+        }
+        Relationships: []
+      }
+      dividas_pagamentos: {
+        Row: {
+          created_at: string
+          data_pagamento: string
+          divida_id: string
+          id: string
+          numero_parcela: number | null
+          observacoes: string | null
+          user_id: string
+          valor: number
+        }
+        Insert: {
+          created_at?: string
+          data_pagamento?: string
+          divida_id: string
+          id?: string
+          numero_parcela?: number | null
+          observacoes?: string | null
+          user_id: string
+          valor: number
+        }
+        Update: {
+          created_at?: string
+          data_pagamento?: string
+          divida_id?: string
+          id?: string
+          numero_parcela?: number | null
+          observacoes?: string | null
+          user_id?: string
+          valor?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dividas_pagamentos_divida_id_fkey"
+            columns: ["divida_id"]
+            isOneToOne: false
+            referencedRelation: "dividas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       ebook_capitulos: {
         Row: {
@@ -972,12 +1214,14 @@ export type Database = {
       }
       marketplace_anuncios: {
         Row: {
+          aceita_troca: boolean | null
           categoria: string
           condicao: string
           created_at: string
           descricao: string | null
           id: string
           imagens: string[] | null
+          localizacao: string | null
           preco: number
           status: string
           titulo: string
@@ -986,12 +1230,14 @@ export type Database = {
           visualizacoes: number | null
         }
         Insert: {
+          aceita_troca?: boolean | null
           categoria: string
           condicao?: string
           created_at?: string
           descricao?: string | null
           id?: string
           imagens?: string[] | null
+          localizacao?: string | null
           preco: number
           status?: string
           titulo: string
@@ -1000,12 +1246,14 @@ export type Database = {
           visualizacoes?: number | null
         }
         Update: {
+          aceita_troca?: boolean | null
           categoria?: string
           condicao?: string
           created_at?: string
           descricao?: string | null
           id?: string
           imagens?: string[] | null
+          localizacao?: string | null
           preco?: number
           status?: string
           titulo?: string
@@ -1053,6 +1301,54 @@ export type Database = {
           },
           {
             foreignKeyName: "marketplace_avaliacoes_servico_id_fkey"
+            columns: ["servico_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_servicos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketplace_conversas: {
+        Row: {
+          anuncio_id: string | null
+          comprador_id: string
+          created_at: string
+          id: string
+          servico_id: string | null
+          status: string | null
+          updated_at: string
+          vendedor_id: string
+        }
+        Insert: {
+          anuncio_id?: string | null
+          comprador_id: string
+          created_at?: string
+          id?: string
+          servico_id?: string | null
+          status?: string | null
+          updated_at?: string
+          vendedor_id: string
+        }
+        Update: {
+          anuncio_id?: string | null
+          comprador_id?: string
+          created_at?: string
+          id?: string
+          servico_id?: string | null
+          status?: string | null
+          updated_at?: string
+          vendedor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_conversas_anuncio_id_fkey"
+            columns: ["anuncio_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_anuncios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_conversas_servico_id_fkey"
             columns: ["servico_id"]
             isOneToOne: false
             referencedRelation: "marketplace_servicos"
@@ -1174,6 +1470,41 @@ export type Database = {
           },
         ]
       }
+      marketplace_mensagens: {
+        Row: {
+          conteudo: string
+          conversa_id: string
+          created_at: string
+          id: string
+          lida: boolean | null
+          remetente_id: string
+        }
+        Insert: {
+          conteudo: string
+          conversa_id: string
+          created_at?: string
+          id?: string
+          lida?: boolean | null
+          remetente_id: string
+        }
+        Update: {
+          conteudo?: string
+          conversa_id?: string
+          created_at?: string
+          id?: string
+          lida?: boolean | null
+          remetente_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_mensagens_conversa_id_fkey"
+            columns: ["conversa_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_conversas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       marketplace_parceiros: {
         Row: {
           banner_url: string | null
@@ -1240,6 +1571,47 @@ export type Database = {
         }
         Relationships: []
       }
+      marketplace_propostas_troca: {
+        Row: {
+          created_at: string
+          descricao_oferta: string
+          id: string
+          imagens_oferta: string[] | null
+          proponente_id: string
+          status: string | null
+          troca_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          descricao_oferta: string
+          id?: string
+          imagens_oferta?: string[] | null
+          proponente_id: string
+          status?: string | null
+          troca_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          descricao_oferta?: string
+          id?: string
+          imagens_oferta?: string[] | null
+          proponente_id?: string
+          status?: string | null
+          troca_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_propostas_troca_troca_id_fkey"
+            columns: ["troca_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_trocas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       marketplace_servicos: {
         Row: {
           categoria: string
@@ -1294,6 +1666,99 @@ export type Database = {
           updated_at?: string
           user_id?: string
           visualizacoes?: number | null
+        }
+        Relationships: []
+      }
+      marketplace_trocas: {
+        Row: {
+          aceita_troca_por: string[] | null
+          categoria: string
+          created_at: string
+          descricao: string | null
+          id: string
+          imagens: string[] | null
+          localizacao: string | null
+          status: string | null
+          titulo: string
+          updated_at: string
+          user_id: string
+          visualizacoes: number | null
+        }
+        Insert: {
+          aceita_troca_por?: string[] | null
+          categoria: string
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          imagens?: string[] | null
+          localizacao?: string | null
+          status?: string | null
+          titulo: string
+          updated_at?: string
+          user_id: string
+          visualizacoes?: number | null
+        }
+        Update: {
+          aceita_troca_por?: string[] | null
+          categoria?: string
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          imagens?: string[] | null
+          localizacao?: string | null
+          status?: string | null
+          titulo?: string
+          updated_at?: string
+          user_id?: string
+          visualizacoes?: number | null
+        }
+        Relationships: []
+      }
+      marketplace_verificacoes: {
+        Row: {
+          avaliacao_media: number | null
+          created_at: string
+          data_primeira_venda: string | null
+          documento_tipo: string | null
+          documento_verificado: boolean | null
+          email_verificado: boolean | null
+          id: string
+          nivel_verificacao: number | null
+          selo_vendedora_confiavel: boolean | null
+          telefone_verificado: boolean | null
+          total_vendas: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avaliacao_media?: number | null
+          created_at?: string
+          data_primeira_venda?: string | null
+          documento_tipo?: string | null
+          documento_verificado?: boolean | null
+          email_verificado?: boolean | null
+          id?: string
+          nivel_verificacao?: number | null
+          selo_vendedora_confiavel?: boolean | null
+          telefone_verificado?: boolean | null
+          total_vendas?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avaliacao_media?: number | null
+          created_at?: string
+          data_primeira_venda?: string | null
+          documento_tipo?: string | null
+          documento_verificado?: boolean | null
+          email_verificado?: boolean | null
+          id?: string
+          nivel_verificacao?: number | null
+          selo_vendedora_confiavel?: boolean | null
+          telefone_verificado?: boolean | null
+          total_vendas?: number | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -1369,6 +1834,33 @@ export type Database = {
           updated_at?: string
           user_id?: string
           via_administracao?: string | null
+        }
+        Relationships: []
+      }
+      mensagens_diretas: {
+        Row: {
+          conteudo: string
+          created_at: string
+          destinatario_id: string
+          id: string
+          lida: boolean | null
+          remetente_id: string
+        }
+        Insert: {
+          conteudo: string
+          created_at?: string
+          destinatario_id: string
+          id?: string
+          lida?: boolean | null
+          remetente_id: string
+        }
+        Update: {
+          conteudo?: string
+          created_at?: string
+          destinatario_id?: string
+          id?: string
+          lida?: boolean | null
+          remetente_id?: string
         }
         Relationships: []
       }
@@ -1468,6 +1960,42 @@ export type Database = {
         }
         Relationships: []
       }
+      notificacoes: {
+        Row: {
+          created_at: string
+          id: string
+          lida: boolean | null
+          mensagem: string | null
+          referencia_id: string | null
+          referencia_tipo: string | null
+          tipo: string
+          titulo: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lida?: boolean | null
+          mensagem?: string | null
+          referencia_id?: string | null
+          referencia_tipo?: string | null
+          tipo: string
+          titulo: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lida?: boolean | null
+          mensagem?: string | null
+          referencia_id?: string | null
+          referencia_tipo?: string | null
+          tipo?: string
+          titulo?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       onboarding_progress: {
         Row: {
           completed: boolean | null
@@ -1492,6 +2020,42 @@ export type Database = {
           id?: string
           step?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      orcamentos: {
+        Row: {
+          alerta_percentual: number | null
+          ano: number
+          categoria: string
+          created_at: string
+          id: string
+          mes: number
+          updated_at: string
+          user_id: string
+          valor_limite: number
+        }
+        Insert: {
+          alerta_percentual?: number | null
+          ano: number
+          categoria: string
+          created_at?: string
+          id?: string
+          mes: number
+          updated_at?: string
+          user_id: string
+          valor_limite: number
+        }
+        Update: {
+          alerta_percentual?: number | null
+          ano?: number
+          categoria?: string
+          created_at?: string
+          id?: string
+          mes?: number
+          updated_at?: string
+          user_id?: string
+          valor_limite?: number
         }
         Relationships: []
       }
@@ -2296,6 +2860,68 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "transacoes_financeiras_conta_id_fkey"
+            columns: ["conta_id"]
+            isOneToOne: false
+            referencedRelation: "contas_financeiras"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      transacoes_recorrentes: {
+        Row: {
+          ativo: boolean
+          categoria: string
+          conta_id: string | null
+          created_at: string
+          data_fim: string | null
+          data_inicio: string
+          descricao: string | null
+          dia_vencimento: number | null
+          frequencia: string
+          id: string
+          tipo: string
+          ultima_geracao: string | null
+          updated_at: string
+          user_id: string
+          valor: number
+        }
+        Insert: {
+          ativo?: boolean
+          categoria: string
+          conta_id?: string | null
+          created_at?: string
+          data_fim?: string | null
+          data_inicio?: string
+          descricao?: string | null
+          dia_vencimento?: number | null
+          frequencia: string
+          id?: string
+          tipo: string
+          ultima_geracao?: string | null
+          updated_at?: string
+          user_id: string
+          valor: number
+        }
+        Update: {
+          ativo?: boolean
+          categoria?: string
+          conta_id?: string | null
+          created_at?: string
+          data_fim?: string | null
+          data_inicio?: string
+          descricao?: string | null
+          dia_vencimento?: number | null
+          frequencia?: string
+          id?: string
+          tipo?: string
+          ultima_geracao?: string | null
+          updated_at?: string
+          user_id?: string
+          valor?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transacoes_recorrentes_conta_id_fkey"
             columns: ["conta_id"]
             isOneToOne: false
             referencedRelation: "contas_financeiras"
