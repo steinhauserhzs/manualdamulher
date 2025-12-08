@@ -13,6 +13,8 @@ import { CicloMenstrualCalendario } from "@/components/saude/CicloMenstrualCalen
 import { AnalisarRefeicaoDialog } from "@/components/saude/AnalisarRefeicaoDialog";
 import { ResumoNutricionalCard } from "@/components/saude/ResumoNutricionalCard";
 import { SuplementacaoCard } from "@/components/saude/SuplementacaoCard";
+import { MedicamentosCard } from "@/components/saude/MedicamentosCard";
+import { TelemedicinaCuidadosCard } from "@/components/saude/TelemedicinaCuidadosCard";
 import saudeIllustration from "@/assets/saude-illustration.jpg";
 
 const Saude = () => {
@@ -164,6 +166,9 @@ const Saude = () => {
           </CardContent>
         </DecorativeCard>
 
+        {/* Medicamentos Diários */}
+        {user && <MedicamentosCard userId={user.id} />}
+
         {/* Ciclo Menstrual */}
         {user && <CicloMenstrualCalendario userId={user.id} />}
 
@@ -192,6 +197,9 @@ const Saude = () => {
 
         {/* Suplementação */}
         {user && <SuplementacaoCard userId={user.id} />}
+
+        {/* Telemedicina & Telepsicologia */}
+        {user && <TelemedicinaCuidadosCard userId={user.id} />}
       </main>
     </div>
   );
