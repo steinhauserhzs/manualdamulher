@@ -1109,6 +1109,81 @@ export type Database = {
         }
         Relationships: []
       }
+      medicamentos_cadastrados: {
+        Row: {
+          alerta_estoque_minimo: number | null
+          ativo: boolean
+          categoria: string
+          created_at: string
+          crm_medico: string | null
+          data_fim: string | null
+          data_inicio: string | null
+          dias_semana: string[] | null
+          dosagem: string | null
+          farmacia: string | null
+          horarios: string[] | null
+          id: string
+          medico_prescreveu: string | null
+          nome: string
+          observacoes: string | null
+          principio_ativo: string | null
+          quantidade_estoque: number | null
+          quantidade_por_dose: number | null
+          tipo: string
+          updated_at: string
+          user_id: string
+          via_administracao: string | null
+        }
+        Insert: {
+          alerta_estoque_minimo?: number | null
+          ativo?: boolean
+          categoria?: string
+          created_at?: string
+          crm_medico?: string | null
+          data_fim?: string | null
+          data_inicio?: string | null
+          dias_semana?: string[] | null
+          dosagem?: string | null
+          farmacia?: string | null
+          horarios?: string[] | null
+          id?: string
+          medico_prescreveu?: string | null
+          nome: string
+          observacoes?: string | null
+          principio_ativo?: string | null
+          quantidade_estoque?: number | null
+          quantidade_por_dose?: number | null
+          tipo?: string
+          updated_at?: string
+          user_id: string
+          via_administracao?: string | null
+        }
+        Update: {
+          alerta_estoque_minimo?: number | null
+          ativo?: boolean
+          categoria?: string
+          created_at?: string
+          crm_medico?: string | null
+          data_fim?: string | null
+          data_inicio?: string | null
+          dias_semana?: string[] | null
+          dosagem?: string | null
+          farmacia?: string | null
+          horarios?: string[] | null
+          id?: string
+          medico_prescreveu?: string | null
+          nome?: string
+          observacoes?: string | null
+          principio_ativo?: string | null
+          quantidade_estoque?: number | null
+          quantidade_por_dose?: number | null
+          tipo?: string
+          updated_at?: string
+          user_id?: string
+          via_administracao?: string | null
+        }
+        Relationships: []
+      }
       metas_financeiras: {
         Row: {
           created_at: string
@@ -1525,6 +1600,53 @@ export type Database = {
         }
         Relationships: []
       }
+      registro_medicamento: {
+        Row: {
+          created_at: string
+          data: string
+          horario_programado: string | null
+          horario_tomado: string | null
+          id: string
+          medicamento_id: string | null
+          notas: string | null
+          pulou_motivo: string | null
+          tomou: boolean
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data?: string
+          horario_programado?: string | null
+          horario_tomado?: string | null
+          id?: string
+          medicamento_id?: string | null
+          notas?: string | null
+          pulou_motivo?: string | null
+          tomou?: boolean
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: string
+          horario_programado?: string | null
+          horario_tomado?: string | null
+          id?: string
+          medicamento_id?: string | null
+          notas?: string | null
+          pulou_motivo?: string | null
+          tomou?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "registro_medicamento_medicamento_id_fkey"
+            columns: ["medicamento_id"]
+            isOneToOne: false
+            referencedRelation: "medicamentos_cadastrados"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       registro_suplementacao: {
         Row: {
           created_at: string
@@ -1734,6 +1856,217 @@ export type Database = {
             columns: ["tarefa_id"]
             isOneToOne: false
             referencedRelation: "tarefas_casa"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      telemedicina_agendamentos: {
+        Row: {
+          avaliacao_paciente: number | null
+          comentario_avaliacao: string | null
+          created_at: string
+          data_hora: string
+          duracao_minutos: number | null
+          id: string
+          link_video_chamada: string | null
+          motivo_consulta: string | null
+          pago: boolean | null
+          profissional_id: string | null
+          status: string
+          tipo: string
+          token_acesso: string | null
+          updated_at: string
+          user_id: string
+          valor: number | null
+        }
+        Insert: {
+          avaliacao_paciente?: number | null
+          comentario_avaliacao?: string | null
+          created_at?: string
+          data_hora: string
+          duracao_minutos?: number | null
+          id?: string
+          link_video_chamada?: string | null
+          motivo_consulta?: string | null
+          pago?: boolean | null
+          profissional_id?: string | null
+          status?: string
+          tipo?: string
+          token_acesso?: string | null
+          updated_at?: string
+          user_id: string
+          valor?: number | null
+        }
+        Update: {
+          avaliacao_paciente?: number | null
+          comentario_avaliacao?: string | null
+          created_at?: string
+          data_hora?: string
+          duracao_minutos?: number | null
+          id?: string
+          link_video_chamada?: string | null
+          motivo_consulta?: string | null
+          pago?: boolean | null
+          profissional_id?: string | null
+          status?: string
+          tipo?: string
+          token_acesso?: string | null
+          updated_at?: string
+          user_id?: string
+          valor?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "telemedicina_agendamentos_profissional_id_fkey"
+            columns: ["profissional_id"]
+            isOneToOne: false
+            referencedRelation: "telemedicina_profissionais"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      telemedicina_especialidades: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          descricao: string | null
+          icone: string | null
+          id: string
+          nome: string
+          tipo: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          descricao?: string | null
+          icone?: string | null
+          id?: string
+          nome: string
+          tipo?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          descricao?: string | null
+          icone?: string | null
+          id?: string
+          nome?: string
+          tipo?: string
+        }
+        Relationships: []
+      }
+      telemedicina_historico: {
+        Row: {
+          agendamento_id: string | null
+          created_at: string
+          data_consulta: string
+          id: string
+          orientacoes: string | null
+          prescricoes: string | null
+          profissional_id: string | null
+          proxima_consulta: string | null
+          resumo_consulta: string | null
+          user_id: string
+        }
+        Insert: {
+          agendamento_id?: string | null
+          created_at?: string
+          data_consulta: string
+          id?: string
+          orientacoes?: string | null
+          prescricoes?: string | null
+          profissional_id?: string | null
+          proxima_consulta?: string | null
+          resumo_consulta?: string | null
+          user_id: string
+        }
+        Update: {
+          agendamento_id?: string | null
+          created_at?: string
+          data_consulta?: string
+          id?: string
+          orientacoes?: string | null
+          prescricoes?: string | null
+          profissional_id?: string | null
+          proxima_consulta?: string | null
+          resumo_consulta?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "telemedicina_historico_agendamento_id_fkey"
+            columns: ["agendamento_id"]
+            isOneToOne: false
+            referencedRelation: "telemedicina_agendamentos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "telemedicina_historico_profissional_id_fkey"
+            columns: ["profissional_id"]
+            isOneToOne: false
+            referencedRelation: "telemedicina_profissionais"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      telemedicina_profissionais: {
+        Row: {
+          anos_experiencia: number | null
+          avaliacao_media: number | null
+          bio: string | null
+          created_at: string
+          disponivel: boolean
+          duracao_consulta: number | null
+          especialidade_id: string | null
+          foto_url: string | null
+          id: string
+          idiomas: string[] | null
+          nome: string
+          registro_profissional: string
+          total_consultas: number | null
+          updated_at: string
+          valor_consulta: number
+        }
+        Insert: {
+          anos_experiencia?: number | null
+          avaliacao_media?: number | null
+          bio?: string | null
+          created_at?: string
+          disponivel?: boolean
+          duracao_consulta?: number | null
+          especialidade_id?: string | null
+          foto_url?: string | null
+          id?: string
+          idiomas?: string[] | null
+          nome: string
+          registro_profissional: string
+          total_consultas?: number | null
+          updated_at?: string
+          valor_consulta?: number
+        }
+        Update: {
+          anos_experiencia?: number | null
+          avaliacao_media?: number | null
+          bio?: string | null
+          created_at?: string
+          disponivel?: boolean
+          duracao_consulta?: number | null
+          especialidade_id?: string | null
+          foto_url?: string | null
+          id?: string
+          idiomas?: string[] | null
+          nome?: string
+          registro_profissional?: string
+          total_consultas?: number | null
+          updated_at?: string
+          valor_consulta?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "telemedicina_profissionais_especialidade_id_fkey"
+            columns: ["especialidade_id"]
+            isOneToOne: false
+            referencedRelation: "telemedicina_especialidades"
             referencedColumns: ["id"]
           },
         ]
