@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Heart, Sparkles, TrendingUp, StickyNote, BookOpen, Library, Lightbulb, HelpCircle, Settings, Crown, Users, ShoppingBag, Stars } from "lucide-react";
+import { Home, Heart, Sparkles, TrendingUp, StickyNote, BookOpen, Library, Lightbulb, HelpCircle, Settings, Crown, Users, ShoppingBag, Stars, CalendarDays, Bell, ShoppingCart, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -18,6 +18,9 @@ const mainNavItems = [
 ];
 
 const secondaryNavItems = [
+  { path: "/calendario", icon: CalendarDays, label: "Calendário" },
+  { path: "/lembretes", icon: Bell, label: "Lembretes" },
+  { path: "/lista-compras", icon: ShoppingCart, label: "Lista de Compras" },
   { path: "/notas", icon: StickyNote, label: "Notas" },
   { path: "/blog", icon: BookOpen, label: "Blog" },
   { path: "/biblioteca", icon: Library, label: "Biblioteca" },
@@ -25,6 +28,7 @@ const secondaryNavItems = [
 ];
 
 const utilityNavItems = [
+  { path: "/instalar", icon: Download, label: "Instalar App" },
   { path: "/ajuda", icon: HelpCircle, label: "Ajuda" },
   { path: "/configuracoes", icon: Settings, label: "Configurações" },
 ];

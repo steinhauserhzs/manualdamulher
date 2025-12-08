@@ -8,7 +8,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { StickyNote, BookOpen, Library, Lightbulb, HelpCircle, Settings } from "lucide-react";
+import { StickyNote, BookOpen, Library, Lightbulb, HelpCircle, Settings, CalendarDays, Bell, ShoppingCart, Download } from "lucide-react";
 import { EmergencyButton } from "@/components/ebook/EmergencyButton";
 
 const mainNavItems = [
@@ -19,6 +19,9 @@ const mainNavItems = [
 ];
 
 const menuItems = [
+  { path: "/calendario", icon: CalendarDays, label: "Calendário" },
+  { path: "/lembretes", icon: Bell, label: "Lembretes" },
+  { path: "/lista-compras", icon: ShoppingCart, label: "Lista de Compras" },
   { path: "/financas", icon: TrendingUp, label: "Finanças" },
   { path: "/bem-estar", icon: Sparkles, label: "Bem-estar" },
   { path: "/horoscopo", icon: Stars, label: "Horóscopo" },
@@ -27,6 +30,7 @@ const menuItems = [
   { path: "/blog", icon: BookOpen, label: "Blog" },
   { path: "/biblioteca", icon: Library, label: "Biblioteca" },
   { path: "/vida-pratica", icon: Lightbulb, label: "Vida Prática" },
+  { path: "/instalar", icon: Download, label: "Instalar App" },
   { path: "/ajuda", icon: HelpCircle, label: "Ajuda" },
   { path: "/configuracoes", icon: Settings, label: "Configurações" },
 ];
