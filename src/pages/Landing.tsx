@@ -38,56 +38,57 @@ import bemEstarIllustration from "@/assets/bem-estar-illustration.jpg";
 
 const Landing = () => {
   return (
-    <div className="min-h-screen overflow-x-hidden">
+    <div className="min-h-screen overflow-x-hidden bg-landing-pattern">
       <Header />
       
       {/* Hero Section */}
       <section className="relative overflow-hidden px-4 py-20 md:py-32 pt-24 w-full max-w-full">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-secondary/10 to-accent/20" />
-        <div className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 md:w-96 md:h-96 bg-secondary/10 rounded-full blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-secondary/8 to-accent/15" />
+        <div className="absolute top-10 right-10 w-48 h-48 md:w-80 md:h-80 bg-primary/8 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 left-10 w-48 h-48 md:w-80 md:h-80 bg-secondary/8 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 md:w-96 md:h-96 bg-accent/5 rounded-full blur-3xl" />
         
         <div className="container relative mx-auto max-w-6xl w-full">
           <div className="grid items-center gap-8 md:grid-cols-2 w-full">
-            <div className="space-y-6 text-center md:text-left w-full">
+            <div className="flex flex-col items-center md:items-start space-y-6 text-center md:text-left w-full">
               <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium">
-                <Zap className="h-4 w-4" />
-                Novidade: IA para análise de refeições!
+                <Zap className="h-4 w-4 flex-shrink-0" />
+                <span>Novidade: IA para análise de refeições!</span>
               </div>
               <h1 className="text-3xl font-bold leading-tight md:text-5xl lg:text-6xl break-words">
                 Organize sua vida, conquiste sua{" "}
                 <span className="text-gradient">independência</span>
               </h1>
-              <p className="text-base text-muted-foreground md:text-xl break-words">
+              <p className="text-base text-muted-foreground md:text-xl break-words max-w-lg">
                 O app completo para mulheres que querem ter controle total sobre casa,
                 finanças, saúde, bem-estar, comunidade e muito mais. Tudo em um só lugar. 💜
               </p>
-              <div className="flex flex-col gap-3 sm:flex-row justify-center md:justify-start">
+              <div className="flex flex-col gap-3 sm:flex-row justify-center md:justify-start w-full sm:w-auto">
                 <Button asChild variant="hero" size="xl" className="hover-scale">
                   <a href="#ebook">
-                    <BookOpen className="mr-2 h-5 w-5" />
+                    <BookOpen className="mr-2 h-5 w-5 flex-shrink-0" />
                     Adquirir E-book + App
                   </a>
                 </Button>
                 <Button asChild variant="outline" size="xl" className="hover-scale">
                   <Link to="/blog">
-                    <Book className="mr-2 h-5 w-5" />
+                    <Book className="mr-2 h-5 w-5 flex-shrink-0" />
                     Ver Blog
                   </Link>
                 </Button>
               </div>
-              <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground md:justify-start">
+              <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-4 text-sm text-muted-foreground md:justify-start">
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-primary" />
-                  Acesso liberado com o E-book
+                  <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
+                  <span>Acesso liberado com o E-book</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-primary" />
-                  9 módulos completos
+                  <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
+                  <span>9 módulos completos</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-primary" />
-                  IA integrada
+                  <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
+                  <span>IA integrada</span>
                 </div>
               </div>
             </div>
@@ -118,28 +119,32 @@ const Landing = () => {
       </section>
 
       {/* Novidades Section - NEW */}
-      <section id="novidades" className="px-4 py-16 md:py-24 bg-gradient-to-b from-background to-muted/30">
-        <div className="container mx-auto max-w-6xl w-full">
-          <div className="text-center mb-12">
+      <section id="novidades" className="relative px-4 py-16 md:py-24 bg-gradient-to-b from-background to-muted/30 overflow-hidden">
+        {/* Decorative blobs */}
+        <div className="absolute top-20 left-10 w-32 h-32 bg-secondary/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl" />
+        
+        <div className="container relative mx-auto max-w-6xl w-full">
+          <div className="flex flex-col items-center text-center mb-12">
             <div className="inline-flex items-center gap-2 bg-secondary/10 text-secondary px-4 py-2 rounded-full text-sm font-medium mb-4">
-              <Sparkles className="h-4 w-4" />
-              Atualizações Recentes
+              <Sparkles className="h-4 w-4 flex-shrink-0" />
+              <span>Atualizações Recentes</span>
             </div>
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
               Novidades do App ✨
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-muted-foreground max-w-2xl">
               Estamos sempre evoluindo! Confira as funcionalidades que adicionamos recentemente para deixar sua experiência ainda mais completa.
             </p>
           </div>
           
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {/* Ciclo Menstrual */}
-            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-pink-500/20 to-rose-500/20 p-6 border border-pink-500/20 hover-scale">
-              <div className="absolute top-2 right-2 bg-pink-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-pink-500/20 to-rose-500/20 p-6 border border-pink-500/20 hover-scale flex flex-col items-center text-center">
+              <div className="absolute top-3 right-3 bg-pink-500 text-white px-2 py-1 rounded-full text-xs font-bold">
                 NOVO
               </div>
-              <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-pink-500/20">
+              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-pink-500/20">
                 <CalendarHeart className="h-7 w-7 text-pink-500" />
               </div>
               <h3 className="text-xl font-bold mb-2">Ciclo Menstrual</h3>
@@ -149,11 +154,11 @@ const Landing = () => {
             </div>
 
             {/* IA Calorias */}
-            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 p-6 border border-violet-500/20 hover-scale">
-              <div className="absolute top-2 right-2 bg-violet-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 p-6 border border-violet-500/20 hover-scale flex flex-col items-center text-center">
+              <div className="absolute top-3 right-3 bg-violet-500 text-white px-2 py-1 rounded-full text-xs font-bold">
                 IA
               </div>
-              <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-violet-500/20">
+              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-violet-500/20">
                 <Camera className="h-7 w-7 text-violet-500" />
               </div>
               <h3 className="text-xl font-bold mb-2">Calculadora de Calorias</h3>
@@ -163,11 +168,11 @@ const Landing = () => {
             </div>
 
             {/* Suplementação */}
-            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/20 to-green-500/20 p-6 border border-emerald-500/20 hover-scale">
-              <div className="absolute top-2 right-2 bg-emerald-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/20 to-green-500/20 p-6 border border-emerald-500/20 hover-scale flex flex-col items-center text-center">
+              <div className="absolute top-3 right-3 bg-emerald-500 text-white px-2 py-1 rounded-full text-xs font-bold">
                 NOVO
               </div>
-              <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-emerald-500/20">
+              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-emerald-500/20">
                 <Dumbbell className="h-7 w-7 text-emerald-500" />
               </div>
               <h3 className="text-xl font-bold mb-2">Suplementação Fitness</h3>
@@ -177,11 +182,11 @@ const Landing = () => {
             </div>
 
             {/* Horóscopo */}
-            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 p-6 border border-amber-500/20 hover-scale">
-              <div className="absolute top-2 right-2 bg-amber-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 p-6 border border-amber-500/20 hover-scale flex flex-col items-center text-center">
+              <div className="absolute top-3 right-3 bg-amber-500 text-white px-2 py-1 rounded-full text-xs font-bold">
                 NOVO
               </div>
-              <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-amber-500/20">
+              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-amber-500/20">
                 <Stars className="h-7 w-7 text-amber-500" />
               </div>
               <h3 className="text-xl font-bold mb-2">Horóscopo Diário</h3>
@@ -191,11 +196,11 @@ const Landing = () => {
             </div>
 
             {/* Marketplace */}
-            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 p-6 border border-blue-500/20 hover-scale">
-              <div className="absolute top-2 right-2 bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 p-6 border border-blue-500/20 hover-scale flex flex-col items-center text-center">
+              <div className="absolute top-3 right-3 bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-bold">
                 NOVO
               </div>
-              <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-blue-500/20">
+              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-blue-500/20">
                 <ShoppingBag className="h-7 w-7 text-blue-500" />
               </div>
               <h3 className="text-xl font-bold mb-2">Marketplace</h3>
@@ -205,11 +210,11 @@ const Landing = () => {
             </div>
 
             {/* Comunidade */}
-            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-500/20 to-blue-500/20 p-6 border border-indigo-500/20 hover-scale">
-              <div className="absolute top-2 right-2 bg-indigo-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+            <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-500/20 to-blue-500/20 p-6 border border-indigo-500/20 hover-scale flex flex-col items-center text-center">
+              <div className="absolute top-3 right-3 bg-indigo-500 text-white px-2 py-1 rounded-full text-xs font-bold">
                 NOVO
               </div>
-              <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-indigo-500/20">
+              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-indigo-500/20">
                 <MessageCircle className="h-7 w-7 text-indigo-500" />
               </div>
               <h3 className="text-xl font-bold mb-2">Comunidade</h3>
@@ -676,7 +681,7 @@ const FeatureCard = ({ icon, title, description, gradient, image }: FeatureCardP
   const hasGradient = gradient && (gradient.startsWith('gradient-') || gradient.startsWith('bg-gradient'));
   
   return (
-    <div className={`group relative overflow-hidden rounded-2xl ${gradient || 'bg-card'} p-6 shadow-card hover-scale transition-all duration-300`}>
+    <div className={`group relative overflow-hidden rounded-2xl ${gradient || 'bg-card'} p-6 shadow-card hover-scale transition-all duration-300 flex flex-col`}>
       {/* Overlay para melhorar contraste em gradientes */}
       {hasGradient && (
         <div className="absolute inset-0 bg-black/20" />
@@ -695,14 +700,14 @@ const FeatureCard = ({ icon, title, description, gradient, image }: FeatureCardP
         </div>
       )}
       
-      <div className="relative">
-        <div className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl ${hasGradient ? 'bg-white/90' : 'bg-background/80'} backdrop-blur-sm`}>
+      <div className="relative flex flex-col items-center text-center h-full">
+        <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl ${hasGradient ? 'bg-white/90' : 'bg-background/80'} backdrop-blur-sm`}>
           {icon}
         </div>
         <h3 className={`mb-2 text-xl font-bold ${hasGradient ? 'text-white' : 'text-foreground'}`}>
           {title}
         </h3>
-        <p className={`${hasGradient ? 'text-white/90' : 'text-muted-foreground'}`}>
+        <p className={`${hasGradient ? 'text-white/90' : 'text-muted-foreground'} text-sm`}>
           {description}
         </p>
       </div>
