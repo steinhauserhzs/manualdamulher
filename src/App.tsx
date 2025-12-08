@@ -39,6 +39,8 @@ import HoroscopoSignoDetalhe from "./pages/HoroscopoSignoDetalhe";
 import Numerologia from "./pages/Numerologia";
 import Compatibilidade from "./pages/Compatibilidade";
 import MapaAstral from "./pages/MapaAstral";
+import Telemedicina from "./pages/Telemedicina";
+import SalaConsulta from "./pages/SalaConsulta";
 
 const queryClient = new QueryClient();
 
@@ -61,6 +63,8 @@ const App = () => (
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/casa" element={<Casa />} />
                 <Route path="/saude" element={<Saude />} />
+                <Route path="/telemedicina" element={<Telemedicina />} />
+                <Route path="/telemedicina/consulta/:id" element={<SalaConsulta />} />
                 <Route path="/bem-estar" element={<BemEstar />} />
                 <Route path="/financas" element={<Financas />} />
                 <Route path="/notas" element={<Notas />} />
