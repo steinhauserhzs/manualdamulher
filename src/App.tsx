@@ -41,6 +41,10 @@ import Compatibilidade from "./pages/Compatibilidade";
 import MapaAstral from "./pages/MapaAstral";
 import Telemedicina from "./pages/Telemedicina";
 import SalaConsulta from "./pages/SalaConsulta";
+import Calendario from "./pages/Calendario";
+import ListaCompras from "./pages/ListaCompras";
+import Lembretes from "./pages/Lembretes";
+import Instalar from "./pages/Instalar";
 
 const queryClient = new QueryClient();
 
@@ -91,6 +95,10 @@ const App = () => (
                 <Route path="/ajuda" element={<Ajuda />} />
                 <Route path="/blog" element={<BlogList />} />
                 <Route path="/blog/:slug" element={<BlogPost />} />
+                <Route path="/calendario" element={<Calendario />} />
+                <Route path="/lista-compras" element={<ListaCompras />} />
+                <Route path="/lembretes" element={<Lembretes />} />
+                <Route path="/instalar" element={<Instalar />} />
               </Route>
               
               <Route path="*" element={<NotFound />} />
