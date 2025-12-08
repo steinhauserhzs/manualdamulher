@@ -1,7 +1,7 @@
 project_id = "gkdspxzksufrpzocpzmg"
 
 [functions.gerar-horoscopo]
-verify_jwt = false
+verify_jwt = true
 
 [functions.analisar-refeicao]
-verify_jwt = false
+verify_jwt = true
