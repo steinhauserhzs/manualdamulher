@@ -186,7 +186,7 @@ export default function ListaCompras() {
         title="Lista de Compras" 
         subtitle="Organize suas compras de forma inteligente"
         icon={ShoppingCart}
-        gradientClass="gradient-casa"
+        gradient="compras"
       />
 
       <main className="container mx-auto px-4 py-6 max-w-2xl">
