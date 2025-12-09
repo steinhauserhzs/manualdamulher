@@ -612,6 +612,65 @@ export type Database = {
         }
         Relationships: []
       }
+      comunidade_stories: {
+        Row: {
+          conteudo: string | null
+          created_at: string
+          expira_em: string
+          id: string
+          imagem_url: string | null
+          user_id: string
+          visualizacoes: number | null
+        }
+        Insert: {
+          conteudo?: string | null
+          created_at?: string
+          expira_em?: string
+          id?: string
+          imagem_url?: string | null
+          user_id: string
+          visualizacoes?: number | null
+        }
+        Update: {
+          conteudo?: string | null
+          created_at?: string
+          expira_em?: string
+          id?: string
+          imagem_url?: string | null
+          user_id?: string
+          visualizacoes?: number | null
+        }
+        Relationships: []
+      }
+      comunidade_stories_views: {
+        Row: {
+          id: string
+          story_id: string
+          user_id: string
+          viewed_at: string
+        }
+        Insert: {
+          id?: string
+          story_id: string
+          user_id: string
+          viewed_at?: string
+        }
+        Update: {
+          id?: string
+          story_id?: string
+          user_id?: string
+          viewed_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comunidade_stories_views_story_id_fkey"
+            columns: ["story_id"]
+            isOneToOne: false
+            referencedRelation: "comunidade_stories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       comunidade_votos: {
         Row: {
           created_at: string | null
@@ -703,6 +762,83 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      despesas_compartilhadas: {
+        Row: {
+          categoria: string | null
+          created_at: string
+          data: string
+          id: string
+          status: string | null
+          titulo: string
+          updated_at: string
+          user_id: string
+          valor_total: number
+        }
+        Insert: {
+          categoria?: string | null
+          created_at?: string
+          data?: string
+          id?: string
+          status?: string | null
+          titulo: string
+          updated_at?: string
+          user_id: string
+          valor_total: number
+        }
+        Update: {
+          categoria?: string | null
+          created_at?: string
+          data?: string
+          id?: string
+          status?: string | null
+          titulo?: string
+          updated_at?: string
+          user_id?: string
+          valor_total?: number
+        }
+        Relationships: []
+      }
+      despesas_participantes: {
+        Row: {
+          created_at: string
+          despesa_id: string
+          email: string | null
+          id: string
+          nome: string
+          status: string | null
+          valor_devido: number
+          valor_pago: number | null
+        }
+        Insert: {
+          created_at?: string
+          despesa_id: string
+          email?: string | null
+          id?: string
+          nome: string
+          status?: string | null
+          valor_devido: number
+          valor_pago?: number | null
+        }
+        Update: {
+          created_at?: string
+          despesa_id?: string
+          email?: string | null
+          id?: string
+          nome?: string
+          status?: string | null
+          valor_devido?: number
+          valor_pago?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "despesas_participantes_despesa_id_fkey"
+            columns: ["despesa_id"]
+            isOneToOne: false
+            referencedRelation: "despesas_compartilhadas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       dicas_favoritas: {
         Row: {
