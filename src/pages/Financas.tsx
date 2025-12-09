@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Wallet, TrendingUp, TrendingDown, Target } from "lucide-react";
+import { ArrowLeft, Wallet, TrendingUp, TrendingDown, Target, PiggyBank, RefreshCw, CreditCard } from "lucide-react";
 import { toast } from "sonner";
 import { AddTransacaoDialog } from "@/components/financas/AddTransacaoDialog";
 import { AddMetaDialog } from "@/components/financas/AddMetaDialog";
@@ -12,6 +12,9 @@ import { ModuleHeader } from "@/components/ui/ModuleHeader";
 import { EmptyStateVisual } from "@/components/ui/EmptyStateVisual";
 import { DecorativeCard } from "@/components/ui/DecorativeCard";
 import financasIllustration from "@/assets/financas-illustration.jpg";
+import { OrcamentosCard } from "@/components/financas/OrcamentosCard";
+import { TransacoesRecorrentesCard } from "@/components/financas/TransacoesRecorrentesCard";
+import { DividasCard } from "@/components/financas/DividasCard";
 
 interface Transacao {
   id: string;
@@ -285,6 +288,14 @@ const Financas = () => {
             )}
           </CardContent>
         </Card>
+
+        {/* Novos Cards Avançados */}
+        <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
+          <OrcamentosCard />
+          <TransacoesRecorrentesCard />
+        </div>
+
+        <DividasCard />
       </main>
     </div>
   );
