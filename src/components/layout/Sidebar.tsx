@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { EmergencyButton } from "@/components/ebook/EmergencyButton";
+import { NotificacoesDropdown } from "@/components/comunidade/NotificacoesDropdown";
 
 const mainNavItems = [
   { path: "/dashboard", icon: Home, label: "Dashboard" },
@@ -53,9 +54,12 @@ export const Sidebar = () => {
 
   return (
     <aside className="hidden md:flex flex-col w-64 bg-card border-r h-screen sticky top-0">
-      <div className="p-6">
-        <h2 className="text-xl font-bold text-primary">Manual da Mulher</h2>
-        <p className="text-sm text-muted-foreground">Independente</p>
+      <div className="p-6 flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-primary">Manual da Mulher</h2>
+          <p className="text-sm text-muted-foreground">Independente</p>
+        </div>
+        <NotificacoesDropdown />
       </div>
       
       <nav className="flex-1 px-3 space-y-1 overflow-y-auto">

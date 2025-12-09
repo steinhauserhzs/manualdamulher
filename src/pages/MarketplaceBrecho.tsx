@@ -11,6 +11,7 @@ import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { AnuncioCard } from "@/components/marketplace/AnuncioCard";
 import { CriarAnuncioDialog } from "@/components/marketplace/CriarAnuncioDialog";
+import { BuscaAvancada } from "@/components/marketplace/BuscaAvancada";
 
 const categorias = [
   { value: "todas", label: "Todas as categorias" },
@@ -136,58 +137,52 @@ const MarketplaceBrecho = () => {
           </div>
         </div>
 
+        {/* Busca Avançada */}
+        <BuscaAvancada onBuscar={(filtros) => {
+          if (filtros.termo) setSearchTerm(filtros.termo);
+          if (filtros.categoria) setCategoriaFiltro(filtros.categoria);
+        }} />
+
         {/* Filters */}
-        <div className="space-y-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Buscar anúncios..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+        <div className="flex flex-wrap gap-2">
+          <Select value={categoriaFiltro} onValueChange={setCategoriaFiltro}>
+            <SelectTrigger className="w-full sm:w-48">
+              <Filter className="h-4 w-4 mr-2" />
+              <SelectValue placeholder="Categoria" />
+            </SelectTrigger>
+            <SelectContent>
+              {categorias.map(cat => (
+                <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={condicaoFiltro} onValueChange={setCondicaoFiltro}>
+            <SelectTrigger className="w-full sm:w-48">
+              <SelectValue placeholder="Condição" />
+            </SelectTrigger>
+            <SelectContent>
+              {condicoes.map(cond => (
+                <SelectItem key={cond.value} value={cond.value}>{cond.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="w-full sm:w-auto">
+                <Plus className="h-4 w-4 mr-2" />
+                Criar Anúncio
+              </Button>
+            </DialogTrigger>
+            <CriarAnuncioDialog 
+              onClose={() => setDialogOpen(false)} 
+              onSuccess={() => {
+                setDialogOpen(false);
+                fetchAnuncios();
+              }}
             />
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            <Select value={categoriaFiltro} onValueChange={setCategoriaFiltro}>
-              <SelectTrigger className="w-full sm:w-48">
-                <Filter className="h-4 w-4 mr-2" />
-                <SelectValue placeholder="Categoria" />
-              </SelectTrigger>
-              <SelectContent>
-                {categorias.map(cat => (
-                  <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select value={condicaoFiltro} onValueChange={setCondicaoFiltro}>
-              <SelectTrigger className="w-full sm:w-48">
-                <SelectValue placeholder="Condição" />
-              </SelectTrigger>
-              <SelectContent>
-                {condicoes.map(cond => (
-                  <SelectItem key={cond.value} value={cond.value}>{cond.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="w-full sm:w-auto">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Criar Anúncio
-                </Button>
-              </DialogTrigger>
-              <CriarAnuncioDialog 
-                onClose={() => setDialogOpen(false)} 
-                onSuccess={() => {
-                  setDialogOpen(false);
-                  fetchAnuncios();
-                }}
-              />
-            </Dialog>
-          </div>
+          </Dialog>
         </div>
 
         {/* Content */}

@@ -11,6 +11,7 @@ import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ServicoCard } from "@/components/marketplace/ServicoCard";
 import { CriarServicoDialog } from "@/components/marketplace/CriarServicoDialog";
+import { BuscaAvancada } from "@/components/marketplace/BuscaAvancada";
 
 const categorias = [
   { value: "todas", label: "Todas as categorias" },
@@ -128,47 +129,41 @@ const MarketplaceServicos = () => {
           </div>
         </div>
 
+        {/* Busca Avançada */}
+        <BuscaAvancada onBuscar={(filtros) => {
+          if (filtros.termo) setSearchTerm(filtros.termo);
+          if (filtros.categoria) setCategoriaFiltro(filtros.categoria);
+        }} />
+
         {/* Filters */}
-        <div className="space-y-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Buscar serviços..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+        <div className="flex flex-wrap gap-2">
+          <Select value={categoriaFiltro} onValueChange={setCategoriaFiltro}>
+            <SelectTrigger className="w-full sm:w-48">
+              <Filter className="h-4 w-4 mr-2" />
+              <SelectValue placeholder="Categoria" />
+            </SelectTrigger>
+            <SelectContent>
+              {categorias.map(cat => (
+                <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="w-full sm:w-auto">
+                <Plus className="h-4 w-4 mr-2" />
+                Oferecer Serviço
+              </Button>
+            </DialogTrigger>
+            <CriarServicoDialog 
+              onClose={() => setDialogOpen(false)} 
+              onSuccess={() => {
+                setDialogOpen(false);
+                fetchServicos();
+              }}
             />
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            <Select value={categoriaFiltro} onValueChange={setCategoriaFiltro}>
-              <SelectTrigger className="w-full sm:w-48">
-                <Filter className="h-4 w-4 mr-2" />
-                <SelectValue placeholder="Categoria" />
-              </SelectTrigger>
-              <SelectContent>
-                {categorias.map(cat => (
-                  <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="w-full sm:w-auto">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Oferecer Serviço
-                </Button>
-              </DialogTrigger>
-              <CriarServicoDialog 
-                onClose={() => setDialogOpen(false)} 
-                onSuccess={() => {
-                  setDialogOpen(false);
-                  fetchServicos();
-                }}
-              />
-            </Dialog>
-          </div>
+          </Dialog>
         </div>
 
         {/* Content */}
