@@ -15,6 +15,8 @@ import financasIllustration from "@/assets/financas-illustration.jpg";
 import { OrcamentosCard } from "@/components/financas/OrcamentosCard";
 import { TransacoesRecorrentesCard } from "@/components/financas/TransacoesRecorrentesCard";
 import { DividasCard } from "@/components/financas/DividasCard";
+import { RelatoriosCard } from "@/components/financas/RelatoriosCard";
+import { DespesasCompartilhadasCard } from "@/components/financas/DespesasCompartilhadasCard";
 
 interface Transacao {
   id: string;
@@ -296,6 +298,10 @@ const Financas = () => {
         </div>
 
         <DividasCard />
+
+        <RelatoriosCard />
+
+        <DespesasCompartilhadasCard />
       </main>
     </div>
   );

@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingBag, Briefcase, Store, Ticket, Search, Heart, ArrowRight, MessageSquare, Repeat } from "lucide-react";
 import { ChatMarketplace } from "@/components/marketplace/ChatMarketplace";
+import { TrocasCard } from "@/components/marketplace/TrocasCard";
+import { VerificacaoVendedora } from "@/components/marketplace/VerificacaoVendedora";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 
 const Marketplace = () => {
@@ -177,6 +179,12 @@ const Marketplace = () => {
             </p>
           </CardContent>
         </Card>
+
+        {/* Sistema de Trocas e Verificação */}
+        <div className="grid gap-4 md:grid-cols-2">
+          <TrocasCard />
+          <VerificacaoVendedora />
+        </div>
       </div>
     </div>
   );

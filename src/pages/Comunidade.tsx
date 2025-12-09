@@ -7,6 +7,7 @@ import { PostCard } from "@/components/comunidade/PostCard";
 import { PostForm } from "@/components/comunidade/PostForm";
 import { MensagensDirectas } from "@/components/comunidade/MensagensDirectas";
 import { GruposCard } from "@/components/comunidade/GruposCard";
+import { StoriesSection } from "@/components/comunidade/StoriesSection";
 import { Plus, MessageCircle, Users } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -118,6 +119,9 @@ const Comunidade = () => {
             Conecte-se, compartilhe experiências e apoie outras mulheres
           </p>
         </div>
+
+        {/* Stories */}
+        <StoriesSection />
 
         <Tabs defaultValue="feed" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3">
