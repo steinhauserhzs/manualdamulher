@@ -67,7 +67,7 @@ export const BottomNav = () => {
             <SheetHeader>
               <SheetTitle>Menu</SheetTitle>
             </SheetHeader>
-            <div className="mt-6 space-y-2">
+            <div className="mt-6 space-y-2 overflow-y-auto max-h-[calc(80vh-100px)] pb-6">
               {menuItems.map((item) => (
                 <Link
                   key={item.path}
