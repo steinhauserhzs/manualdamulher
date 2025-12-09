@@ -4,13 +4,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, ShoppingBag, Briefcase, Store, Ticket as TicketIcon } from "lucide-react";
+import { ArrowLeft, ShoppingBag, Briefcase, Store, Ticket as TicketIcon, History } from "lucide-react";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { AnuncioCard } from "@/components/marketplace/AnuncioCard";
 import { ServicoCard } from "@/components/marketplace/ServicoCard";
 import { ParceiroCard } from "@/components/marketplace/ParceiroCard";
 import { CupomCard } from "@/components/marketplace/CupomCard";
+import { HistoricoTransacoes } from "@/components/marketplace/HistoricoTransacoes";
 
 const MeusAnuncios = () => {
   const { toast } = useToast();
@@ -88,22 +89,26 @@ const MeusAnuncios = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="anuncios" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 h-auto">
+          <TabsList className="grid w-full grid-cols-5 h-auto">
             <TabsTrigger value="anuncios" className="flex flex-col sm:flex-row gap-1 py-2">
               <ShoppingBag className="h-4 w-4" />
-              <span className="text-xs sm:text-sm">Brechó ({anuncios.length})</span>
+              <span className="text-xs sm:text-sm hidden sm:inline">Brechó ({anuncios.length})</span>
             </TabsTrigger>
             <TabsTrigger value="servicos" className="flex flex-col sm:flex-row gap-1 py-2">
               <Briefcase className="h-4 w-4" />
-              <span className="text-xs sm:text-sm">Serviços ({servicos.length})</span>
+              <span className="text-xs sm:text-sm hidden sm:inline">Serviços ({servicos.length})</span>
             </TabsTrigger>
             <TabsTrigger value="parceiros" className="flex flex-col sm:flex-row gap-1 py-2">
               <Store className="h-4 w-4" />
-              <span className="text-xs sm:text-sm">Parceiros ({parceiros.length})</span>
+              <span className="text-xs sm:text-sm hidden sm:inline">Parceiros ({parceiros.length})</span>
             </TabsTrigger>
             <TabsTrigger value="cupons" className="flex flex-col sm:flex-row gap-1 py-2">
               <TicketIcon className="h-4 w-4" />
-              <span className="text-xs sm:text-sm">Cupons ({cupons.length})</span>
+              <span className="text-xs sm:text-sm hidden sm:inline">Cupons ({cupons.length})</span>
+            </TabsTrigger>
+            <TabsTrigger value="historico" className="flex flex-col sm:flex-row gap-1 py-2">
+              <History className="h-4 w-4" />
+              <span className="text-xs sm:text-sm hidden sm:inline">Histórico</span>
             </TabsTrigger>
           </TabsList>
 
@@ -169,6 +174,10 @@ const MeusAnuncios = () => {
                 ))}
               </div>
             )}
+          </TabsContent>
+
+          <TabsContent value="historico" className="mt-4">
+            <HistoricoTransacoes />
           </TabsContent>
         </Tabs>
       </div>
