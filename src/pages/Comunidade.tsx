@@ -5,7 +5,10 @@ import { Button } from "@/components/ui/button";
 
 import { PostCard } from "@/components/comunidade/PostCard";
 import { PostForm } from "@/components/comunidade/PostForm";
-import { Plus } from "lucide-react";
+import { MensagensDirectas } from "@/components/comunidade/MensagensDirectas";
+import { GruposCard } from "@/components/comunidade/GruposCard";
+import { Plus, MessageCircle, Users } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 interface Post {
@@ -116,76 +119,100 @@ const Comunidade = () => {
           </p>
         </div>
 
-        {/* Filtros e Botão de Criar */}
-        <div className="space-y-4 mb-6">
-          {/* Filtros como botões individuais */}
-          <div className="flex flex-wrap gap-2">
-            {[
-              { value: "todos", emoji: "📝", label: "Todos" },
-              { value: "pergunta", emoji: "❓", label: "Perguntas" },
-              { value: "dica", emoji: "💡", label: "Dicas" },
-              { value: "enquete", emoji: "📊", label: "Enquetes" },
-            ].map((filtro) => (
-              <Button
-                key={filtro.value}
-                variant={filtroAtivo === filtro.value ? "default" : "outline"}
-                size="sm"
-                onClick={() => setFiltroAtivo(filtro.value)}
-                className="flex items-center gap-1.5"
-              >
-                <span>{filtro.emoji}</span>
-                <span>{filtro.label}</span>
-              </Button>
-            ))}
-          </div>
+        <Tabs defaultValue="feed" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="feed" className="text-xs sm:text-sm">📝 Feed</TabsTrigger>
+            <TabsTrigger value="mensagens" className="text-xs sm:text-sm">
+              <MessageCircle className="h-4 w-4 mr-1" />
+              Mensagens
+            </TabsTrigger>
+            <TabsTrigger value="grupos" className="text-xs sm:text-sm">
+              <Users className="h-4 w-4 mr-1" />
+              Grupos
+            </TabsTrigger>
+          </TabsList>
 
-          {/* Botão de Criar Post */}
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
-              <Button className="w-full sm:w-auto">
-                <Plus className="h-4 w-4 mr-2" />
-                Criar Post
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="w-full max-w-2xl mx-4 sm:mx-auto max-h-[85vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>Criar Novo Post</DialogTitle>
-              </DialogHeader>
-              <PostForm onSuccess={handlePostCreated} />
-            </DialogContent>
-          </Dialog>
-        </div>
-
-        {/* Feed de Posts */}
-        {loading ? (
-          <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="bg-card rounded-lg p-6 border animate-pulse"
-              >
-                <div className="h-4 bg-muted rounded w-1/4 mb-4"></div>
-                <div className="h-4 bg-muted rounded w-full mb-2"></div>
-                <div className="h-4 bg-muted rounded w-3/4"></div>
+          <TabsContent value="feed" className="space-y-6">
+            {/* Filtros e Botão de Criar */}
+            <div className="space-y-4">
+              {/* Filtros como botões individuais */}
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { value: "todos", emoji: "📝", label: "Todos" },
+                  { value: "pergunta", emoji: "❓", label: "Perguntas" },
+                  { value: "dica", emoji: "💡", label: "Dicas" },
+                  { value: "enquete", emoji: "📊", label: "Enquetes" },
+                ].map((filtro) => (
+                  <Button
+                    key={filtro.value}
+                    variant={filtroAtivo === filtro.value ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setFiltroAtivo(filtro.value)}
+                    className="flex items-center gap-1.5"
+                  >
+                    <span>{filtro.emoji}</span>
+                    <span>{filtro.label}</span>
+                  </Button>
+                ))}
               </div>
-            ))}
-          </div>
-        ) : posts.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-lg text-muted-foreground mb-4">
-              Nenhum post encontrado
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Seja a primeira a compartilhar algo na comunidade!
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {posts.map((post) => (
-              <PostCard key={post.id} post={post} onUpdate={carregarPosts} />
-            ))}
-          </div>
-        )}
+
+              {/* Botão de Criar Post */}
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button className="w-full sm:w-auto">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Criar Post
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="w-full max-w-2xl mx-4 sm:mx-auto max-h-[85vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>Criar Novo Post</DialogTitle>
+                  </DialogHeader>
+                  <PostForm onSuccess={handlePostCreated} />
+                </DialogContent>
+              </Dialog>
+            </div>
+
+            {/* Feed de Posts */}
+            {loading ? (
+              <div className="space-y-4">
+                {[1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="bg-card rounded-lg p-6 border animate-pulse"
+                  >
+                    <div className="h-4 bg-muted rounded w-1/4 mb-4"></div>
+                    <div className="h-4 bg-muted rounded w-full mb-2"></div>
+                    <div className="h-4 bg-muted rounded w-3/4"></div>
+                  </div>
+                ))}
+              </div>
+            ) : posts.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-lg text-muted-foreground mb-4">
+                  Nenhum post encontrado
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Seja a primeira a compartilhar algo na comunidade!
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {posts.map((post) => (
+                  <PostCard key={post.id} post={post} onUpdate={carregarPosts} />
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="mensagens">
+            <MensagensDirectas />
+          </TabsContent>
+
+          <TabsContent value="grupos">
+            <GruposCard />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
