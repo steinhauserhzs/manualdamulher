@@ -9,6 +9,7 @@ import { MessageCircle, Bookmark } from "lucide-react";
 import { EnqueteDisplay } from "./EnqueteDisplay";
 import { LikeButton } from "./LikeButton";
 import { LinkifyText } from "./LinkifyText";
+import { UserBadges } from "./UserBadges";
 
 interface PostCardProps {
   post: {
@@ -101,6 +102,7 @@ export const PostCard = ({ post, onUpdate }: PostCardProps) => {
               {getTipoIcon(post.tipo)} {getTipoLabel(post.tipo)}
             </Badge>
           </div>
+          <UserBadges userId={post.user_id} maxDisplay={2} />
           <p className="text-sm text-muted-foreground">{timeAgo}</p>
         </div>
       </div>

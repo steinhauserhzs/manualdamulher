@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { PostCard } from "@/components/comunidade/PostCard";
 import { FollowButton } from "@/components/comunidade/FollowButton";
-import { ArrowLeft, MapPin, Instagram, Globe, Users } from "lucide-react";
+import { UserBadges } from "@/components/comunidade/UserBadges";
+import { ArrowLeft, MapPin, Instagram, Globe, Users, Award } from "lucide-react";
 import { toast } from "sonner";
 
 interface Perfil {
@@ -178,6 +179,9 @@ export default function PerfilPublico() {
             {perfil.bio && (
               <p className="text-muted-foreground mt-2">{perfil.bio}</p>
             )}
+            <div className="mt-3">
+              <UserBadges userId={userId!} showAll />
+            </div>
           </div>
 
           <div className="flex flex-wrap justify-center gap-4 sm:gap-6 text-sm">
