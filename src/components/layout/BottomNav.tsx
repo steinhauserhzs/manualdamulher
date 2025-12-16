@@ -14,10 +14,10 @@ import { BookHeart, BookOpen, Library, Lightbulb, HelpCircle, Settings, Calendar
 import { EmergencyButton } from "@/components/ebook/EmergencyButton";
 
 const mainNavItems = [
-  { path: "/dashboard", icon: Home, label: "Início", shortLabel: "Início" },
-  { path: "/saude", icon: Heart, label: "Saúde", shortLabel: "Saúde" },
-  { path: "/marketplace", icon: ShoppingBag, label: "Marketplace", shortLabel: "Loja" },
-  { path: "/comunidade", icon: Users, label: "Comunidade", shortLabel: "Social" },
+  { path: "/dashboard", icon: Home, label: "Início" },
+  { path: "/saude", icon: Heart, label: "Saúde" },
+  { path: "/marketplace", icon: ShoppingBag, label: "Loja" },
+  { path: "/comunidade", icon: Users, label: "Social" },
 ];
 
 const menuItems = [
@@ -53,20 +53,19 @@ export const BottomNav = () => {
             key={item.path}
             to={item.path}
             className={cn(
-              "flex flex-col items-center justify-center flex-1 h-full",
+              "flex flex-col items-center justify-center w-1/5 h-full",
               location.pathname === item.path
                 ? "text-primary"
                 : "text-muted-foreground"
             )}
           >
             <item.icon className="h-6 w-6" />
-            <span className="text-xs mt-1 hidden xs:inline">{item.label}</span>
-            <span className="text-xs mt-1 xs:hidden">{item.shortLabel}</span>
+            <span className="text-xs mt-1">{item.label}</span>
           </Link>
         ))}
         
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger className="flex flex-col items-center justify-center flex-1 h-full text-muted-foreground">
+          <SheetTrigger className="flex flex-col items-center justify-center w-1/5 h-full text-muted-foreground">
             <Menu className="h-6 w-6" />
             <span className="text-xs mt-1">Menu</span>
           </SheetTrigger>
