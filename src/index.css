@@ -70,8 +70,8 @@ All colors MUST be HSL.
     --bem-estar-light: 150 40% 85%;
     --financas-primary: 200 60% 50%;
     --financas-light: 200 50% 85%;
-    --notas-primary: 45 90% 60%;
-    --notas-light: 45 80% 85%;
+    --diario-primary: 45 90% 60%;
+    --diario-light: 45 80% 85%;
   }
 
   .dark {

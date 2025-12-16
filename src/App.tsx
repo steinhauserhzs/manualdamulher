@@ -15,7 +15,7 @@ import BemEstar from "./pages/BemEstar";
 import Financas from "./pages/Financas";
 import BlogList from "./pages/BlogList";
 import BlogPost from "./pages/BlogPost";
-import Notas from "./pages/Notas";
+import MeuDiario from "./pages/MeuDiario";
 import Comunidade from "./pages/Comunidade";
 import ComunidadePost from "./pages/ComunidadePost";
 import GrupoDetalhe from "./pages/GrupoDetalhe";
@@ -72,7 +72,7 @@ const App = () => (
                 <Route path="/telemedicina/consulta/:id" element={<SalaConsulta />} />
                 <Route path="/bem-estar" element={<BemEstar />} />
                 <Route path="/financas" element={<Financas />} />
-                <Route path="/notas" element={<Notas />} />
+                <Route path="/meu-diario" element={<MeuDiario />} />
                 <Route path="/comunidade" element={<Comunidade />} />
                 <Route path="/comunidade/:id" element={<ComunidadePost />} />
                 <Route path="/comunidade/grupo/:id" element={<GrupoDetalhe />} />

@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Home, Heart, TrendingUp, Sparkles, LogOut, BookOpen, StickyNote, Flame, Award, ShoppingBag, Stars, Users } from "lucide-react";
+import { Home, Heart, TrendingUp, Sparkles, LogOut, BookOpen, BookHeart, Flame, Award, ShoppingBag, Stars, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
@@ -377,10 +377,10 @@ const Dashboard = () => {
               color="secondary"
             />
             <ActionCard
-              icon={<StickyNote className="h-6 w-6 sm:h-8 sm:w-8" />}
-              title="Notas"
-              description="Suas anotações pessoais"
-              link="/notas"
+              icon={<BookHeart className="h-6 w-6 sm:h-8 sm:w-8" />}
+              title="Meu Diário"
+              description="Suas reflexões e memórias"
+              link="/meu-diario"
               color="accent"
             />
           </div>

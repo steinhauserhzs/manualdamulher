@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Search, Star, Trash2, Edit } from "lucide-react";
+import { Plus, Search, Trash2, Edit, BookHeart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 
-interface Nota {
+interface Entrada {
   id: string;
   titulo: string;
   conteudo: string;
@@ -24,25 +24,25 @@ interface Nota {
   updated_at: string;
 }
 
-const categorias = ["Pessoal", "Casa", "Saúde", "Finanças", "Bem-estar", "Trabalho", "Outros"];
+const categorias = ["Reflexões", "Gratidão", "Sonhos", "Memórias", "Desabafos", "Metas", "Outros"];
 
-const Notas = () => {
+const MeuDiario = () => {
   const [user, setUser] = useState<any>(null);
-  const [notas, setNotas] = useState<Nota[]>([]);
-  const [filteredNotas, setFilteredNotas] = useState<Nota[]>([]);
+  const [entradas, setEntradas] = useState<Entrada[]>([]);
+  const [filteredEntradas, setFilteredEntradas] = useState<Entrada[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [categoriaFilter, setCategoriaFilter] = useState<string>("all");
   
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [editingNota, setEditingNota] = useState<Nota | null>(null);
+  const [editingEntrada, setEditingEntrada] = useState<Entrada | null>(null);
   const [titulo, setTitulo] = useState("");
   const [conteudo, setConteudo] = useState("");
   const [categoria, setCategoria] = useState("");
   const [saving, setSaving] = useState(false);
   
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [notaToDelete, setNotaToDelete] = useState<string | null>(null);
+  const [entradaToDelete, setEntradaToDelete] = useState<string | null>(null);
 
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -55,12 +55,12 @@ const Notas = () => {
         return;
       }
       setUser(session.user);
-      carregarNotas(session.user.id);
+      carregarEntradas(session.user.id);
     };
     checkAuth();
   }, [navigate]);
 
-  const carregarNotas = async (userId: string) => {
+  const carregarEntradas = async (userId: string) => {
     setLoading(true);
     const { data, error } = await supabase
       .from('notas')
@@ -70,42 +70,42 @@ const Notas = () => {
 
     if (error) {
       toast({
-        title: "Erro ao carregar notas",
+        title: "Erro ao carregar entradas",
         description: error.message,
         variant: "destructive",
       });
     } else {
-      setNotas(data || []);
-      setFilteredNotas(data || []);
+      setEntradas(data || []);
+      setFilteredEntradas(data || []);
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    let filtered = notas;
+    let filtered = entradas;
 
     if (search) {
-      filtered = filtered.filter(nota =>
-        nota.titulo.toLowerCase().includes(search.toLowerCase()) ||
-        nota.conteudo?.toLowerCase().includes(search.toLowerCase())
+      filtered = filtered.filter(entrada =>
+        entrada.titulo.toLowerCase().includes(search.toLowerCase()) ||
+        entrada.conteudo?.toLowerCase().includes(search.toLowerCase())
       );
     }
 
     if (categoriaFilter !== "all") {
-      filtered = filtered.filter(nota => nota.categoria === categoriaFilter);
+      filtered = filtered.filter(entrada => entrada.categoria === categoriaFilter);
     }
 
-    setFilteredNotas(filtered);
-  }, [search, categoriaFilter, notas]);
+    setFilteredEntradas(filtered);
+  }, [search, categoriaFilter, entradas]);
 
-  const handleOpenDialog = (nota?: Nota) => {
-    if (nota) {
-      setEditingNota(nota);
-      setTitulo(nota.titulo);
-      setConteudo(nota.conteudo || "");
-      setCategoria(nota.categoria || "");
+  const handleOpenDialog = (entrada?: Entrada) => {
+    if (entrada) {
+      setEditingEntrada(entrada);
+      setTitulo(entrada.titulo);
+      setConteudo(entrada.conteudo || "");
+      setCategoria(entrada.categoria || "");
     } else {
-      setEditingNota(null);
+      setEditingEntrada(null);
       setTitulo("");
       setConteudo("");
       setCategoria("");
@@ -117,7 +117,7 @@ const Notas = () => {
     if (!titulo.trim()) {
       toast({
         title: "Ops!",
-        description: "Por favor, dê um título para sua nota.",
+        description: "Por favor, dê um título para sua entrada.",
         variant: "destructive",
       });
       return;
@@ -128,7 +128,7 @@ const Notas = () => {
     setSaving(true);
 
     try {
-      if (editingNota) {
+      if (editingEntrada) {
         const { error } = await supabase
           .from('notas')
           .update({
@@ -136,12 +136,12 @@ const Notas = () => {
             conteudo,
             categoria,
           })
-          .eq('id', editingNota.id);
+          .eq('id', editingEntrada.id);
 
         if (error) throw error;
 
         toast({
-          title: "Nota atualizada! ✅",
+          title: "Entrada atualizada! ✅",
           description: "Suas alterações foram salvas.",
         });
       } else {
@@ -157,16 +157,16 @@ const Notas = () => {
         if (error) throw error;
 
         toast({
-          title: "Nota criada! 📝",
-          description: "Sua nota foi salva com sucesso.",
+          title: "Entrada criada! 📔",
+          description: "Sua entrada foi salva no diário.",
         });
       }
 
       setDialogOpen(false);
-      carregarNotas(user.id);
+      carregarEntradas(user.id);
     } catch (error: any) {
       toast({
-        title: "Erro ao salvar nota",
+        title: "Erro ao salvar entrada",
         description: error.message,
         variant: "destructive",
       });
@@ -176,29 +176,29 @@ const Notas = () => {
   };
 
   const handleDelete = async () => {
-    if (!notaToDelete) return;
+    if (!entradaToDelete) return;
 
     const { error } = await supabase
       .from('notas')
       .delete()
-      .eq('id', notaToDelete);
+      .eq('id', entradaToDelete);
 
     if (error) {
       toast({
-        title: "Erro ao excluir nota",
+        title: "Erro ao excluir entrada",
         description: error.message,
         variant: "destructive",
       });
     } else {
       toast({
-        title: "Nota excluída",
-        description: "A nota foi removida com sucesso.",
+        title: "Entrada excluída",
+        description: "A entrada foi removida do seu diário.",
       });
-      if (user) carregarNotas(user.id);
+      if (user) carregarEntradas(user.id);
     }
 
     setDeleteDialogOpen(false);
-    setNotaToDelete(null);
+    setEntradaToDelete(null);
   };
 
   if (loading) {
@@ -214,15 +214,15 @@ const Notas = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
-        <Breadcrumbs items={[{ label: "Notas" }]} />
+        <Breadcrumbs items={[{ label: "Meu Diário" }]} />
         
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
           <div>
-            <h1 className="text-3xl font-bold">Minhas Notas 📝</h1>
-            <p className="text-muted-foreground">Organize seus pensamentos e ideias</p>
+            <h1 className="text-3xl font-bold">Meu Diário 📔</h1>
+            <p className="text-muted-foreground">Seu espaço pessoal para reflexões e memórias</p>
           </div>
           <Button onClick={() => handleOpenDialog()} size="lg">
-            <Plus className="mr-2 h-4 w-4" /> Nova Nota
+            <Plus className="mr-2 h-4 w-4" /> Nova Entrada
           </Button>
         </div>
 
@@ -230,7 +230,7 @@ const Notas = () => {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Buscar notas..."
+              placeholder="Buscar no diário..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-10"
@@ -249,31 +249,31 @@ const Notas = () => {
           </Select>
         </div>
 
-        {filteredNotas.length === 0 ? (
+        {filteredEntradas.length === 0 ? (
           <EmptyState
-            icon={Search}
-            title={search || categoriaFilter !== "all" ? "Nenhuma nota encontrada" : "Você ainda não tem notas"}
-            description={search || categoriaFilter !== "all" ? "Tente ajustar seus filtros" : "Crie sua primeira nota para começar a organizar suas ideias!"}
-            actionLabel={search || categoriaFilter !== "all" ? undefined : "Criar Nota"}
+            icon={BookHeart}
+            title={search || categoriaFilter !== "all" ? "Nenhuma entrada encontrada" : "Seu diário está vazio"}
+            description={search || categoriaFilter !== "all" ? "Tente ajustar seus filtros" : "Comece a escrever suas reflexões, memórias e pensamentos!"}
+            actionLabel={search || categoriaFilter !== "all" ? undefined : "Nova Entrada"}
             onAction={() => handleOpenDialog()}
           />
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {filteredNotas.map((nota) => (
-              <Card key={nota.id} className="hover:shadow-md transition-shadow">
+            {filteredEntradas.map((entrada) => (
+              <Card key={entrada.id} className="hover:shadow-md transition-shadow">
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
-                      <CardTitle className="text-lg">{nota.titulo}</CardTitle>
-                      {nota.categoria && (
-                        <CardDescription>{nota.categoria}</CardDescription>
+                      <CardTitle className="text-lg">{entrada.titulo}</CardTitle>
+                      {entrada.categoria && (
+                        <CardDescription>{entrada.categoria}</CardDescription>
                       )}
                     </div>
                     <div className="flex gap-2">
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => handleOpenDialog(nota)}
+                        onClick={() => handleOpenDialog(entrada)}
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
@@ -281,7 +281,7 @@ const Notas = () => {
                         variant="ghost"
                         size="icon"
                         onClick={() => {
-                          setNotaToDelete(nota.id);
+                          setEntradaToDelete(entrada.id);
                           setDeleteDialogOpen(true);
                         }}
                       >
@@ -292,10 +292,10 @@ const Notas = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground line-clamp-3">
-                    {nota.conteudo || "Sem conteúdo"}
+                    {entrada.conteudo || "Sem conteúdo"}
                   </p>
                   <p className="text-xs text-muted-foreground mt-3">
-                    Atualizado: {new Date(nota.updated_at).toLocaleDateString('pt-BR')}
+                    {new Date(entrada.updated_at).toLocaleDateString('pt-BR')}
                   </p>
                 </CardContent>
               </Card>
@@ -306,9 +306,9 @@ const Notas = () => {
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>{editingNota ? "Editar Nota" : "Nova Nota"}</DialogTitle>
+              <DialogTitle>{editingEntrada ? "Editar Entrada" : "Nova Entrada do Diário"}</DialogTitle>
               <DialogDescription>
-                {editingNota ? "Atualize sua nota" : "Crie uma nova nota para organizar suas ideias"}
+                {editingEntrada ? "Atualize sua entrada" : "Registre seus pensamentos, memórias ou reflexões"}
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
@@ -318,7 +318,7 @@ const Notas = () => {
                   id="titulo"
                   value={titulo}
                   onChange={(e) => setTitulo(e.target.value)}
-                  placeholder="Dê um título para sua nota"
+                  placeholder="Título da entrada"
                 />
               </div>
               <div>
@@ -340,7 +340,7 @@ const Notas = () => {
                   id="conteudo"
                   value={conteudo}
                   onChange={(e) => setConteudo(e.target.value)}
-                  placeholder="Escreva sua nota aqui..."
+                  placeholder="Escreva seus pensamentos, memórias ou reflexões..."
                   rows={10}
                 />
               </div>
@@ -350,7 +350,7 @@ const Notas = () => {
                 Cancelar
               </Button>
               <Button onClick={handleSave} disabled={saving}>
-                {saving ? "Salvando..." : "Salvar Nota"}
+                {saving ? "Salvando..." : "Salvar Entrada"}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -359,8 +359,8 @@ const Notas = () => {
         <ConfirmDialog
           open={deleteDialogOpen}
           onOpenChange={setDeleteDialogOpen}
-          title="Excluir nota?"
-          description="Esta ação não pode ser desfeita. A nota será permanentemente removida."
+          title="Excluir entrada?"
+          description="Esta ação não pode ser desfeita. A entrada será permanentemente removida do seu diário."
           onConfirm={handleDelete}
           confirmText="Sim, excluir"
           variant="destructive"
@@ -370,4 +370,4 @@ const Notas = () => {
   );
 };
 
-export default Notas;
+export default MeuDiario;
