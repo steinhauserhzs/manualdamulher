@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Home, Heart, Sparkles, TrendingUp, Menu, Users, ShoppingBag, Stars } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -38,6 +39,11 @@ const menuItems = [
 
 export const BottomNav = () => {
   const location = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleNavigation = () => {
+    setIsOpen(false);
+  };
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t z-50">
@@ -59,7 +65,7 @@ export const BottomNav = () => {
           </Link>
         ))}
         
-        <Sheet>
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger className="flex flex-col items-center justify-center flex-1 h-full text-muted-foreground">
             <Menu className="h-6 w-6" />
             <span className="text-xs mt-1">Menu</span>
@@ -74,6 +80,7 @@ export const BottomNav = () => {
                   <Link
                     key={item.path}
                     to={item.path}
+                    onClick={handleNavigation}
                     className={cn(
                       "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors",
                       location.pathname === item.path
