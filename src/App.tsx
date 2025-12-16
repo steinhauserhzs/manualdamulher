@@ -18,6 +18,7 @@ import BlogPost from "./pages/BlogPost";
 import Notas from "./pages/Notas";
 import Comunidade from "./pages/Comunidade";
 import ComunidadePost from "./pages/ComunidadePost";
+import GrupoDetalhe from "./pages/GrupoDetalhe";
 import PerfilPublico from "./pages/PerfilPublico";
 import Biblioteca from "./pages/Biblioteca";
 import VidaPratica from "./pages/VidaPratica";
@@ -74,6 +75,7 @@ const App = () => (
                 <Route path="/notas" element={<Notas />} />
                 <Route path="/comunidade" element={<Comunidade />} />
                 <Route path="/comunidade/:id" element={<ComunidadePost />} />
+                <Route path="/comunidade/grupo/:id" element={<GrupoDetalhe />} />
                 <Route path="/perfil/:userId" element={<PerfilPublico />} />
                 <Route path="/marketplace" element={<Marketplace />} />
                 <Route path="/marketplace/brecho" element={<MarketplaceBrecho />} />
