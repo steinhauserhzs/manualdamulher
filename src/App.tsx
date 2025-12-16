@@ -47,6 +47,18 @@ import ListaCompras from "./pages/ListaCompras";
 import Lembretes from "./pages/Lembretes";
 import Instalar from "./pages/Instalar";
 
+// Admin imports
+import AdminProtectedRoute from "./components/admin/AdminProtectedRoute";
+import AdminLayout from "./components/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminUsuarios from "./pages/admin/AdminUsuarios";
+import AdminBlog from "./pages/admin/AdminBlog";
+import AdminComunidade from "./pages/admin/AdminComunidade";
+import AdminMarketplace from "./pages/admin/AdminMarketplace";
+import AdminRecursos from "./pages/admin/AdminRecursos";
+import AdminEbook from "./pages/admin/AdminEbook";
+import AdminAjuda from "./pages/admin/AdminAjuda";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -62,6 +74,20 @@ const App = () => (
               <Route path="/" element={<Landing />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/reset-password" element={<ResetPassword />} />
+
+              {/* Admin Routes (Hidden) */}
+              <Route element={<AdminProtectedRoute />}>
+                <Route element={<AdminLayout />}>
+                  <Route path="/admin" element={<AdminDashboard />} />
+                  <Route path="/admin/usuarios" element={<AdminUsuarios />} />
+                  <Route path="/admin/blog" element={<AdminBlog />} />
+                  <Route path="/admin/comunidade" element={<AdminComunidade />} />
+                  <Route path="/admin/marketplace" element={<AdminMarketplace />} />
+                  <Route path="/admin/recursos" element={<AdminRecursos />} />
+                  <Route path="/admin/ebook" element={<AdminEbook />} />
+                  <Route path="/admin/ajuda" element={<AdminAjuda />} />
+                </Route>
+              </Route>
 
               {/* Authenticated Routes */}
               <Route element={<AuthenticatedLayout />}>
