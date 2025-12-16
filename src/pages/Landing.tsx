@@ -67,7 +67,7 @@ const Landing = () => {
                 <Button asChild variant="hero" size="lg" className="hover-scale w-full sm:w-auto text-center">
                   <Link to="/auth">
                     <Sparkles className="mr-2 h-5 w-5 flex-shrink-0" />
-                    <span className="truncate">Começar Agora - 7 dias grátis</span>
+                    <span className="truncate">Começar Agora - 100% Grátis</span>
                   </Link>
                 </Button>
                 <Button asChild variant="outline" size="lg" className="hover-scale w-full sm:w-auto">
@@ -80,16 +80,25 @@ const Landing = () => {
               <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-4 text-sm text-muted-foreground md:justify-start">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
-                  <span>7 dias grátis para testar</span>
+                  <span>✨ 100% gratuito por tempo limitado</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
-                  <span>Cancele quando quiser</span>
+                  <span>9 módulos + IA incluídos</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
-                  <span>9 módulos + IA</span>
+                  <span>Sem cartão de crédito</span>
                 </div>
+              </div>
+              
+              {/* Banner sobre planos futuros */}
+              <div className="mt-2 px-4 py-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl text-center w-full max-w-lg">
+                <p className="text-sm text-amber-800 dark:text-amber-200">
+                  💜 <strong>100% Grátis por enquanto!</strong> Em breve teremos planos 
+                  de assinatura com benefícios exclusivos como telemedicina, suporte 
+                  prioritário e funcionalidades avançadas.
+                </p>
               </div>
             </div>
             <div className="relative hidden md:block">
@@ -353,7 +362,7 @@ const Landing = () => {
               number="1"
               icon={<Sparkles className="h-8 w-8" />}
               title="Crie sua conta"
-              description="Cadastre-se gratuitamente e aproveite 7 dias grátis para testar tudo"
+              description="Cadastre-se gratuitamente e tenha acesso completo a todos os 9 módulos"
             />
             <StepCard
               number="2"
@@ -475,22 +484,24 @@ const Landing = () => {
             
             <AccordionItem value="q7">
               <AccordionTrigger>
-                Posso acessar o app sem comprar o E-book?
+                O app é realmente gratuito?
               </AccordionTrigger>
               <AccordionContent>
-                Não. O app é um conteúdo exclusivo para quem adquire o E-book. 
-                É assim que conseguimos manter a qualidade e oferecer suporte dedicado 
-                para nossa comunidade de mulheres.
+                Sim! Atualmente o app é 100% gratuito com acesso completo a todos os 9 módulos, 
+                comunidade, marketplace e IA. Em breve lançaremos planos de assinatura com 
+                benefícios adicionais como telemedicina, suporte prioritário e funcionalidades 
+                premium, mas a versão gratuita continuará disponível.
               </AccordionContent>
             </AccordionItem>
             
             <AccordionItem value="q8">
               <AccordionTrigger>
-                Tem garantia?
+                Vocês terão planos pagos no futuro?
               </AccordionTrigger>
               <AccordionContent>
-                Sim! Oferecemos 7 dias de garantia incondicional. Se não gostar, 
-                devolvemos 100% do seu dinheiro, sem perguntas.
+                Sim! Estamos desenvolvendo planos de assinatura com benefícios exclusivos como 
+                consultas de telemedicina, psicologia online, suporte prioritário e funcionalidades 
+                avançadas. A versão gratuita atual continuará existindo com as funcionalidades básicas.
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -511,7 +522,7 @@ const Landing = () => {
           <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90 hover-scale text-sm md:text-lg px-6 md:px-8 py-4 md:py-6 h-auto w-full max-w-md mx-auto">
             <Link to="/auth" className="flex items-center justify-center">
               <Sparkles className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-              <span className="break-words">Começar Agora - 7 dias grátis</span>
+              <span className="break-words">Começar Agora - Grátis</span>
             </Link>
           </Button>
         </div>
