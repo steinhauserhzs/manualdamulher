@@ -8,6 +8,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { StickyNote, BookOpen, Library, Lightbulb, HelpCircle, Settings, CalendarDays, Bell, ShoppingCart, Download } from "lucide-react";
 import { EmergencyButton } from "@/components/ebook/EmergencyButton";
 
@@ -63,32 +64,34 @@ export const BottomNav = () => {
             <Menu className="h-6 w-6" />
             <span className="text-xs mt-1">Menu</span>
           </SheetTrigger>
-          <SheetContent side="bottom" className="h-[80vh]">
-            <SheetHeader>
+          <SheetContent side="bottom" className="h-[80vh] flex flex-col">
+            <SheetHeader className="flex-shrink-0">
               <SheetTitle>Menu</SheetTitle>
             </SheetHeader>
-            <div className="mt-6 space-y-2 overflow-y-auto max-h-[calc(80vh-100px)] pb-6">
-              {menuItems.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={cn(
-                    "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors",
-                    location.pathname === item.path
-                      ? "bg-primary text-primary-foreground"
-                      : "hover:bg-accent"
-                  )}
-                >
-                  <item.icon className="h-5 w-5" />
-                  <span>{item.label}</span>
-                </Link>
-              ))}
-              
-              <div className="flex items-center gap-3 px-4 py-3 border-t mt-4 pt-4">
-                <EmergencyButton />
-                <span className="text-sm">Contatos de Emergência</span>
+            <ScrollArea className="flex-1 mt-4">
+              <div className="space-y-2 pr-4 pb-6">
+                {menuItems.map((item) => (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    className={cn(
+                      "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors",
+                      location.pathname === item.path
+                        ? "bg-primary text-primary-foreground"
+                        : "hover:bg-accent"
+                    )}
+                  >
+                    <item.icon className="h-5 w-5" />
+                    <span>{item.label}</span>
+                  </Link>
+                ))}
+                
+                <div className="flex items-center gap-3 px-4 py-3 border-t mt-4 pt-4">
+                  <EmergencyButton />
+                  <span className="text-sm">Contatos de Emergência</span>
+                </div>
               </div>
-            </div>
+            </ScrollArea>
           </SheetContent>
         </Sheet>
       </div>

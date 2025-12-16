@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Heart, Menu, Sparkles } from "lucide-react";
+import { Heart, Menu, Sparkles, LogIn } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { EmergencyButton } from "@/components/ebook/EmergencyButton";
 
@@ -66,12 +66,19 @@ export const Header = () => {
           </div>
           
           {/* Mobile Menu */}
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild className="md:hidden">
-              <Button variant="ghost" size="icon">
-                <Menu className="h-6 w-6" />
-              </Button>
-            </SheetTrigger>
+          <div className="flex items-center gap-1 md:hidden">
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/auth" className="flex items-center gap-1">
+                <LogIn className="h-5 w-5" />
+                <span className="text-sm">Entrar</span>
+              </Link>
+            </Button>
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
             <SheetContent side="right" className="w-[280px]">
               <div className="flex flex-col gap-4 mt-8">
                 {navLinks.map(link => (
@@ -105,7 +112,8 @@ export const Header = () => {
                 </Button>
               </div>
             </SheetContent>
-          </Sheet>
+            </Sheet>
+          </div>
         </nav>
       </div>
     </header>
