@@ -8,7 +8,8 @@ import { PostForm } from "@/components/comunidade/PostForm";
 import { MensagensDirectas } from "@/components/comunidade/MensagensDirectas";
 import { GruposCard } from "@/components/comunidade/GruposCard";
 import { StoriesSection } from "@/components/comunidade/StoriesSection";
-import { Plus, MessageCircle, Users } from "lucide-react";
+import { UsuariosOnline } from "@/components/comunidade/UsuariosOnline";
+import { Plus, MessageCircle, Users, UserCheck } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
@@ -39,26 +40,63 @@ const Comunidade = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [filtroAtivo, setFiltroAtivo] = useState<string>("todos");
+  const [filtroSeguindo, setFiltroSeguindo] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
-    carregarPosts();
-  }, [filtroAtivo]);
+    getCurrentUser();
+  }, []);
+
+  useEffect(() => {
+    if (currentUserId !== null) {
+      carregarPosts();
+    }
+  }, [filtroAtivo, filtroSeguindo, currentUserId]);
+
+  const getCurrentUser = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    setCurrentUserId(user?.id || null);
+  };
 
   const carregarPosts = async () => {
     setLoading(true);
     try {
+      // Se filtro "seguindo" estiver ativo, buscar IDs de quem eu sigo
+      let seguindoIds: string[] = [];
+      if (filtroSeguindo && currentUserId) {
+        const { data: seguindoData } = await supabase
+          .from("comunidade_seguidores")
+          .select("seguindo_id")
+          .eq("seguidor_id", currentUserId);
+        
+        seguindoIds = seguindoData?.map(s => s.seguindo_id) || [];
+        
+        // Se não seguir ninguém, mostrar lista vazia
+        if (seguindoIds.length === 0) {
+          setPosts([]);
+          setLoading(false);
+          return;
+        }
+      }
+
       let query = supabase
         .from("comunidade_posts")
         .select(`
           *,
           comunidade_enquetes (id, opcoes, multipla_escolha, data_fim)
         `)
+        .is("grupo_id", null) // Apenas posts do feed geral (não de grupos)
         .order("created_at", { ascending: false });
 
       if (filtroAtivo !== "todos") {
         query = query.eq("tipo", filtroAtivo);
+      }
+
+      // Filtrar por usuários seguidos
+      if (filtroSeguindo && seguindoIds.length > 0) {
+        query = query.in("user_id", seguindoIds);
       }
 
       const { data, error } = await query;
@@ -120,6 +158,9 @@ const Comunidade = () => {
           </p>
         </div>
 
+        {/* Usuários Online */}
+        <UsuariosOnline />
+
         {/* Stories */}
         <StoriesSection />
 
@@ -158,6 +199,17 @@ const Comunidade = () => {
                     <span>{filtro.label}</span>
                   </Button>
                 ))}
+                
+                {/* Filtro Seguindo */}
+                <Button
+                  variant={filtroSeguindo ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setFiltroSeguindo(!filtroSeguindo)}
+                  className="flex items-center gap-1.5"
+                >
+                  <UserCheck className="h-4 w-4" />
+                  <span>Seguindo</span>
+                </Button>
               </div>
 
               {/* Botão de Criar Post */}
@@ -194,10 +246,16 @@ const Comunidade = () => {
             ) : posts.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-lg text-muted-foreground mb-4">
-                  Nenhum post encontrado
+                  {filtroSeguindo 
+                    ? "Nenhum post de quem você segue" 
+                    : "Nenhum post encontrado"
+                  }
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Seja a primeira a compartilhar algo na comunidade!
+                  {filtroSeguindo 
+                    ? "Siga mais pessoas para ver seus posts aqui!" 
+                    : "Seja a primeira a compartilhar algo na comunidade!"
+                  }
                 </p>
               </div>
             ) : (
