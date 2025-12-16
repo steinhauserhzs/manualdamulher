@@ -1,34 +1,64 @@
-import { useState, useEffect } from "react";
-import { Heart } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Heart } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import { criarNotificacao, getAutorPost, getAutorComentario, getNomeUsuario } from "@/lib/notificacoes";
 
 interface LikeButtonProps {
   postId?: string;
   comentarioId?: string;
   initialLikesCount: number;
-  onLikeChange?: (newCount: number) => void;
+  onLikeChange?: () => void;
 }
 
-export function LikeButton({ postId, comentarioId, initialLikesCount, onLikeChange }: LikeButtonProps) {
+export const LikeButton = ({
+  postId,
+  comentarioId,
+  initialLikesCount,
+  onLikeChange,
+}: LikeButtonProps) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(initialLikesCount);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const { toast } = useToast();
 
-  useEffect(() => {
-    verificarLike();
+  // Buscar contagem real de likes do banco
+  const fetchRealLikesCount = useCallback(async () => {
+    const query = supabase
+      .from("comunidade_likes")
+      .select("id", { count: "exact" });
+
+    if (postId) {
+      query.eq("post_id", postId);
+    } else if (comentarioId) {
+      query.eq("comentario_id", comentarioId);
+    }
+
+    const { count } = await query;
+    if (count !== null) {
+      setLikesCount(count);
+    }
   }, [postId, comentarioId]);
 
-  const verificarLike = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setCurrentUserId(user.id);
+        verificarLike(user.id);
+      }
+    };
+    getCurrentUser();
+    fetchRealLikesCount();
+  }, [postId, comentarioId, fetchRealLikesCount]);
 
+  const verificarLike = async (userId: string) => {
     const query = supabase
       .from("comunidade_likes")
       .select("id")
-      .eq("user_id", user.id);
+      .eq("user_id", userId);
 
     if (postId) {
       query.eq("post_id", postId);
@@ -41,16 +71,16 @@ export function LikeButton({ postId, comentarioId, initialLikesCount, onLikeChan
   };
 
   const handleLike = async () => {
-    if (isLoading) return;
-    
-    setIsLoading(true);
-    const { data: { user } } = await supabase.auth.getUser();
-    
-    if (!user) {
-      toast.error("Você precisa estar logada para curtir");
-      setIsLoading(false);
+    if (!currentUserId) {
+      toast({
+        title: "Faça login",
+        description: "Você precisa estar logada para curtir.",
+        variant: "destructive",
+      });
       return;
     }
+
+    setIsLoading(true);
 
     try {
       if (isLiked) {
@@ -58,7 +88,7 @@ export function LikeButton({ postId, comentarioId, initialLikesCount, onLikeChan
         const query = supabase
           .from("comunidade_likes")
           .delete()
-          .eq("user_id", user.id);
+          .eq("user_id", currentUserId);
 
         if (postId) {
           query.eq("post_id", postId);
@@ -69,82 +99,77 @@ export function LikeButton({ postId, comentarioId, initialLikesCount, onLikeChan
         const { error } = await query;
         if (error) throw error;
 
-        const newCount = likesCount - 1;
-        setLikesCount(newCount);
         setIsLiked(false);
-        onLikeChange?.(newCount);
-
-        if (postId) {
-          await supabase
-            .from("comunidade_posts")
-            .update({ likes_count: newCount })
-            .eq("id", postId);
-        } else if (comentarioId) {
-          await supabase
-            .from("comunidade_comentarios")
-            .update({ likes_count: newCount })
-            .eq("id", comentarioId);
-        }
+        setLikesCount((prev) => Math.max(0, prev - 1));
       } else {
         // Adicionar like
-        const likeData: any = { user_id: user.id };
-        if (postId) likeData.post_id = postId;
-        if (comentarioId) likeData.comentario_id = comentarioId;
-
-        const { error } = await supabase
-          .from("comunidade_likes")
-          .insert(likeData);
+        const { error } = await supabase.from("comunidade_likes").insert({
+          user_id: currentUserId,
+          post_id: postId || null,
+          comentario_id: comentarioId || null,
+        });
 
         if (error) throw error;
 
-        const newCount = likesCount + 1;
-        setLikesCount(newCount);
         setIsLiked(true);
-        onLikeChange?.(newCount);
+        setLikesCount((prev) => prev + 1);
 
-        if (postId) {
-          await supabase
-            .from("comunidade_posts")
-            .update({ likes_count: newCount })
-            .eq("id", postId);
+        // Criar notificação para o autor (se não for o próprio usuário)
+        try {
+          let autorId: string | null = null;
           
-          // Notificar autor do post
-          const autorId = await getAutorPost(postId);
-          if (autorId) {
-            const nomeUsuario = await getNomeUsuario(user.id);
+          if (postId) {
+            autorId = await getAutorPost(postId);
+          } else if (comentarioId) {
+            autorId = await getAutorComentario(comentarioId);
+          }
+
+          if (autorId && autorId !== currentUserId) {
+            const nomeUsuario = await getNomeUsuario(currentUserId);
             await criarNotificacao({
               userId: autorId,
-              tipo: 'like',
-              titulo: 'Nova curtida! ❤️',
-              mensagem: `${nomeUsuario} curtiu seu post`,
-              referenciaId: postId,
-              referenciaTipo: 'post'
+              tipo: "like",
+              titulo: "Nova curtida! ❤️",
+              mensagem: `${nomeUsuario} curtiu seu ${postId ? "post" : "comentário"}`,
+              referenciaId: postId || comentarioId || null,
+              referenciaTipo: postId ? "post" : "comentario",
             });
           }
-        } else if (comentarioId) {
-          await supabase
-            .from("comunidade_comentarios")
-            .update({ likes_count: newCount })
-            .eq("id", comentarioId);
-          
-          // Notificar autor do comentário
-          const autorId = await getAutorComentario(comentarioId);
-          if (autorId) {
-            const nomeUsuario = await getNomeUsuario(user.id);
-            await criarNotificacao({
-              userId: autorId,
-              tipo: 'like',
-              titulo: 'Nova curtida! ❤️',
-              mensagem: `${nomeUsuario} curtiu seu comentário`,
-              referenciaId: comentarioId,
-              referenciaTipo: 'comentario'
-            });
-          }
+        } catch (notifError) {
+          console.error("Erro ao criar notificação:", notifError);
         }
       }
-    } catch (error) {
-      console.error("Erro ao curtir:", error);
-      toast.error("Erro ao curtir. Tente novamente.");
+
+      // Atualizar contador na tabela original para manter sincronizado
+      if (postId) {
+        const { count } = await supabase
+          .from("comunidade_likes")
+          .select("id", { count: "exact" })
+          .eq("post_id", postId);
+
+        await supabase
+          .from("comunidade_posts")
+          .update({ likes_count: count || 0 })
+          .eq("id", postId);
+      } else if (comentarioId) {
+        const { count } = await supabase
+          .from("comunidade_likes")
+          .select("id", { count: "exact" })
+          .eq("comentario_id", comentarioId);
+
+        await supabase
+          .from("comunidade_comentarios")
+          .update({ likes_count: count || 0 })
+          .eq("id", comentarioId);
+      }
+
+      onLikeChange?.();
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error.message,
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -154,16 +179,14 @@ export function LikeButton({ postId, comentarioId, initialLikesCount, onLikeChan
     <Button
       variant="ghost"
       size="sm"
+      className="gap-1"
       onClick={handleLike}
       disabled={isLoading}
-      className="gap-1 text-muted-foreground hover:text-rose-600 transition-colors"
     >
       <Heart
-        className={`h-4 w-4 transition-all ${
-          isLiked ? "fill-rose-600 text-rose-600" : ""
-        }`}
+        className={`h-4 w-4 ${isLiked ? "fill-red-500 text-red-500" : ""}`}
       />
-      <span className={isLiked ? "text-rose-600" : ""}>{likesCount}</span>
+      <span className="text-sm">{likesCount}</span>
     </Button>
   );
-}
+};

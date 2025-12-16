@@ -7,7 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Badge } from "@/components/ui/badge";
-import { Plus, X, ImageIcon } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Plus, X, EyeOff } from "lucide-react";
 import { criarNotificacao, getNomeUsuario, detectarMencoes } from "@/lib/notificacoes";
 
 interface PostFormProps {
@@ -24,6 +25,7 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
   const [imagemFile, setImagemFile] = useState<File | null>(null);
   const [imagemPreview, setImagemPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [anonimo, setAnonimo] = useState(false);
 
   const adicionarTag = () => {
     if (tagInput.trim() && !tags.includes(tagInput.trim())) {
@@ -138,6 +140,7 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
           conteudo: conteudo.trim(),
           tags: tags.length > 0 ? tags : null,
           imagem_url: imagemUrl,
+          anonimo,
         })
         .select()
         .single();
@@ -163,19 +166,21 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
         if (enqueteError) throw enqueteError;
       }
 
-      // Detect and notify mentions in the post content
-      const mencionados = await detectarMencoes(conteudo);
-      if (mencionados.length > 0 && post) {
-        const nomeUsuario = await getNomeUsuario(user.id);
-        for (const mencionadoId of mencionados) {
-          await criarNotificacao({
-            userId: mencionadoId,
-            tipo: 'mencao',
-            titulo: 'Você foi mencionada! 📢',
-            mensagem: `${nomeUsuario} mencionou você em um post`,
-            referenciaId: post.id,
-            referenciaTipo: 'post'
-          });
+      // Detect and notify mentions in the post content (only if not anonymous)
+      if (!anonimo) {
+        const mencionados = await detectarMencoes(conteudo);
+        if (mencionados.length > 0 && post) {
+          const nomeUsuario = await getNomeUsuario(user.id);
+          for (const mencionadoId of mencionados) {
+            await criarNotificacao({
+              userId: mencionadoId,
+              tipo: 'mencao',
+              titulo: 'Você foi mencionada! 📢',
+              mensagem: `${nomeUsuario} mencionou você em um post`,
+              referenciaId: post.id,
+              referenciaTipo: 'post'
+            });
+          }
         }
       }
 
@@ -186,6 +191,7 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
       setOpcoesEnquete(["", ""]);
       setImagemFile(null);
       setImagemPreview(null);
+      setAnonimo(false);
 
       onSuccess();
     } catch (error: any) {
@@ -226,6 +232,24 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
             </Label>
           </div>
         </RadioGroup>
+      </div>
+
+      {/* Opção de Anonimato */}
+      <div className="flex items-center space-x-2 p-3 bg-muted/50 rounded-lg border">
+        <Checkbox
+          id="anonimo"
+          checked={anonimo}
+          onCheckedChange={(checked) => setAnonimo(checked as boolean)}
+        />
+        <div className="flex items-center gap-2">
+          <EyeOff className="h-4 w-4 text-muted-foreground" />
+          <Label htmlFor="anonimo" className="cursor-pointer text-sm">
+            Publicar anonimamente
+          </Label>
+        </div>
+        <span className="text-xs text-muted-foreground ml-auto">
+          Seu nome não será exibido
+        </span>
       </div>
 
       {/* Título (opcional) */}

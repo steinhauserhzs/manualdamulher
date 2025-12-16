@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -24,7 +24,42 @@ export const EnqueteDisplay = ({ enquete, postId, onUpdate }: EnqueteDisplayProp
   const [selectedOpcao, setSelectedOpcao] = useState<number | null>(null);
   const [jaVotou, setJaVotou] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [totalVotosReal, setTotalVotosReal] = useState(0);
   const { toast } = useToast();
+
+  // Buscar contagem real de votos do banco
+  const fetchRealVoteCounts = useCallback(async () => {
+    const { data: votosData } = await supabase
+      .from("comunidade_votos")
+      .select("opcao_index")
+      .eq("enquete_id", enquete.id);
+
+    if (votosData) {
+      // Contar votos por opção
+      const contagemVotos: Record<number, number> = {};
+      votosData.forEach((voto) => {
+        contagemVotos[voto.opcao_index] = (contagemVotos[voto.opcao_index] || 0) + 1;
+      });
+
+      // Atualizar opções com contagem real
+      const { data: enqueteData } = await supabase
+        .from("comunidade_enquetes")
+        .select("opcoes")
+        .eq("id", enquete.id)
+        .single();
+
+      if (enqueteData) {
+        const opcoesAtualizadas = (enqueteData.opcoes as Array<{ texto: string; votos: number }>).map(
+          (opcao, index) => ({
+            ...opcao,
+            votos: contagemVotos[index] || 0,
+          })
+        );
+        setOpcoes(opcoesAtualizadas);
+        setTotalVotosReal(votosData.length);
+      }
+    }
+  }, [enquete.id]);
 
   useEffect(() => {
     carregarEnquete();
@@ -32,16 +67,8 @@ export const EnqueteDisplay = ({ enquete, postId, onUpdate }: EnqueteDisplayProp
 
   const carregarEnquete = async () => {
     try {
-      // Carregar opções atualizadas
-      const { data: enqueteData, error: enqueteError } = await supabase
-        .from("comunidade_enquetes")
-        .select("opcoes")
-        .eq("id", enquete.id)
-        .single();
-
-      if (enqueteError) throw enqueteError;
-
-      setOpcoes((enqueteData.opcoes as Array<{ texto: string; votos: number }>) || []);
+      // Buscar contagem real de votos
+      await fetchRealVoteCounts();
 
       // Verificar se usuário já votou
       const {
@@ -94,19 +121,10 @@ export const EnqueteDisplay = ({ enquete, postId, onUpdate }: EnqueteDisplayProp
 
       if (votoError) throw votoError;
 
-      // Atualizar contagem de votos na enquete
-      const novasOpcoes = [...opcoes];
-      novasOpcoes[selectedOpcao].votos += 1;
-
-      const { error: updateError } = await supabase
-        .from("comunidade_enquetes")
-        .update({ opcoes: novasOpcoes })
-        .eq("id", enquete.id);
-
-      if (updateError) throw updateError;
+      // Buscar contagem atualizada
+      await fetchRealVoteCounts();
 
       setJaVotou(true);
-      setOpcoes(novasOpcoes);
 
       toast({
         title: "Voto registrado!",
@@ -174,7 +192,7 @@ export const EnqueteDisplay = ({ enquete, postId, onUpdate }: EnqueteDisplayProp
                     {opcao.texto}
                   </span>
                   <span className="text-muted-foreground">
-                    {porcentagem.toFixed(0)}%
+                    {porcentagem.toFixed(0)}% ({opcao.votos})
                   </span>
                 </div>
                 <Progress value={porcentagem} className="h-2" />

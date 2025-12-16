@@ -21,6 +21,7 @@ const Configuracoes = () => {
   const [saving, setSaving] = useState(false);
   
   const [nome, setNome] = useState("");
+  const [username, setUsername] = useState("");
   const [pronome, setPronome] = useState("");
   const [dataNascimento, setDataNascimento] = useState("");
   const [objetivos, setObjetivos] = useState("");
@@ -72,6 +73,7 @@ const Configuracoes = () => {
     } else if (data) {
       setPerfil(data);
       setNome(data.nome || "");
+      setUsername((data as any).username || "");
       setPronome(data.pronome || "");
       setDataNascimento(data.data_nascimento || "");
       setObjetivos(data.objetivos || "");
@@ -100,6 +102,15 @@ const Configuracoes = () => {
       return;
     }
 
+    if (username && !/^[a-zA-Z0-9_]+$/.test(username)) {
+      toast({
+        title: "Erro",
+        description: "Username deve conter apenas letras, números e underscore",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (instagram && instagram.trim() && !instagram.startsWith('@') && !instagram.includes('instagram.com')) {
       toast({
         title: "Erro",
@@ -123,6 +134,7 @@ const Configuracoes = () => {
       .from('perfis')
       .update({
         nome,
+        username: username?.trim().toLowerCase() || null,
         pronome,
         data_nascimento: dataNascimento || null,
         objetivos,
@@ -252,6 +264,21 @@ const Configuracoes = () => {
                       onChange={(e) => setNome(e.target.value)}
                       placeholder="Seu nome"
                     />
+                  </div>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div>
+                    <Label htmlFor="username">Username (@)</Label>
+                    <Input
+                      id="username"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
+                      placeholder="seu_username"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Apenas letras, números e underscore
+                    </p>
                   </div>
                   <div>
                     <Label htmlFor="pronome">Pronome</Label>

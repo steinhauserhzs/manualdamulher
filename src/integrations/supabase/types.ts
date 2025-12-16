@@ -540,6 +540,7 @@ export type Database = {
       }
       comunidade_posts: {
         Row: {
+          anonimo: boolean | null
           comentarios_count: number | null
           conteudo: string
           created_at: string | null
@@ -554,6 +555,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          anonimo?: boolean | null
           comentarios_count?: number | null
           conteudo: string
           created_at?: string | null
@@ -568,6 +570,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          anonimo?: boolean | null
           comentarios_count?: number | null
           conteudo?: string
           created_at?: string | null
@@ -614,6 +617,7 @@ export type Database = {
       }
       comunidade_stories: {
         Row: {
+          anonimo: boolean | null
           conteudo: string | null
           created_at: string
           expira_em: string
@@ -623,6 +627,7 @@ export type Database = {
           visualizacoes: number | null
         }
         Insert: {
+          anonimo?: boolean | null
           conteudo?: string | null
           created_at?: string
           expira_em?: string
@@ -632,6 +637,7 @@ export type Database = {
           visualizacoes?: number | null
         }
         Update: {
+          anonimo?: boolean | null
           conteudo?: string | null
           created_at?: string
           expira_em?: string
@@ -2248,6 +2254,7 @@ export type Database = {
           tipo_usuario: Database["public"]["Enums"]["tipo_usuario"]
           updated_at: string
           user_id: string
+          username: string | null
           visibilidade_perfil: string | null
           website: string | null
         }
@@ -2267,6 +2274,7 @@ export type Database = {
           tipo_usuario?: Database["public"]["Enums"]["tipo_usuario"]
           updated_at?: string
           user_id: string
+          username?: string | null
           visibilidade_perfil?: string | null
           website?: string | null
         }
@@ -2286,6 +2294,7 @@ export type Database = {
           tipo_usuario?: Database["public"]["Enums"]["tipo_usuario"]
           updated_at?: string
           user_id?: string
+          username?: string | null
           visibilidade_perfil?: string | null
           website?: string | null
         }
