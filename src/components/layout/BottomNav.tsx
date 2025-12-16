@@ -10,7 +10,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { StickyNote, BookOpen, Library, Lightbulb, HelpCircle, Settings, CalendarDays, Bell, ShoppingCart, Download } from "lucide-react";
+import { BookHeart, BookOpen, Library, Lightbulb, HelpCircle, Settings, CalendarDays, Bell, ShoppingCart, Download } from "lucide-react";
 import { EmergencyButton } from "@/components/ebook/EmergencyButton";
 
 const mainNavItems = [
@@ -28,7 +28,7 @@ const menuItems = [
   { path: "/bem-estar", icon: Sparkles, label: "Bem-estar" },
   { path: "/horoscopo", icon: Stars, label: "Horóscopo" },
   { path: "/ebook", icon: BookOpen, label: "E-book" },
-  { path: "/notas", icon: StickyNote, label: "Notas" },
+  { path: "/meu-diario", icon: BookHeart, label: "Meu Diário" },
   { path: "/blog", icon: BookOpen, label: "Blog" },
   { path: "/biblioteca", icon: Library, label: "Biblioteca" },
   { path: "/vida-pratica", icon: Lightbulb, label: "Vida Prática" },

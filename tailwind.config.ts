@@ -79,9 +79,9 @@ export default {
           DEFAULT: "hsl(var(--financas-primary))",
           light: "hsl(var(--financas-light))",
         },
-        notas: {
-          DEFAULT: "hsl(var(--notas-primary))",
-          light: "hsl(var(--notas-light))",
+        diario: {
+          DEFAULT: "hsl(var(--diario-primary))",
+          light: "hsl(var(--diario-light))",
         },
       },
       borderRadius: {
