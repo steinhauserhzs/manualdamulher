@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, Heart, Sparkles, TrendingUp, Menu, Users, ShoppingBag, Stars } from "lucide-react";
+import { Home, Heart, Sparkles, TrendingUp, Menu, Users, ShoppingBag, Stars, Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Sheet,
@@ -10,8 +10,10 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { BookHeart, BookOpen, Library, Lightbulb, HelpCircle, Settings, CalendarDays, Bell, ShoppingCart, Download } from "lucide-react";
+import { BookHeart, BookOpen, Library, Lightbulb, HelpCircle, Settings, CalendarDays, ShoppingCart, Download } from "lucide-react";
 import { EmergencyButton } from "@/components/ebook/EmergencyButton";
+import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/integrations/supabase/client";
 
 const mainNavItems = [
   { path: "/dashboard", icon: Home, label: "Início" },
@@ -40,6 +42,38 @@ const menuItems = [
 export const BottomNav = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const [naoLidas, setNaoLidas] = useState(0);
+
+  useEffect(() => {
+    carregarNotificacoes();
+    
+    // Subscribe to new notifications
+    const channel = supabase
+      .channel('bottom-nav-notifications')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'notificacoes' },
+        () => carregarNotificacoes()
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const carregarNotificacoes = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { count } = await supabase
+      .from("notificacoes")
+      .select("*", { count: 'exact', head: true })
+      .eq("user_id", user.id)
+      .eq("lida", false);
+
+    setNaoLidas(count || 0);
+  };
 
   const handleNavigation = () => {
     setIsOpen(false);
@@ -63,6 +97,26 @@ export const BottomNav = () => {
             <span className="text-xs mt-1">{item.label}</span>
           </Link>
         ))}
+        
+        {/* Notifications Button */}
+        <Link
+          to="/comunidade?tab=notificacoes"
+          className={cn(
+            "flex flex-col items-center justify-center w-1/5 h-full relative",
+            "text-muted-foreground"
+          )}
+        >
+          <Bell className="h-6 w-6" />
+          {naoLidas > 0 && (
+            <Badge 
+              variant="destructive" 
+              className="absolute top-1 right-2 h-4 w-4 p-0 flex items-center justify-center text-[10px]"
+            >
+              {naoLidas > 9 ? "9+" : naoLidas}
+            </Badge>
+          )}
+          <span className="text-xs mt-1">Alertas</span>
+        </Link>
         
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger className="flex flex-col items-center justify-center w-1/5 h-full text-muted-foreground">

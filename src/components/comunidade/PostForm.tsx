@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Badge } from "@/components/ui/badge";
 import { Plus, X, ImageIcon } from "lucide-react";
+import { criarNotificacao, getNomeUsuario, detectarMencoes } from "@/lib/notificacoes";
 
 interface PostFormProps {
   onSuccess: () => void;
@@ -162,6 +163,22 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
         if (enqueteError) throw enqueteError;
       }
 
+      // Detect and notify mentions in the post content
+      const mencionados = await detectarMencoes(conteudo);
+      if (mencionados.length > 0 && post) {
+        const nomeUsuario = await getNomeUsuario(user.id);
+        for (const mencionadoId of mencionados) {
+          await criarNotificacao({
+            userId: mencionadoId,
+            tipo: 'mencao',
+            titulo: 'Você foi mencionada! 📢',
+            mensagem: `${nomeUsuario} mencionou você em um post`,
+            referenciaId: post.id,
+            referenciaTipo: 'post'
+          });
+        }
+      }
+
       // Limpar formulário
       setTitulo("");
       setConteudo("");
@@ -239,14 +256,14 @@ export const PostForm = ({ onSuccess }: PostFormProps) => {
               ? "Compartilhe sua dica..."
               : tipo === "enquete"
               ? "Descreva sua enquete..."
-              : "Escreva seu post..."
+              : "Escreva seu post... Use @nome para mencionar alguém"
           }
           rows={5}
           maxLength={5000}
           required
         />
         <p className="text-xs text-muted-foreground mt-1">
-          {conteudo.length}/5000 caracteres
+          {conteudo.length}/5000 caracteres • Use @nome para mencionar
         </p>
       </div>
 

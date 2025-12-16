@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { UserPlus, UserMinus } from "lucide-react";
 import { toast } from "sonner";
+import { criarNotificacao, getNomeUsuario } from "@/lib/notificacoes";
 
 interface FollowButtonProps {
   userId: string;
@@ -71,6 +72,17 @@ export function FollowButton({ userId, onFollowChange }: FollowButtonProps) {
         if (error) throw error;
         setIsFollowing(true);
         toast.success("Você começou a seguir esta usuária!");
+
+        // Notify the user being followed
+        const nomeUsuario = await getNomeUsuario(currentUserId);
+        await criarNotificacao({
+          userId: userId,
+          tipo: 'seguidor',
+          titulo: 'Nova seguidora! 👋',
+          mensagem: `${nomeUsuario} começou a te seguir`,
+          referenciaId: currentUserId,
+          referenciaTipo: 'perfil'
+        });
       }
 
       onFollowChange?.();

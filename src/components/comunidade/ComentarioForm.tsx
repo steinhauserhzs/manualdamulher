@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Send } from "lucide-react";
+import { criarNotificacao, getAutorPost, getAutorComentario, getNomeUsuario, detectarMencoes } from "@/lib/notificacoes";
 
 interface ComentarioFormProps {
   postId: string;
@@ -34,14 +35,16 @@ export function ComentarioForm({ postId, parentId, onSuccess, onCancel, placehol
         return;
       }
 
-      const { error } = await supabase
+      const { data: novoComentario, error } = await supabase
         .from("comunidade_comentarios")
         .insert({
           post_id: postId,
           user_id: user.id,
           conteudo: conteudo.trim(),
           parent_id: parentId || null,
-        });
+        })
+        .select()
+        .single();
 
       if (error) throw error;
 
@@ -57,6 +60,51 @@ export function ComentarioForm({ postId, parentId, onSuccess, onCancel, placehol
           .from("comunidade_posts")
           .update({ comentarios_count: (currentPost.comentarios_count || 0) + 1 })
           .eq("id", postId);
+      }
+
+      // Get user name for notification
+      const nomeUsuario = await getNomeUsuario(user.id);
+
+      // Notify based on comment type
+      if (parentId) {
+        // It's a reply - notify the comment author
+        const autorComentario = await getAutorComentario(parentId);
+        if (autorComentario) {
+          await criarNotificacao({
+            userId: autorComentario,
+            tipo: 'resposta',
+            titulo: 'Nova resposta! 💬',
+            mensagem: `${nomeUsuario} respondeu seu comentário`,
+            referenciaId: postId,
+            referenciaTipo: 'post'
+          });
+        }
+      } else {
+        // It's a new comment - notify the post author
+        const autorPost = await getAutorPost(postId);
+        if (autorPost) {
+          await criarNotificacao({
+            userId: autorPost,
+            tipo: 'comentario',
+            titulo: 'Novo comentário! 💬',
+            mensagem: `${nomeUsuario} comentou em seu post`,
+            referenciaId: postId,
+            referenciaTipo: 'post'
+          });
+        }
+      }
+
+      // Detect and notify mentions
+      const mencionados = await detectarMencoes(conteudo);
+      for (const mencionadoId of mencionados) {
+        await criarNotificacao({
+          userId: mencionadoId,
+          tipo: 'mencao',
+          titulo: 'Você foi mencionada! 📢',
+          mensagem: `${nomeUsuario} mencionou você em um comentário`,
+          referenciaId: postId,
+          referenciaTipo: 'post'
+        });
       }
 
       toast.success(parentId ? "Resposta enviada!" : "Comentário enviado!");
