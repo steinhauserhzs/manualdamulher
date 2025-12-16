@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Plus, X, Eye } from "lucide-react";
+import { Plus, X, Eye, ImagePlus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { Textarea } from "@/components/ui/textarea";
@@ -35,9 +35,12 @@ export const StoriesSection = () => {
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
   const [currentStories, setCurrentStories] = useState<Story[]>([]);
   const [currentStoryIndex, setCurrentStoryIndex] = useState(0);
-  const [novoStory, setNovoStory] = useState({ conteudo: "", imagem_url: "" });
+  const [novoStory, setNovoStory] = useState({ conteudo: "" });
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [imagemFile, setImagemFile] = useState<File | null>(null);
+  const [imagemPreview, setImagemPreview] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     carregarStories();
@@ -90,30 +93,96 @@ export const StoriesSection = () => {
     setLoading(false);
   };
 
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      toast({ title: "Selecione uma imagem válida", variant: "destructive" });
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: "Imagem muito grande", description: "Máximo 5MB", variant: "destructive" });
+      return;
+    }
+
+    setImagemFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagemPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removerImagem = () => {
+    setImagemFile(null);
+    setImagemPreview(null);
+  };
+
+  const uploadImagem = async (userId: string): Promise<string | null> => {
+    if (!imagemFile) return null;
+
+    const fileExt = imagemFile.name.split('.').pop();
+    const fileName = `${userId}-${Date.now()}.${fileExt}`;
+    const filePath = `stories/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('comunidade-imagens')
+      .upload(filePath, imagemFile);
+
+    if (uploadError) {
+      console.error('Erro no upload:', uploadError);
+      throw new Error('Erro ao fazer upload da imagem');
+    }
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('comunidade-imagens')
+      .getPublicUrl(filePath);
+
+    return publicUrl;
+  };
+
   const criarStory = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    if (!novoStory.conteudo && !novoStory.imagem_url) {
+    if (!novoStory.conteudo && !imagemFile) {
       toast({ title: "Adicione um texto ou imagem", variant: "destructive" });
       return;
     }
 
-    const { error } = await supabase.from("comunidade_stories").insert({
-      user_id: user.id,
-      conteudo: novoStory.conteudo || null,
-      imagem_url: novoStory.imagem_url || null
-    });
+    setUploading(true);
 
-    if (error) {
-      toast({ title: "Erro ao criar story", variant: "destructive" });
-      return;
+    try {
+      let imagemUrl: string | null = null;
+
+      if (imagemFile) {
+        imagemUrl = await uploadImagem(user.id);
+      }
+
+      const { error } = await supabase.from("comunidade_stories").insert({
+        user_id: user.id,
+        conteudo: novoStory.conteudo || null,
+        imagem_url: imagemUrl
+      });
+
+      if (error) {
+        toast({ title: "Erro ao criar story", variant: "destructive" });
+        return;
+      }
+
+      toast({ title: "Story publicado!", description: "Expira em 24 horas" });
+      setDialogOpen(false);
+      setNovoStory({ conteudo: "" });
+      setImagemFile(null);
+      setImagemPreview(null);
+      carregarStories();
+    } catch (error) {
+      toast({ title: "Erro ao fazer upload", variant: "destructive" });
+    } finally {
+      setUploading(false);
     }
-
-    toast({ title: "Story publicado!", description: "Expira em 24 horas" });
-    setDialogOpen(false);
-    setNovoStory({ conteudo: "", imagem_url: "" });
-    carregarStories();
   };
 
   const visualizarStories = async (userStories: StoriesByUser) => {
@@ -183,15 +252,40 @@ export const StoriesSection = () => {
                 />
               </div>
               <div>
-                <Label>URL da Imagem (opcional)</Label>
-                <Input
-                  value={novoStory.imagem_url}
-                  onChange={(e) => setNovoStory(prev => ({ ...prev, imagem_url: e.target.value }))}
-                  placeholder="https://..."
-                />
+                <Label>Imagem (opcional)</Label>
+                {imagemPreview ? (
+                  <div className="relative mt-2">
+                    <img 
+                      src={imagemPreview} 
+                      alt="Preview" 
+                      className="rounded-lg max-h-40 w-full object-cover"
+                    />
+                    <Button 
+                      variant="destructive" 
+                      size="icon"
+                      className="absolute top-2 right-2 h-8 w-8"
+                      onClick={removerImagem}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="mt-2">
+                    <label className="flex items-center gap-2 p-4 border-2 border-dashed rounded-lg cursor-pointer hover:border-primary transition-colors">
+                      <ImagePlus className="h-5 w-5 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">Selecionar da galeria</span>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageSelect}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+                )}
               </div>
-              <Button onClick={criarStory} className="w-full">
-                Publicar Story
+              <Button onClick={criarStory} className="w-full" disabled={uploading}>
+                {uploading ? "Publicando..." : "Publicar Story"}
               </Button>
             </div>
           </DialogContent>
