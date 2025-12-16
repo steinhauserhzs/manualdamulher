@@ -9,6 +9,7 @@ import { MensagensDirectas } from "@/components/comunidade/MensagensDirectas";
 import { GruposCard } from "@/components/comunidade/GruposCard";
 import { StoriesSection } from "@/components/comunidade/StoriesSection";
 import { UsuariosOnline } from "@/components/comunidade/UsuariosOnline";
+import { SearchBar } from "@/components/comunidade/SearchBar";
 import { Plus, MessageCircle, Users, UserCheck } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -24,9 +25,11 @@ interface Post {
   likes_count: number;
   comentarios_count: number;
   created_at: string;
+  anonimo?: boolean;
   perfis: {
     nome: string;
     avatar_url: string | null;
+    username?: string | null;
   };
   comunidade_enquetes?: Array<{
     id: string;
@@ -108,7 +111,7 @@ const Comunidade = () => {
         const userIds = [...new Set(data.map((p) => p.user_id))];
         const { data: perfisData } = await supabase
           .from("perfis")
-          .select("user_id, nome, avatar_url")
+          .select("user_id, nome, avatar_url, username")
           .in("user_id", userIds);
 
         const perfisMap = new Map(
@@ -120,6 +123,7 @@ const Comunidade = () => {
           perfis: perfisMap.get(post.user_id) || {
             nome: "Usuária",
             avatar_url: null,
+            username: null,
           },
         }));
 
@@ -156,6 +160,11 @@ const Comunidade = () => {
           <p className="text-muted-foreground">
             Conecte-se, compartilhe experiências e apoie outras mulheres
           </p>
+        </div>
+
+        {/* Barra de Pesquisa */}
+        <div className="mb-6">
+          <SearchBar />
         </div>
 
         {/* Usuários Online */}

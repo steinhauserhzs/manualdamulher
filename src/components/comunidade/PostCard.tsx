@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Bookmark } from "lucide-react";
+import { MessageCircle, Bookmark, User } from "lucide-react";
 import { EnqueteDisplay } from "./EnqueteDisplay";
 import { LikeButton } from "./LikeButton";
 import { LinkifyText } from "./LinkifyText";
@@ -23,9 +23,11 @@ interface PostCardProps {
     likes_count: number;
     comentarios_count: number;
     created_at: string;
+    anonimo?: boolean;
     perfis: {
       nome: string;
       avatar_url: string | null;
+      username?: string | null;
     };
     comunidade_enquetes?: Array<{
       id: string;
@@ -64,6 +66,8 @@ const getTipoLabel = (tipo: string) => {
 };
 
 export const PostCard = ({ post, onUpdate }: PostCardProps) => {
+  const isAnonimo = post.anonimo === true;
+
   const getInitials = (name: string) => {
     return name
       .split(" ")
@@ -78,31 +82,56 @@ export const PostCard = ({ post, onUpdate }: PostCardProps) => {
     locale: ptBR,
   });
 
+  const displayName = isAnonimo ? "Usuária Anônima" : post.perfis.nome;
+  const displayUsername = isAnonimo ? null : post.perfis.username;
+  const displayAvatar = isAnonimo ? null : post.perfis.avatar_url;
+
   return (
     <Card className="p-4 sm:p-6">
       {/* Header do Post */}
       <div className="flex items-start gap-3 mb-4">
-        <Link to={`/perfil/${post.user_id}`} className="flex-shrink-0">
-          <Avatar className="h-10 w-10 cursor-pointer hover:ring-2 ring-primary transition-all">
-            <AvatarImage src={post.perfis.avatar_url || undefined} />
-            <AvatarFallback className="bg-primary text-primary-foreground">
-              {getInitials(post.perfis.nome)}
-            </AvatarFallback>
-          </Avatar>
-        </Link>
+        {isAnonimo ? (
+          <div className="flex-shrink-0">
+            <Avatar className="h-10 w-10">
+              <AvatarFallback className="bg-muted text-muted-foreground">
+                <User className="h-5 w-5" />
+              </AvatarFallback>
+            </Avatar>
+          </div>
+        ) : (
+          <Link to={`/perfil/${post.user_id}`} className="flex-shrink-0">
+            <Avatar className="h-10 w-10 cursor-pointer hover:ring-2 ring-primary transition-all">
+              <AvatarImage src={displayAvatar || undefined} />
+              <AvatarFallback className="bg-primary text-primary-foreground">
+                {getInitials(displayName)}
+              </AvatarFallback>
+            </Avatar>
+          </Link>
+        )}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <Link 
-              to={`/perfil/${post.user_id}`}
-              className="font-semibold text-foreground hover:underline"
-            >
-              {post.perfis.nome}
-            </Link>
+            {isAnonimo ? (
+              <span className="font-semibold text-muted-foreground">
+                {displayName}
+              </span>
+            ) : (
+              <Link 
+                to={`/perfil/${post.user_id}`}
+                className="font-semibold text-foreground hover:underline"
+              >
+                {displayName}
+              </Link>
+            )}
+            {displayUsername && (
+              <span className="text-sm text-muted-foreground">
+                @{displayUsername}
+              </span>
+            )}
             <Badge variant="secondary" className="text-xs">
               {getTipoIcon(post.tipo)} {getTipoLabel(post.tipo)}
             </Badge>
           </div>
-          <UserBadges userId={post.user_id} maxDisplay={2} />
+          {!isAnonimo && <UserBadges userId={post.user_id} maxDisplay={2} />}
           <p className="text-sm text-muted-foreground">{timeAgo}</p>
         </div>
       </div>
