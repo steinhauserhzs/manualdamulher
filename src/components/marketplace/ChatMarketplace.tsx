@@ -10,6 +10,7 @@ import { toast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
+import { criarNotificacao, getNomeUsuario } from "@/lib/notificacoes";
 
 interface Conversa {
   id: string;
@@ -72,7 +73,6 @@ export const ChatMarketplace = ({ anuncioId, vendedorId, anuncioTitulo, onClose 
     setUserId(user.id);
 
     if (anuncioId && vendedorId) {
-      // Iniciar nova conversa ou buscar existente
       await iniciarOuBuscarConversa(user.id, anuncioId, vendedorId);
     } else {
       await carregarConversas(user.id);
@@ -81,7 +81,6 @@ export const ChatMarketplace = ({ anuncioId, vendedorId, anuncioTitulo, onClose 
   };
 
   const iniciarOuBuscarConversa = async (uid: string, anuncio: string, vendedor: string) => {
-    // Verificar se já existe conversa
     const { data: conversaExistente } = await supabase
       .from("marketplace_conversas")
       .select("*")
@@ -97,7 +96,6 @@ export const ChatMarketplace = ({ anuncioId, vendedorId, anuncioTitulo, onClose 
         outro_nome: "Vendedora"
       });
     } else {
-      // Criar nova conversa
       const { data: novaConversa, error } = await supabase
         .from("marketplace_conversas")
         .insert({
@@ -135,7 +133,6 @@ export const ChatMarketplace = ({ anuncioId, vendedorId, anuncioTitulo, onClose 
 
       if (!data) return;
 
-      // Buscar nomes dos outros usuários
       const outrosIds = data.map(c => c.comprador_id === uid ? c.vendedor_id : c.comprador_id);
       const { data: perfis } = await supabase
         .from("perfis")
@@ -171,7 +168,6 @@ export const ChatMarketplace = ({ anuncioId, vendedorId, anuncioTitulo, onClose 
 
       setMensagens(data || []);
 
-      // Marcar como lidas
       if (userId) {
         await supabase
           .from("marketplace_mensagens")
@@ -196,11 +192,29 @@ export const ChatMarketplace = ({ anuncioId, vendedorId, anuncioTitulo, onClose 
 
       if (error) throw error;
 
-      // Atualizar updated_at da conversa
       await supabase
         .from("marketplace_conversas")
         .update({ updated_at: new Date().toISOString() })
         .eq("id", conversaAtiva);
+
+      // Notify the other person
+      if (infoConversa) {
+        const outroId = infoConversa.comprador_id === userId 
+          ? infoConversa.vendedor_id 
+          : infoConversa.comprador_id;
+        
+        const nomeUsuario = await getNomeUsuario(userId);
+        const titulo = infoConversa.anuncio_titulo || "um anúncio";
+        
+        await criarNotificacao({
+          userId: outroId,
+          tipo: 'marketplace',
+          titulo: 'Nova mensagem no Marketplace! 🛒',
+          mensagem: `${nomeUsuario} enviou mensagem sobre "${titulo}"`,
+          referenciaId: infoConversa.anuncio_id,
+          referenciaTipo: 'anuncio'
+        });
+      }
 
       setNovaMensagem("");
       carregarMensagens();

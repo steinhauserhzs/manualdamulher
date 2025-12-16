@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { criarNotificacao, getNomeUsuario } from "@/lib/notificacoes";
 
 interface Conversa {
   id: string;
@@ -69,7 +70,6 @@ export const MensagensDirectas = ({ destinatarioId, onClose }: MensagensDirectas
 
   const carregarConversas = async (uid: string) => {
     try {
-      // Buscar todas as mensagens do usuário
       const { data: mensagensData } = await supabase
         .from("mensagens_diretas")
         .select("*")
@@ -78,7 +78,6 @@ export const MensagensDirectas = ({ destinatarioId, onClose }: MensagensDirectas
 
       if (!mensagensData) return;
 
-      // Agrupar por contato
       const contatosMap = new Map<string, { ultima: any; nao_lidas: number }>();
       
       mensagensData.forEach(msg => {
@@ -96,7 +95,6 @@ export const MensagensDirectas = ({ destinatarioId, onClose }: MensagensDirectas
         }
       });
 
-      // Buscar perfis dos contatos
       const contatoIds = Array.from(contatosMap.keys());
       if (contatoIds.length === 0) {
         setConversas([]);
@@ -139,7 +137,6 @@ export const MensagensDirectas = ({ destinatarioId, onClose }: MensagensDirectas
 
       setMensagens(data || []);
 
-      // Marcar como lidas
       await supabase
         .from("mensagens_diretas")
         .update({ lida: true })
@@ -173,6 +170,18 @@ export const MensagensDirectas = ({ destinatarioId, onClose }: MensagensDirectas
       });
 
       if (error) throw error;
+
+      // Notify recipient
+      const nomeUsuario = await getNomeUsuario(userId);
+      const mensagemPreview = novaMensagem.trim().substring(0, 50);
+      await criarNotificacao({
+        userId: conversaAtiva,
+        tipo: 'mensagem',
+        titulo: 'Nova mensagem! ✉️',
+        mensagem: `${nomeUsuario}: ${mensagemPreview}${novaMensagem.length > 50 ? '...' : ''}`,
+        referenciaId: null,
+        referenciaTipo: 'mensagem_direta'
+      });
 
       setNovaMensagem("");
       carregarMensagens();

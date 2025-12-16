@@ -3,6 +3,7 @@ import { Heart } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { criarNotificacao, getAutorPost, getAutorComentario, getNomeUsuario } from "@/lib/notificacoes";
 
 interface LikeButtonProps {
   postId?: string;
@@ -68,7 +69,6 @@ export function LikeButton({ postId, comentarioId, initialLikesCount, onLikeChan
         const { error } = await query;
         if (error) throw error;
 
-        // Atualizar contador
         const newCount = likesCount - 1;
         setLikesCount(newCount);
         setIsLiked(false);
@@ -97,7 +97,6 @@ export function LikeButton({ postId, comentarioId, initialLikesCount, onLikeChan
 
         if (error) throw error;
 
-        // Atualizar contador
         const newCount = likesCount + 1;
         setLikesCount(newCount);
         setIsLiked(true);
@@ -108,11 +107,39 @@ export function LikeButton({ postId, comentarioId, initialLikesCount, onLikeChan
             .from("comunidade_posts")
             .update({ likes_count: newCount })
             .eq("id", postId);
+          
+          // Notificar autor do post
+          const autorId = await getAutorPost(postId);
+          if (autorId) {
+            const nomeUsuario = await getNomeUsuario(user.id);
+            await criarNotificacao({
+              userId: autorId,
+              tipo: 'like',
+              titulo: 'Nova curtida! ❤️',
+              mensagem: `${nomeUsuario} curtiu seu post`,
+              referenciaId: postId,
+              referenciaTipo: 'post'
+            });
+          }
         } else if (comentarioId) {
           await supabase
             .from("comunidade_comentarios")
             .update({ likes_count: newCount })
             .eq("id", comentarioId);
+          
+          // Notificar autor do comentário
+          const autorId = await getAutorComentario(comentarioId);
+          if (autorId) {
+            const nomeUsuario = await getNomeUsuario(user.id);
+            await criarNotificacao({
+              userId: autorId,
+              tipo: 'like',
+              titulo: 'Nova curtida! ❤️',
+              mensagem: `${nomeUsuario} curtiu seu comentário`,
+              referenciaId: comentarioId,
+              referenciaTipo: 'comentario'
+            });
+          }
         }
       }
     } catch (error) {

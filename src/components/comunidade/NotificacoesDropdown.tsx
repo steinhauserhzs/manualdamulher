@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Bell, Heart, MessageCircle, UserPlus, Star, Check } from "lucide-react";
+import { Bell, Heart, MessageCircle, UserPlus, Star, Check, Reply, Mail, ShoppingBag, AtSign } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDistanceToNow } from "date-fns";
@@ -19,6 +20,7 @@ interface Notificacao {
 }
 
 export const NotificacoesDropdown = () => {
+  const navigate = useNavigate();
   const [notificacoes, setNotificacoes] = useState<Notificacao[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -77,14 +79,55 @@ export const NotificacoesDropdown = () => {
     carregarNotificacoes();
   };
 
+  const handleClickNotificacao = (notificacao: Notificacao) => {
+    marcarComoLida(notificacao.id);
+    
+    // Navigate based on reference type
+    switch (notificacao.referencia_tipo) {
+      case 'post':
+        if (notificacao.referencia_id) {
+          navigate(`/comunidade/${notificacao.referencia_id}`);
+        }
+        break;
+      case 'comentario':
+        // Navigate to the post containing the comment
+        if (notificacao.referencia_id) {
+          navigate(`/comunidade/${notificacao.referencia_id}`);
+        }
+        break;
+      case 'perfil':
+        if (notificacao.referencia_id) {
+          navigate(`/perfil/${notificacao.referencia_id}`);
+        }
+        break;
+      case 'mensagem_direta':
+        navigate('/comunidade?tab=mensagens');
+        break;
+      case 'anuncio':
+        navigate('/marketplace');
+        break;
+      default:
+        // Stay on current page
+        break;
+    }
+  };
+
   const getIcon = (tipo: string) => {
     switch (tipo) {
       case "like":
-        return <Heart className="h-4 w-4 text-red-500" />;
+        return <Heart className="h-4 w-4 text-rose-500" />;
       case "comentario":
         return <MessageCircle className="h-4 w-4 text-blue-500" />;
+      case "resposta":
+        return <Reply className="h-4 w-4 text-cyan-500" />;
       case "seguidor":
         return <UserPlus className="h-4 w-4 text-green-500" />;
+      case "mensagem":
+        return <Mail className="h-4 w-4 text-purple-500" />;
+      case "marketplace":
+        return <ShoppingBag className="h-4 w-4 text-orange-500" />;
+      case "mencao":
+        return <AtSign className="h-4 w-4 text-pink-500" />;
       case "badge":
         return <Star className="h-4 w-4 text-yellow-500" />;
       default:
@@ -132,7 +175,7 @@ export const NotificacoesDropdown = () => {
           notificacoes.map((notificacao) => (
             <DropdownMenuItem
               key={notificacao.id}
-              onClick={() => marcarComoLida(notificacao.id)}
+              onClick={() => handleClickNotificacao(notificacao)}
               className={`flex items-start gap-3 p-3 cursor-pointer ${!notificacao.lida ? 'bg-primary/5' : ''}`}
             >
               <div className="mt-0.5">{getIcon(notificacao.tipo)}</div>
