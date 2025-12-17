@@ -561,8 +561,8 @@ const Landing = () => {
               <h4 className="font-bold mb-4">Suporte</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li><a href="mailto:suporte@manualdamulher.com" className="hover:text-foreground transition-colors">suporte@manualdamulher.com</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Termos de Uso</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Política de Privacidade</a></li>
+                <li><Link to="/termos" className="hover:text-foreground transition-colors">Termos de Uso</Link></li>
+                <li><Link to="/privacidade" className="hover:text-foreground transition-colors">Política de Privacidade</Link></li>
               </ul>
             </div>
           </div>
