@@ -46,6 +46,8 @@ import Calendario from "./pages/Calendario";
 import ListaCompras from "./pages/ListaCompras";
 import Lembretes from "./pages/Lembretes";
 import Instalar from "./pages/Instalar";
+import Privacidade from "./pages/Privacidade";
+import Termos from "./pages/Termos";
 
 // Admin imports
 import AdminProtectedRoute from "./components/admin/AdminProtectedRoute";
@@ -73,6 +75,8 @@ const App = () => (
               {/* Public Routes */}
               <Route path="/" element={<Landing />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/privacidade" element={<Privacidade />} />
+              <Route path="/termos" element={<Termos />} />
               <Route path="/reset-password" element={<ResetPassword />} />
 
               {/* Admin Routes (Hidden) */}
